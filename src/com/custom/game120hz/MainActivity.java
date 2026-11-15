@@ -1,15 +1,11 @@
 package com.custom.game120hz;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -17,7 +13,6 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -34,21 +29,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-/** Material-styled UI for Hyper120 with app picker, 3-dot menu, and auto-override service. */
+/** Material-styled UI for Hyper120 with notch-safe spacing, app picker, and 3-dot menu. */
 public class MainActivity extends Activity {
-    private static final String BUY_ME_A_COFFEE_URL = "https://buymeacoffee.com/rohan_reyes";
-    private static final String GITHUB_REPO_URL = "https://github.com/Rohan-Reyes/Hyper120";
-
-    private static final int COL_BG = Color.parseColor("#0E1117");
-    private static final int COL_SURFACE = Color.parseColor("#181D27");
-    private static final int COL_SURFACE_SEL = Color.parseColor("#172636");
-    private static final int COL_OUTLINE = Color.parseColor("#2A3244");
-    private static final int COL_PRIMARY = Color.parseColor("#38BDF8");
-    private static final int COL_ON_PRIMARY = Color.parseColor("#06202E");
-    private static final int COL_TEXT = Color.parseColor("#F1F5F9");
-    private static final int COL_MUTED = Color.parseColor("#94A3B8");
-    private static final int COL_TEAL = Color.parseColor("#2DD4BF");
-
     private static class AppEntry {
         final String label;
         final String packageName;
@@ -68,29 +50,24 @@ public class MainActivity extends Activity {
     private Set<String> selectedPackages;
     private AppAdapter adapter;
     private TextView statusText;
-    private float density;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        density = getResources().getDisplayMetrics().density;
-
-        Window w = getWindow();
-        w.setStatusBarColor(COL_BG);
-        w.setNavigationBarColor(COL_BG);
+        UiHelper.setupDarkBars(this);
 
         selectedPackages = FpsApplier.loadPackages(this);
 
         LinearLayout root = new LinearLayout(this);
         root.setOrientation(LinearLayout.VERTICAL);
-        root.setBackgroundColor(COL_BG);
-        root.setPadding(dp(16), dp(20), dp(16), dp(12));
+        root.setBackgroundColor(UiHelper.COL_BG);
+        UiHelper.applyNotchSafePadding(this, root, 16, 18, 12);
 
-        // Top Material App Bar with 3-dot overflow menu
+        // Top Material App Bar (pushed comfortably below drop/punch-hole notch)
         LinearLayout topBar = new LinearLayout(this);
         topBar.setOrientation(LinearLayout.HORIZONTAL);
         topBar.setGravity(Gravity.CENTER_VERTICAL);
-        topBar.setPadding(dp(4), dp(4), dp(4), dp(12));
+        topBar.setPadding(dp(4), dp(8), dp(4), dp(14));
 
         LinearLayout titleCol = new LinearLayout(this);
         titleCol.setOrientation(LinearLayout.VERTICAL);
@@ -101,13 +78,13 @@ public class MainActivity extends Activity {
         title.setText("Hyper120");
         title.setTextSize(26);
         title.setTypeface(Typeface.DEFAULT_BOLD);
-        title.setTextColor(COL_TEXT);
+        title.setTextColor(UiHelper.COL_TEXT);
         titleCol.addView(title);
 
         TextView subtitle = new TextView(this);
         subtitle.setText("Xiaomi 120Hz PowerKeeper Override");
         subtitle.setTextSize(12);
-        subtitle.setTextColor(COL_MUTED);
+        subtitle.setTextColor(UiHelper.COL_MUTED);
         titleCol.addView(subtitle);
         topBar.addView(titleCol);
 
@@ -115,11 +92,10 @@ public class MainActivity extends Activity {
         menuBtn.setText("\u22EE");
         menuBtn.setTextSize(24);
         menuBtn.setTypeface(Typeface.DEFAULT_BOLD);
-        menuBtn.setTextColor(COL_TEXT);
+        menuBtn.setTextColor(UiHelper.COL_TEXT);
         menuBtn.setGravity(Gravity.CENTER);
-        menuBtn.setBackground(pillBg(COL_SURFACE, COL_OUTLINE, 20));
-        LinearLayout.LayoutParams menuParams = new LinearLayout.LayoutParams(dp(42), dp(42));
-        menuBtn.setLayoutParams(menuParams);
+        menuBtn.setBackground(UiHelper.pillBg(this, UiHelper.COL_SURFACE, UiHelper.COL_OUTLINE, 22));
+        menuBtn.setLayoutParams(new LinearLayout.LayoutParams(dp(44), dp(44)));
         menuBtn.setOnClickListener(this::showOverflowMenu);
         topBar.addView(menuBtn);
 
@@ -128,7 +104,7 @@ public class MainActivity extends Activity {
         // Material Control Card
         LinearLayout card = new LinearLayout(this);
         card.setOrientation(LinearLayout.VERTICAL);
-        card.setBackground(pillBg(COL_SURFACE, COL_OUTLINE, 20));
+        card.setBackground(UiHelper.pillBg(this, UiHelper.COL_SURFACE, UiHelper.COL_OUTLINE, 20));
         card.setPadding(dp(16), dp(14), dp(16), dp(14));
         card.setElevation(dp(4));
 
@@ -138,7 +114,7 @@ public class MainActivity extends Activity {
 
         TextView toggleLabel = new TextView(this);
         toggleLabel.setText("Auto-override in background");
-        toggleLabel.setTextColor(COL_TEXT);
+        toggleLabel.setTextColor(UiHelper.COL_TEXT);
         toggleLabel.setTextSize(15);
         toggleLabel.setLayoutParams(new LinearLayout.LayoutParams(
             0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
@@ -159,8 +135,8 @@ public class MainActivity extends Activity {
         applyBtn.setAllCaps(false);
         applyBtn.setTextSize(15);
         applyBtn.setTypeface(Typeface.DEFAULT_BOLD);
-        applyBtn.setTextColor(COL_ON_PRIMARY);
-        applyBtn.setBackground(pillBg(COL_PRIMARY, 0, 24));
+        applyBtn.setTextColor(UiHelper.COL_ON_PRIMARY);
+        applyBtn.setBackground(UiHelper.pillBg(this, UiHelper.COL_PRIMARY, 0, 26));
         LinearLayout.LayoutParams btnParams = new LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT, dp(46));
         btnParams.topMargin = dp(12);
@@ -169,7 +145,7 @@ public class MainActivity extends Activity {
         card.addView(applyBtn);
 
         statusText = new TextView(this);
-        statusText.setTextColor(COL_TEAL);
+        statusText.setTextColor(UiHelper.COL_TEAL);
         statusText.setTextSize(12);
         statusText.setPadding(0, dp(10), 0, 0);
         card.addView(statusText);
@@ -179,10 +155,10 @@ public class MainActivity extends Activity {
         // Material Search Pill
         EditText searchBox = new EditText(this);
         searchBox.setHint("Search apps or packages...");
-        searchBox.setHintTextColor(COL_MUTED);
-        searchBox.setTextColor(COL_TEXT);
+        searchBox.setHintTextColor(UiHelper.COL_MUTED);
+        searchBox.setTextColor(UiHelper.COL_TEXT);
         searchBox.setTextSize(14);
-        searchBox.setBackground(pillBg(COL_SURFACE, COL_OUTLINE, 26));
+        searchBox.setBackground(UiHelper.pillBg(this, UiHelper.COL_SURFACE, UiHelper.COL_OUTLINE, 26));
         searchBox.setPadding(dp(16), dp(12), dp(16), dp(12));
         LinearLayout.LayoutParams searchParams = new LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -236,46 +212,19 @@ public class MainActivity extends Activity {
         popup.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
                 case 1:
-                    openUrl(BUY_ME_A_COFFEE_URL);
+                    UiHelper.openUrl(this, UiHelper.BUY_ME_A_COFFEE_URL);
                     return true;
                 case 2:
-                    openUrl(GITHUB_REPO_URL);
+                    UiHelper.openUrl(this, UiHelper.GITHUB_REPO_URL);
                     return true;
                 case 3:
-                    showAboutDialog();
+                    startActivity(new Intent(this, AboutActivity.class));
                     return true;
                 default:
                     return false;
             }
         });
         popup.show();
-    }
-
-    private void showAboutDialog() {
-        new AlertDialog.Builder(this)
-            .setTitle("Hyper120 v3.0")
-            .setMessage(
-                "Unlocks 120Hz in Xiaomi PowerKeeper for selected games & apps without root.\n\n"
-                + "Support:\n" + BUY_ME_A_COFFEE_URL + "\n\n"
-                + "GitHub:\n" + GITHUB_REPO_URL)
-            .setPositiveButton("GitHub", (d, w) -> openUrl(GITHUB_REPO_URL))
-            .setNeutralButton("Buy Me a Coffee", (d, w) -> openUrl(BUY_ME_A_COFFEE_URL))
-            .setNegativeButton("Close", null)
-            .show();
-    }
-
-    private void openUrl(String url) {
-        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
-    }
-
-    private GradientDrawable pillBg(int fillColor, int strokeColor, int radiusDp) {
-        GradientDrawable gd = new GradientDrawable();
-        gd.setColor(fillColor);
-        gd.setCornerRadius(dp(radiusDp));
-        if (strokeColor != 0) {
-            gd.setStroke(dp(1), strokeColor);
-        }
-        return gd;
     }
 
     private void syncServiceState(boolean enabled) {
@@ -328,7 +277,7 @@ public class MainActivity extends Activity {
     }
 
     private int dp(int v) {
-        return (int) (v * density);
+        return UiHelper.dp(this, v);
     }
 
     private class AppAdapter extends BaseAdapter {
@@ -363,13 +312,13 @@ public class MainActivity extends Activity {
                     0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
 
                 nameView = new TextView(MainActivity.this);
-                nameView.setTextColor(COL_TEXT);
+                nameView.setTextColor(UiHelper.COL_TEXT);
                 nameView.setTextSize(15);
                 nameView.setTypeface(Typeface.DEFAULT_BOLD);
                 textCol.addView(nameView);
 
                 pkgView = new TextView(MainActivity.this);
-                pkgView.setTextColor(COL_MUTED);
+                pkgView.setTextColor(UiHelper.COL_MUTED);
                 pkgView.setTextSize(12);
                 textCol.addView(pkgView);
 
@@ -392,9 +341,10 @@ public class MainActivity extends Activity {
 
             AppEntry entry = filteredApps.get(position);
             boolean selected = selectedPackages.contains(entry.packageName);
-            row.setBackground(pillBg(
-                selected ? COL_SURFACE_SEL : COL_SURFACE,
-                selected ? COL_PRIMARY : COL_OUTLINE,
+            row.setBackground(UiHelper.pillBg(
+                MainActivity.this,
+                selected ? UiHelper.COL_SURFACE_SEL : UiHelper.COL_SURFACE,
+                selected ? UiHelper.COL_PRIMARY : UiHelper.COL_OUTLINE,
                 16));
             iconView.setImageDrawable(entry.icon);
             nameView.setText(entry.isGame ? entry.label + "  \u2022  GAME" : entry.label);
