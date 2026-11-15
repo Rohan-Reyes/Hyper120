@@ -56,7 +56,7 @@ public class Auto120Service extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        FpsApplier.apply120Hz(this, FpsApplier.loadPackages(this));
+        FpsApplier.apply120Hz(this, FpsApplier.syncInstalledGames(this));
         return START_STICKY;
     }
 

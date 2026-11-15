@@ -54,7 +54,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         UiHelper.setupDarkBars(this);
 
-        selectedPackages = FpsApplier.loadPackages(this);
+        selectedPackages = FpsApplier.syncInstalledGames(this);
 
         LinearLayout root = new LinearLayout(this);
         root.setOrientation(LinearLayout.VERTICAL);
@@ -128,6 +128,33 @@ public class MainActivity extends Activity {
         toggleRow.addView(autoSwitch);
         card.addView(toggleRow);
 
+        LinearLayout autoAddRow = new LinearLayout(this);
+        autoAddRow.setOrientation(LinearLayout.HORIZONTAL);
+        autoAddRow.setGravity(Gravity.CENTER_VERTICAL);
+        autoAddRow.setPadding(0, dp(8), 0, 0);
+
+        TextView autoAddLabel = new TextView(this);
+        autoAddLabel.setText("Auto-add installed games");
+        autoAddLabel.setTextColor(UiHelper.COL_TEXT);
+        autoAddLabel.setTextSize(15);
+        autoAddLabel.setLayoutParams(new LinearLayout.LayoutParams(
+            0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+        autoAddRow.addView(autoAddLabel);
+
+        Switch autoAddSwitch = new Switch(this);
+        autoAddSwitch.setChecked(FpsApplier.isAutoAddGamesEnabled(this));
+        autoAddSwitch.setOnCheckedChangeListener((btn, isChecked) -> {
+            FpsApplier.setAutoAddGamesEnabled(this, isChecked);
+            if (isChecked) {
+                selectedPackages = FpsApplier.syncInstalledGames(this);
+                loadInstalledApps();
+                filterApps("");
+                applyNow();
+            }
+        });
+        autoAddRow.addView(autoAddSwitch);
+        card.addView(autoAddRow);
+
         Button applyBtn = new Button(this);
         applyBtn.setText("Apply 120Hz Now");
         applyBtn.setAllCaps(false);
@@ -185,8 +212,10 @@ public class MainActivity extends Activity {
             AppEntry entry = filteredApps.get(pos);
             if (selectedPackages.contains(entry.packageName)) {
                 selectedPackages.remove(entry.packageName);
+                FpsApplier.setPackageIgnored(this, entry.packageName, true);
             } else {
                 selectedPackages.add(entry.packageName);
+                FpsApplier.setPackageIgnored(this, entry.packageName, false);
             }
             FpsApplier.savePackages(this, selectedPackages);
             adapter.notifyDataSetChanged();
@@ -225,8 +254,7 @@ public class MainActivity extends Activity {
             if (getPackageName().equals(ai.packageName)) continue;
             String label = pm.getApplicationLabel(ai).toString();
             Drawable icon = pm.getApplicationIcon(ai);
-            boolean isGame = (ai.category == ApplicationInfo.CATEGORY_GAME)
-                || ((ai.flags & ApplicationInfo.FLAG_IS_GAME) != 0);
+            boolean isGame = FpsApplier.isGameApp(ai);
             allApps.add(new AppEntry(label, ai.packageName, icon, isGame));
         }
         Collections.sort(allApps, (a, b) -> {

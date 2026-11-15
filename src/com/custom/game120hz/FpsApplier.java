@@ -3,15 +3,20 @@ package com.custom.game120hz;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
-/** Sends Joyose-compatible refresh-rate override broadcasts to PowerKeeper. */
+/** Sends Joyose-compatible refresh-rate override broadcasts to PowerKeeper and auto-detects games. */
 public final class FpsApplier {
     private static final String PREFS = "game_120hz_prefs";
     private static final String KEY_PACKAGES = "packages";
+    private static final String KEY_IGNORED = "ignored_games";
     private static final String KEY_AUTO_ENABLED = "auto_enabled";
+    private static final String KEY_AUTO_ADD_GAMES = "auto_add_games";
     private static final String ACTION_OVERRIDE = "com.xiaomi.joyose.OVERRIDE_GAME_FRESHRATE";
     private static final String POWERKEEPER_PKG = "com.miui.powerkeeper";
 
@@ -39,6 +44,25 @@ public final class FpsApplier {
             .apply();
     }
 
+    public static Set<String> loadIgnoredPackages(Context ctx) {
+        SharedPreferences sp = ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
+        Set<String> ignored = sp.getStringSet(KEY_IGNORED, null);
+        return ignored == null ? new LinkedHashSet<>() : new LinkedHashSet<>(ignored);
+    }
+
+    public static void setPackageIgnored(Context ctx, String pkg, boolean ignored) {
+        Set<String> set = loadIgnoredPackages(ctx);
+        if (ignored) {
+            set.add(pkg);
+        } else {
+            set.remove(pkg);
+        }
+        ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+            .edit()
+            .putStringSet(KEY_IGNORED, set)
+            .apply();
+    }
+
     public static boolean isAutoEnabled(Context ctx) {
         return ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
             .getBoolean(KEY_AUTO_ENABLED, true);
@@ -49,6 +73,49 @@ public final class FpsApplier {
             .edit()
             .putBoolean(KEY_AUTO_ENABLED, enabled)
             .apply();
+    }
+
+    public static boolean isAutoAddGamesEnabled(Context ctx) {
+        return ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+            .getBoolean(KEY_AUTO_ADD_GAMES, true);
+    }
+
+    public static void setAutoAddGamesEnabled(Context ctx, boolean enabled) {
+        ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+            .edit()
+            .putBoolean(KEY_AUTO_ADD_GAMES, enabled)
+            .apply();
+    }
+
+    public static boolean isGameApp(ApplicationInfo ai) {
+        return (ai.category == ApplicationInfo.CATEGORY_GAME)
+            || ((ai.flags & ApplicationInfo.FLAG_IS_GAME) != 0);
+    }
+
+    /** Auto-adds all installed games (unless manually unchecked by user) when enabled. */
+    public static Set<String> syncInstalledGames(Context ctx) {
+        Set<String> pkgs = loadPackages(ctx);
+        if (!isAutoAddGamesEnabled(ctx)) {
+            return pkgs;
+        }
+        Set<String> ignored = loadIgnoredPackages(ctx);
+        PackageManager pm = ctx.getPackageManager();
+        List<ApplicationInfo> apps = pm.getInstalledApplications(0);
+        boolean changed = false;
+        String selfPkg = ctx.getPackageName();
+        for (ApplicationInfo ai : apps) {
+            if (selfPkg.equals(ai.packageName)) continue;
+            if (pm.getLaunchIntentForPackage(ai.packageName) == null) continue;
+            if (isGameApp(ai) && !ignored.contains(ai.packageName)) {
+                if (pkgs.add(ai.packageName)) {
+                    changed = true;
+                }
+            }
+        }
+        if (changed) {
+            savePackages(ctx, pkgs);
+        }
+        return pkgs;
     }
 
     public static void apply120Hz(Context ctx, Set<String> pkgs) {

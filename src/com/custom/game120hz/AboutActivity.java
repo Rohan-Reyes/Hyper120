@@ -72,7 +72,7 @@ public class AboutActivity extends Activity {
         heroCard.addView(appName);
 
         TextView version = new TextView(this);
-        version.setText("v3.2  \u2022  Rootless 120Hz Override");
+        version.setText("v3.3  \u2022  Rootless 120Hz Override");
         version.setTextSize(13);
         version.setTextColor(UiHelper.COL_TEAL);
         version.setPadding(0, dp(4), 0, dp(14));
