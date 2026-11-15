@@ -1,0 +1,65 @@
+package com.custom.game120hz;
+
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+/** Sends Joyose-compatible refresh-rate override broadcasts to PowerKeeper. */
+public final class FpsApplier {
+    private static final String PREFS = "game_120hz_prefs";
+    private static final String KEY_PACKAGES = "packages";
+    private static final String KEY_AUTO_ENABLED = "auto_enabled";
+    private static final String ACTION_OVERRIDE = "com.xiaomi.joyose.OVERRIDE_GAME_FRESHRATE";
+    private static final String POWERKEEPER_PKG = "com.miui.powerkeeper";
+
+    public static final String[] DEFAULT_PACKAGES = {
+        "com.mobile.legends",
+        "com.roblox.client",
+        "com.mojang.minecraftpe"
+    };
+
+    private FpsApplier() {}
+
+    public static Set<String> loadPackages(Context ctx) {
+        SharedPreferences sp = ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
+        Set<String> saved = sp.getStringSet(KEY_PACKAGES, null);
+        if (saved == null) {
+            return new LinkedHashSet<>(Arrays.asList(DEFAULT_PACKAGES));
+        }
+        return new LinkedHashSet<>(saved);
+    }
+
+    public static void savePackages(Context ctx, Set<String> pkgs) {
+        ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+            .edit()
+            .putStringSet(KEY_PACKAGES, new LinkedHashSet<>(pkgs))
+            .apply();
+    }
+
+    public static boolean isAutoEnabled(Context ctx) {
+        return ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+            .getBoolean(KEY_AUTO_ENABLED, true);
+    }
+
+    public static void setAutoEnabled(Context ctx, boolean enabled) {
+        ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+            .edit()
+            .putBoolean(KEY_AUTO_ENABLED, enabled)
+            .apply();
+    }
+
+    public static void apply120Hz(Context ctx, Set<String> pkgs) {
+        for (String pkg : pkgs) {
+            String trimmed = pkg.trim();
+            if (trimmed.isEmpty()) continue;
+            Intent intent = new Intent(ACTION_OVERRIDE);
+            intent.putExtra("override_pkg_name", trimmed);
+            intent.putExtra("override_freshrate", 120);
+            intent.setPackage(POWERKEEPER_PKG);
+            ctx.sendBroadcast(intent);
+        }
+    }
+}
