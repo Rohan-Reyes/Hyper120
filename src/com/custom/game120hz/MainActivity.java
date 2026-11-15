@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -20,7 +19,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.PopupMenu;
 import android.widget.Switch;
 import android.widget.TextView;
 import java.util.ArrayList;
@@ -96,7 +94,7 @@ public class MainActivity extends Activity {
         menuBtn.setGravity(Gravity.CENTER);
         menuBtn.setBackground(UiHelper.pillBg(this, UiHelper.COL_SURFACE, UiHelper.COL_OUTLINE, 22));
         menuBtn.setLayoutParams(new LinearLayout.LayoutParams(dp(44), dp(44)));
-        menuBtn.setOnClickListener(this::showOverflowMenu);
+        menuBtn.setOnClickListener(v -> startActivity(new Intent(this, AboutActivity.class)));
         topBar.addView(menuBtn);
 
         root.addView(topBar);
@@ -202,29 +200,6 @@ public class MainActivity extends Activity {
         filterApps("");
         applyNow();
         syncServiceState(autoOn);
-    }
-
-    private void showOverflowMenu(View anchor) {
-        PopupMenu popup = new PopupMenu(this, anchor);
-        popup.getMenu().add(Menu.NONE, 1, 1, "Support: buymeacoffee.com/rohan_reyes");
-        popup.getMenu().add(Menu.NONE, 2, 2, "GitHub: github.com/Rohan-Reyes/Hyper120");
-        popup.getMenu().add(Menu.NONE, 3, 3, "About Hyper120");
-        popup.setOnMenuItemClickListener(item -> {
-            switch (item.getItemId()) {
-                case 1:
-                    UiHelper.openUrl(this, UiHelper.BUY_ME_A_COFFEE_URL);
-                    return true;
-                case 2:
-                    UiHelper.openUrl(this, UiHelper.GITHUB_REPO_URL);
-                    return true;
-                case 3:
-                    startActivity(new Intent(this, AboutActivity.class));
-                    return true;
-                default:
-                    return false;
-            }
-        });
-        popup.show();
     }
 
     private void syncServiceState(boolean enabled) {
