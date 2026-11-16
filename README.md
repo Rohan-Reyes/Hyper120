@@ -13,7 +13,10 @@ Unlike other workarounds that force you to disable `com.miui.powerkeeper` (hurti
 - **Auto-Add Installed Games:** Automatically detects existing and newly installed games (`PACKAGE_ADDED`) and adds them to 120Hz (while remembering any game you manually uncheck).
 - **Zero Normal-Use Battery Trade-off:** PowerKeeper stays enabled and adaptive refresh rate still drops to 60Hz/idle in regular apps.
 - **Consistent Against Resets:** Periodically refreshes PowerKeeper's `mPrivGames` map while your screen is on so games stay locked at 120Hz.
+- **Target FPS & Quick Settings Tile:** Pick `60Hz`, `90Hz`, `120Hz`, or `144Hz`, toggle background override from Control Center, and inspect live broadcast logs via **Show Terminal**.
 - **Simple App Picker:** Search and check any installed game or app — no manual package typing or ADB commands required.
+
+🌐 **Website:** https://hyper120.aten-systems.site
 
 ---
 
@@ -40,7 +43,7 @@ adb shell appops set com.custom.game120hz RUN_ANY_IN_BACKGROUND allow
 
 | Main App Picker | About & Support |
 | :---: | :---: |
-| <img src="assets/ui-main.png" width="320" alt="Hyper120 Main UI" /> | <img src="assets/ui-about.png" width="320" alt="Hyper120 About Page" /> |
+| <img src="assets/ui-main.png?v=35" width="320" alt="Hyper120 Main UI" /> | <img src="assets/ui-about.png" width="320" alt="Hyper120 About Page" /> |
 
 ### Recent In-Game Screenshots
 
