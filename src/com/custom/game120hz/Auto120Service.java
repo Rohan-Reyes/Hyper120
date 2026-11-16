@@ -57,6 +57,10 @@ public class Auto120Service extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         FpsApplier.apply120Hz(this, FpsApplier.syncInstalledGames(this));
+        NotificationManager nm = getSystemService(NotificationManager.class);
+        if (nm != null) {
+            nm.notify(NOTIF_ID, buildNotification());
+        }
         return START_STICKY;
     }
 
@@ -90,9 +94,10 @@ public class Auto120Service extends Service {
         Intent openIntent = new Intent(this, MainActivity.class);
         PendingIntent pi = PendingIntent.getActivity(
             this, 0, openIntent, PendingIntent.FLAG_IMMUTABLE);
+        int fps = FpsApplier.getTargetFps(this);
         return new Notification.Builder(this, CHANNEL_ID)
-            .setContentTitle("Hyper120 Active")
-            .setContentText("Auto-overriding selected apps to 120fps")
+            .setContentTitle("Hyper120 Active (" + fps + "Hz)")
+            .setContentText("Auto-overriding selected apps to " + fps + "fps")
             .setSmallIcon(R.drawable.ic_launcher)
             .setContentIntent(pi)
             .setOngoing(true)

@@ -57,7 +57,10 @@ public class MainActivity extends Activity {
     private AppAdapter adapter;
     private Button applyBtn;
     private TextView statusText;
+    private TextView logToggleBtn;
     private TextView logText;
+    private boolean logVisible = false;
+    private final List<TextView> fpsPills = new ArrayList<>();
     private final Deque<String> logLines = new ArrayDeque<>();
     private final Handler uiHandler = new Handler(Looper.getMainLooper());
     private final Runnable resetBtnRunnable = this::resetApplyButton;
@@ -137,6 +140,7 @@ public class MainActivity extends Activity {
         autoSwitch.setOnCheckedChangeListener((btn, isChecked) -> {
             FpsApplier.setAutoEnabled(this, isChecked);
             syncServiceState(isChecked);
+            Hyper120TileService.requestTileSync(this);
         });
         toggleRow.addView(autoSwitch);
         card.addView(toggleRow);
@@ -170,8 +174,52 @@ public class MainActivity extends Activity {
         autoAddRow.addView(autoAddSwitch);
         card.addView(autoAddRow);
 
+        // Target FPS selector row
+        LinearLayout fpsRow = new LinearLayout(this);
+        fpsRow.setOrientation(LinearLayout.HORIZONTAL);
+        fpsRow.setGravity(Gravity.CENTER_VERTICAL);
+        fpsRow.setPadding(0, dp(10), 0, 0);
+
+        TextView fpsLabel = new TextView(this);
+        fpsLabel.setText("Target FPS");
+        fpsLabel.setTextColor(UiHelper.COL_TEXT);
+        fpsLabel.setTextSize(15);
+        fpsLabel.setLayoutParams(new LinearLayout.LayoutParams(
+            0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+        fpsRow.addView(fpsLabel);
+
+        fpsPills.clear();
+        for (int fps : FpsApplier.SUPPORTED_FPS) {
+            TextView pill = new TextView(this);
+            pill.setText(fps + "Hz");
+            pill.setTag(fps);
+            pill.setTextSize(12);
+            pill.setTypeface(Typeface.DEFAULT_BOLD);
+            pill.setGravity(Gravity.CENTER);
+            pill.setPadding(dp(11), dp(6), dp(11), dp(6));
+            LinearLayout.LayoutParams pp = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            pp.leftMargin = dp(6);
+            pill.setLayoutParams(pp);
+            pill.setOnClickListener(v -> {
+                v.performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK);
+                FpsApplier.setTargetFps(this, fps);
+                updateFpsPills();
+                resetApplyButton();
+                if (FpsApplier.isAutoEnabled(this)) {
+                    syncServiceState(true);
+                }
+                applyNow(true, "Target " + fps + "Hz");
+                Hyper120TileService.requestTileSync(this);
+            });
+            fpsPills.add(pill);
+            fpsRow.addView(pill);
+        }
+        card.addView(fpsRow);
+        updateFpsPills();
+
         applyBtn = new Button(this);
-        applyBtn.setText("Apply 120Hz Now");
+        applyBtn.setText("Apply " + FpsApplier.getTargetFps(this) + "Hz Now");
         applyBtn.setAllCaps(false);
         applyBtn.setTextSize(15);
         applyBtn.setTypeface(Typeface.DEFAULT_BOLD);
@@ -187,11 +235,39 @@ public class MainActivity extends Activity {
         });
         card.addView(applyBtn);
 
+        LinearLayout statusRow = new LinearLayout(this);
+        statusRow.setOrientation(LinearLayout.HORIZONTAL);
+        statusRow.setGravity(Gravity.CENTER_VERTICAL);
+        statusRow.setPadding(0, dp(10), 0, 0);
+
         statusText = new TextView(this);
         statusText.setTextColor(UiHelper.COL_TEAL);
         statusText.setTextSize(12);
-        statusText.setPadding(0, dp(10), 0, 0);
-        card.addView(statusText);
+        statusText.setLayoutParams(new LinearLayout.LayoutParams(
+            0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+        statusRow.addView(statusText);
+
+        logToggleBtn = new TextView(this);
+        logToggleBtn.setText("Show Terminal");
+        logToggleBtn.setTextColor(UiHelper.COL_MUTED);
+        logToggleBtn.setTextSize(11);
+        logToggleBtn.setTypeface(Typeface.DEFAULT_BOLD);
+        logToggleBtn.setPadding(dp(10), dp(5), dp(10), dp(5));
+        logToggleBtn.setBackground(UiHelper.pillBg(this, UiHelper.COL_BG, UiHelper.COL_OUTLINE, 14));
+        logToggleBtn.setOnClickListener(v -> {
+            logVisible = !logVisible;
+            logToggleBtn.setText(logVisible ? "Hide Terminal" : "Show Terminal");
+            logToggleBtn.setTextColor(logVisible ? UiHelper.COL_PRIMARY : UiHelper.COL_MUTED);
+            if (logVisible) {
+                logText.setVisibility(View.VISIBLE);
+                logText.setAlpha(0f);
+                logText.animate().alpha(1f).setDuration(180).start();
+            } else {
+                logText.setVisibility(View.GONE);
+            }
+        });
+        statusRow.addView(logToggleBtn);
+        card.addView(statusRow);
 
         logText = new TextView(this);
         logText.setTypeface(Typeface.MONOSPACE);
@@ -200,6 +276,7 @@ public class MainActivity extends Activity {
         logText.setLineSpacing(dp(2), 1f);
         logText.setBackground(UiHelper.pillBg(this, UiHelper.COL_BG, UiHelper.COL_OUTLINE, 12));
         logText.setPadding(dp(10), dp(8), dp(10), dp(8));
+        logText.setVisibility(View.GONE);
         LinearLayout.LayoutParams logParams = new LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         logParams.topMargin = dp(8);
@@ -276,7 +353,7 @@ public class MainActivity extends Activity {
     private void applyNow(boolean animateBtn, String reason) {
         FpsApplier.ApplyResult res = FpsApplier.apply120Hz(this, selectedPackages);
         String pkTag = res.powerKeeperFound ? "PowerKeeper OK" : "PowerKeeper missing!";
-        statusText.setText("120Hz active for " + res.count + " app(s) · " + pkTag);
+        statusText.setText(res.fps + "Hz active for " + res.count + " app(s) \u00B7 " + pkTag);
         statusText.setAlpha(0.35f);
         statusText.animate().alpha(1f).setDuration(260).start();
 
@@ -293,14 +370,14 @@ public class MainActivity extends Activity {
             }
             preview = " [" + sb + "]";
         }
-        appendLog(reason + ": sent 120Hz to " + res.count + " app(s) (" + pkTag + ")" + preview);
+        appendLog(reason + ": sent " + res.fps + "Hz to " + res.count + " app(s) (" + pkTag + ")" + preview);
 
         if (animateBtn) {
-            animateApplyButton(res.count, res.powerKeeperFound);
+            animateApplyButton(res.count, res.fps, res.powerKeeperFound);
         }
     }
 
-    private void animateApplyButton(int count, boolean pkFound) {
+    private void animateApplyButton(int count, int fps, boolean pkFound) {
         uiHandler.removeCallbacks(resetBtnRunnable);
         applyBtn.animate().cancel();
         applyBtn.setScaleX(0.94f);
@@ -312,14 +389,28 @@ public class MainActivity extends Activity {
             .setInterpolator(new DecelerateInterpolator())
             .start();
 
-        applyBtn.setText(pkFound ? ("\u2713 Applied 120Hz (" + count + ")") : "PowerKeeper not found");
+        applyBtn.setText(pkFound ? ("\u2713 Applied " + fps + "Hz (" + count + ")") : "PowerKeeper not found");
         applyBtn.setBackground(UiHelper.pillBg(this, pkFound ? UiHelper.COL_TEAL : UiHelper.COL_PRIMARY, 0, 26));
         uiHandler.postDelayed(resetBtnRunnable, 1400);
     }
 
     private void resetApplyButton() {
-        applyBtn.setText("Apply 120Hz Now");
+        applyBtn.setText("Apply " + FpsApplier.getTargetFps(this) + "Hz Now");
         applyBtn.setBackground(UiHelper.pillBg(this, UiHelper.COL_PRIMARY, 0, 26));
+    }
+
+    private void updateFpsPills() {
+        int activeFps = FpsApplier.getTargetFps(this);
+        for (TextView pill : fpsPills) {
+            int fps = (Integer) pill.getTag();
+            boolean selected = (fps == activeFps);
+            pill.setTextColor(selected ? UiHelper.COL_ON_PRIMARY : UiHelper.COL_MUTED);
+            pill.setBackground(UiHelper.pillBg(
+                this,
+                selected ? UiHelper.COL_PRIMARY : UiHelper.COL_BG,
+                selected ? 0 : UiHelper.COL_OUTLINE,
+                16));
+        }
     }
 
     private void appendLog(String msg) {
@@ -334,8 +425,10 @@ public class MainActivity extends Activity {
             sb.append(line);
         }
         logText.setText(sb.toString());
-        logText.setAlpha(0.55f);
-        logText.animate().alpha(1f).setDuration(220).start();
+        if (logVisible) {
+            logText.setAlpha(0.55f);
+            logText.animate().alpha(1f).setDuration(220).start();
+        }
     }
 
     private void loadInstalledApps() {

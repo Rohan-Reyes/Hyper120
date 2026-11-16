@@ -20,8 +20,11 @@ public final class FpsApplier {
     private static final String KEY_IGNORED = "ignored_games";
     private static final String KEY_AUTO_ENABLED = "auto_enabled";
     private static final String KEY_AUTO_ADD_GAMES = "auto_add_games";
+    private static final String KEY_TARGET_FPS = "target_fps";
     private static final String ACTION_OVERRIDE = "com.xiaomi.joyose.OVERRIDE_GAME_FRESHRATE";
     private static final String POWERKEEPER_PKG = "com.miui.powerkeeper";
+
+    public static final int[] SUPPORTED_FPS = {60, 90, 120, 144};
 
     public static final String[] DEFAULT_PACKAGES = {
         "com.mobile.legends",
@@ -90,6 +93,18 @@ public final class FpsApplier {
             .apply();
     }
 
+    public static int getTargetFps(Context ctx) {
+        return ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+            .getInt(KEY_TARGET_FPS, 120);
+    }
+
+    public static void setTargetFps(Context ctx, int fps) {
+        ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+            .edit()
+            .putInt(KEY_TARGET_FPS, fps)
+            .apply();
+    }
+
     public static boolean isGameApp(ApplicationInfo ai) {
         return (ai.category == ApplicationInfo.CATEGORY_GAME)
             || ((ai.flags & ApplicationInfo.FLAG_IS_GAME) != 0);
@@ -123,11 +138,13 @@ public final class FpsApplier {
 
     public static final class ApplyResult {
         public final int count;
+        public final int fps;
         public final boolean powerKeeperFound;
         public final List<String> packages;
 
-        ApplyResult(int count, boolean powerKeeperFound, List<String> packages) {
+        ApplyResult(int count, int fps, boolean powerKeeperFound, List<String> packages) {
             this.count = count;
+            this.fps = fps;
             this.powerKeeperFound = powerKeeperFound;
             this.packages = packages;
         }
@@ -143,6 +160,10 @@ public final class FpsApplier {
     }
 
     public static ApplyResult apply120Hz(Context ctx, Set<String> pkgs) {
+        return applyTargetFps(ctx, pkgs, getTargetFps(ctx));
+    }
+
+    public static ApplyResult applyTargetFps(Context ctx, Set<String> pkgs, int fps) {
         boolean pkFound = isPowerKeeperInstalled(ctx);
         List<String> sent = new ArrayList<>();
         for (String pkg : pkgs) {
@@ -150,12 +171,12 @@ public final class FpsApplier {
             if (trimmed.isEmpty()) continue;
             Intent intent = new Intent(ACTION_OVERRIDE);
             intent.putExtra("override_pkg_name", trimmed);
-            intent.putExtra("override_freshrate", 120);
+            intent.putExtra("override_freshrate", fps);
             intent.setPackage(POWERKEEPER_PKG);
             ctx.sendBroadcast(intent);
             sent.add(trimmed);
         }
-        Log.i(TAG, "apply120Hz: sent=" + sent.size() + " powerKeeperFound=" + pkFound + " pkgs=" + sent);
-        return new ApplyResult(sent.size(), pkFound, sent);
+        Log.i(TAG, "applyTargetFps: fps=" + fps + " sent=" + sent.size() + " powerKeeperFound=" + pkFound + " pkgs=" + sent);
+        return new ApplyResult(sent.size(), fps, pkFound, sent);
     }
 }
