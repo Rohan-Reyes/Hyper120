@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.util.Log;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -12,6 +14,7 @@ import java.util.Set;
 
 /** Sends Joyose-compatible refresh-rate override broadcasts to PowerKeeper and auto-detects games. */
 public final class FpsApplier {
+    private static final String TAG = "Hyper120";
     private static final String PREFS = "game_120hz_prefs";
     private static final String KEY_PACKAGES = "packages";
     private static final String KEY_IGNORED = "ignored_games";
@@ -118,7 +121,30 @@ public final class FpsApplier {
         return pkgs;
     }
 
-    public static void apply120Hz(Context ctx, Set<String> pkgs) {
+    public static final class ApplyResult {
+        public final int count;
+        public final boolean powerKeeperFound;
+        public final List<String> packages;
+
+        ApplyResult(int count, boolean powerKeeperFound, List<String> packages) {
+            this.count = count;
+            this.powerKeeperFound = powerKeeperFound;
+            this.packages = packages;
+        }
+    }
+
+    public static boolean isPowerKeeperInstalled(Context ctx) {
+        try {
+            ctx.getPackageManager().getPackageInfo(POWERKEEPER_PKG, 0);
+            return true;
+        } catch (PackageManager.NameNotFoundException e) {
+            return false;
+        }
+    }
+
+    public static ApplyResult apply120Hz(Context ctx, Set<String> pkgs) {
+        boolean pkFound = isPowerKeeperInstalled(ctx);
+        List<String> sent = new ArrayList<>();
         for (String pkg : pkgs) {
             String trimmed = pkg.trim();
             if (trimmed.isEmpty()) continue;
@@ -127,6 +153,9 @@ public final class FpsApplier {
             intent.putExtra("override_freshrate", 120);
             intent.setPackage(POWERKEEPER_PKG);
             ctx.sendBroadcast(intent);
+            sent.add(trimmed);
         }
+        Log.i(TAG, "apply120Hz: sent=" + sent.size() + " powerKeeperFound=" + pkFound + " pkgs=" + sent);
+        return new ApplyResult(sent.size(), pkFound, sent);
     }
 }

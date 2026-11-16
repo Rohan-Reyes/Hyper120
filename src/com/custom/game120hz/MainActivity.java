@@ -7,11 +7,15 @@ import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
+import android.view.HapticFeedbackConstants;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -21,8 +25,12 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
+import java.text.SimpleDateFormat;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
+import java.util.Deque;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -47,7 +55,12 @@ public class MainActivity extends Activity {
     private final List<AppEntry> filteredApps = new ArrayList<>();
     private Set<String> selectedPackages;
     private AppAdapter adapter;
+    private Button applyBtn;
     private TextView statusText;
+    private TextView logText;
+    private final Deque<String> logLines = new ArrayDeque<>();
+    private final Handler uiHandler = new Handler(Looper.getMainLooper());
+    private final Runnable resetBtnRunnable = this::resetApplyButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,13 +162,15 @@ public class MainActivity extends Activity {
                 selectedPackages = FpsApplier.syncInstalledGames(this);
                 loadInstalledApps();
                 filterApps("");
-                applyNow();
+                applyNow(false, "Auto-add ON");
+            } else {
+                appendLog("Auto-add games disabled");
             }
         });
         autoAddRow.addView(autoAddSwitch);
         card.addView(autoAddRow);
 
-        Button applyBtn = new Button(this);
+        applyBtn = new Button(this);
         applyBtn.setText("Apply 120Hz Now");
         applyBtn.setAllCaps(false);
         applyBtn.setTextSize(15);
@@ -166,7 +181,10 @@ public class MainActivity extends Activity {
             ViewGroup.LayoutParams.MATCH_PARENT, dp(46));
         btnParams.topMargin = dp(12);
         applyBtn.setLayoutParams(btnParams);
-        applyBtn.setOnClickListener(v -> applyNow());
+        applyBtn.setOnClickListener(v -> {
+            v.performHapticFeedback(HapticFeedbackConstants.CONFIRM);
+            applyNow(true, "Manual tap");
+        });
         card.addView(applyBtn);
 
         statusText = new TextView(this);
@@ -174,6 +192,19 @@ public class MainActivity extends Activity {
         statusText.setTextSize(12);
         statusText.setPadding(0, dp(10), 0, 0);
         card.addView(statusText);
+
+        logText = new TextView(this);
+        logText.setTypeface(Typeface.MONOSPACE);
+        logText.setTextColor(UiHelper.COL_MUTED);
+        logText.setTextSize(10.5f);
+        logText.setLineSpacing(dp(2), 1f);
+        logText.setBackground(UiHelper.pillBg(this, UiHelper.COL_BG, UiHelper.COL_OUTLINE, 12));
+        logText.setPadding(dp(10), dp(8), dp(10), dp(8));
+        LinearLayout.LayoutParams logParams = new LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        logParams.topMargin = dp(8);
+        logText.setLayoutParams(logParams);
+        card.addView(logText);
 
         root.addView(card);
 
@@ -213,13 +244,15 @@ public class MainActivity extends Activity {
             if (selectedPackages.contains(entry.packageName)) {
                 selectedPackages.remove(entry.packageName);
                 FpsApplier.setPackageIgnored(this, entry.packageName, true);
+                appendLog("Removed " + entry.packageName);
             } else {
                 selectedPackages.add(entry.packageName);
                 FpsApplier.setPackageIgnored(this, entry.packageName, false);
+                appendLog("Added " + entry.packageName);
             }
             FpsApplier.savePackages(this, selectedPackages);
             adapter.notifyDataSetChanged();
-            applyNow();
+            applyNow(true, "Selection updated");
         });
         root.addView(listView);
 
@@ -227,7 +260,7 @@ public class MainActivity extends Activity {
 
         loadInstalledApps();
         filterApps("");
-        applyNow();
+        applyNow(false, "App started");
         syncServiceState(autoOn);
     }
 
@@ -240,9 +273,69 @@ public class MainActivity extends Activity {
         }
     }
 
-    private void applyNow() {
-        FpsApplier.apply120Hz(this, selectedPackages);
-        statusText.setText("120Hz active for " + selectedPackages.size() + " selected app(s).");
+    private void applyNow(boolean animateBtn, String reason) {
+        FpsApplier.ApplyResult res = FpsApplier.apply120Hz(this, selectedPackages);
+        String pkTag = res.powerKeeperFound ? "PowerKeeper OK" : "PowerKeeper missing!";
+        statusText.setText("120Hz active for " + res.count + " app(s) · " + pkTag);
+        statusText.setAlpha(0.35f);
+        statusText.animate().alpha(1f).setDuration(260).start();
+
+        String preview = "";
+        if (!res.packages.isEmpty()) {
+            int show = Math.min(2, res.packages.size());
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < show; i++) {
+                if (i > 0) sb.append(", ");
+                sb.append(res.packages.get(i));
+            }
+            if (res.packages.size() > show) {
+                sb.append(" +").append(res.packages.size() - show);
+            }
+            preview = " [" + sb + "]";
+        }
+        appendLog(reason + ": sent 120Hz to " + res.count + " app(s) (" + pkTag + ")" + preview);
+
+        if (animateBtn) {
+            animateApplyButton(res.count, res.powerKeeperFound);
+        }
+    }
+
+    private void animateApplyButton(int count, boolean pkFound) {
+        uiHandler.removeCallbacks(resetBtnRunnable);
+        applyBtn.animate().cancel();
+        applyBtn.setScaleX(0.94f);
+        applyBtn.setScaleY(0.94f);
+        applyBtn.animate()
+            .scaleX(1f)
+            .scaleY(1f)
+            .setDuration(220)
+            .setInterpolator(new DecelerateInterpolator())
+            .start();
+
+        applyBtn.setText(pkFound ? ("\u2713 Applied 120Hz (" + count + ")") : "PowerKeeper not found");
+        applyBtn.setBackground(UiHelper.pillBg(this, pkFound ? UiHelper.COL_TEAL : UiHelper.COL_PRIMARY, 0, 26));
+        uiHandler.postDelayed(resetBtnRunnable, 1400);
+    }
+
+    private void resetApplyButton() {
+        applyBtn.setText("Apply 120Hz Now");
+        applyBtn.setBackground(UiHelper.pillBg(this, UiHelper.COL_PRIMARY, 0, 26));
+    }
+
+    private void appendLog(String msg) {
+        String ts = new SimpleDateFormat("HH:mm:ss", Locale.US).format(new Date());
+        logLines.addLast("[" + ts + "] " + msg);
+        while (logLines.size() > 4) {
+            logLines.removeFirst();
+        }
+        StringBuilder sb = new StringBuilder();
+        for (String line : logLines) {
+            if (sb.length() > 0) sb.append('\n');
+            sb.append(line);
+        }
+        logText.setText(sb.toString());
+        logText.setAlpha(0.55f);
+        logText.animate().alpha(1f).setDuration(220).start();
     }
 
     private void loadInstalledApps() {
