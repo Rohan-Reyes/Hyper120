@@ -1,0 +1,8 @@
+{
+  "id": "com.custom.game120hz",
+  "url": "https://github.com/Rohan-Reyes/Hyper120",
+  "author": "Rohan-Reyes",
+  "name": "Hyper120",
+  "preferredApkIndex": 0,
+  "additionalSettings": "{\"includePrereleases\":false,\"fallbackToOlderReleases\":true,\"filterReleaseNotesByRegEx\":\"\",\"verifyLatestTag\":false,\"dontSortReleasesList\":false,\"useLatestAssetDateAsReleaseDate\":false,\"trackOnly\":false,\"versionExtractionRegEx\":\"\",\"matchGroupToUse\":\"\",\"versionDetection\":true,\"releaseDateAsVersion\":false,\"useVersionCodeAsOSVersion\":false,\"apkFilterRegEx\":\"Hyper120\\\\.apk$\",\"invertAPKFilter\":false,\"autoApkFilterByArch\":true,\"appName\":\"Hyper120\",\"shizukuPretendToBeGooglePlay\":false,\"allowInsecure\":false,\"exemptFromBackgroundRestrictions\":false,\"skipUpdateNotifications\":false,\"about\":\"Rootless 120Hz PowerKeeper override for Xiaomi HyperOS / MIUI\"}"
+}

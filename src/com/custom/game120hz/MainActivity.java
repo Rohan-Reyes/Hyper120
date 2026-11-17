@@ -339,6 +339,7 @@ public class MainActivity extends Activity {
         filterApps("");
         applyNow(false, "App started");
         syncServiceState(autoOn);
+        FpsApplier.pingActiveUser(this);
     }
 
     private void syncServiceState(boolean enabled) {

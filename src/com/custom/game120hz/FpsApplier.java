@@ -6,11 +6,14 @@ import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.util.Log;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 /** Sends Joyose-compatible refresh-rate override broadcasts to PowerKeeper and auto-detects games. */
 public final class FpsApplier {
@@ -21,6 +24,10 @@ public final class FpsApplier {
     private static final String KEY_AUTO_ENABLED = "auto_enabled";
     private static final String KEY_AUTO_ADD_GAMES = "auto_add_games";
     private static final String KEY_TARGET_FPS = "target_fps";
+    private static final String KEY_ANON_ID = "anon_id";
+    private static final String KEY_LAST_PING = "last_ping_ms";
+    private static final String PING_URL = "https://hyper120.aten-systems.site/api/ping";
+    private static final long PING_INTERVAL_MS = 12L * 60L * 60L * 1000L;
     private static final String ACTION_OVERRIDE = "com.xiaomi.joyose.OVERRIDE_GAME_FRESHRATE";
     private static final String POWERKEEPER_PKG = "com.miui.powerkeeper";
 
@@ -178,5 +185,45 @@ public final class FpsApplier {
         }
         Log.i(TAG, "applyTargetFps: fps=" + fps + " sent=" + sent.size() + " powerKeeperFound=" + pkFound + " pkgs=" + sent);
         return new ApplyResult(sent.size(), fps, pkFound, sent);
+    }
+
+    /** Sends an anonymous random-UUID ping at most once per 12h for the active user counter. */
+    public static void pingActiveUser(Context ctx) {
+        SharedPreferences sp = ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
+        long now = System.currentTimeMillis();
+        if (now - sp.getLong(KEY_LAST_PING, 0L) < PING_INTERVAL_MS) {
+            return;
+        }
+        String id = sp.getString(KEY_ANON_ID, null);
+        if (id == null || id.isEmpty()) {
+            id = UUID.randomUUID().toString();
+            sp.edit().putString(KEY_ANON_ID, id).apply();
+        }
+        final String finalId = id;
+        final String ver = getAppVersion(ctx);
+        new Thread(() -> {
+            HttpURLConnection conn = null;
+            try {
+                URL url = new URL(PING_URL + "?id=" + finalId + "&v=" + ver);
+                conn = (HttpURLConnection) url.openConnection();
+                conn.setConnectTimeout(3000);
+                conn.setReadTimeout(3000);
+                conn.setRequestMethod("GET");
+                if (conn.getResponseCode() == 200) {
+                    sp.edit().putLong(KEY_LAST_PING, System.currentTimeMillis()).apply();
+                }
+            } catch (Exception ignored) {
+            } finally {
+                if (conn != null) conn.disconnect();
+            }
+        }).start();
+    }
+
+    private static String getAppVersion(Context ctx) {
+        try {
+            return ctx.getPackageManager().getPackageInfo(ctx.getPackageName(), 0).versionName;
+        } catch (Exception e) {
+            return "3.6";
+        }
     }
 }

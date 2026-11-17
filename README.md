@@ -22,7 +22,12 @@ Unlike other workarounds that force you to disable `com.miui.powerkeeper` (hurti
 
 ## How to Install
 
-### Option A: Directly on Your Phone (No PC)
+### Option A: Obtainium (Recommended for Auto-Updates)
+1. Install [Obtainium](https://github.com/ImranR98/Obtainium/releases).
+2. Tap **[Add Hyper120 to Obtainium](https://apps.obtainium.imranr.dev/redirect.html?r=obtainium://app/%7B%22id%22%3A%22com.custom.game120hz%22%2C%22url%22%3A%22https%3A%2F%2Fgithub.com%2FRohan-Reyes%2FHyper120%22%2C%22author%22%3A%22Rohan-Reyes%22%2C%22name%22%3A%22Hyper120%22%7D)** (or import [`obtainium.json`](obtainium.json) / `https://github.com/Rohan-Reyes/Hyper120`).
+3. Allow **Install from unknown sources** and launch **Hyper120**.
+
+### Option B: Directly on Your Phone (Manual APK)
 1. Download **`Hyper120.apk`** from the [Releases](https://github.com/Rohan-Reyes/Hyper120/releases) page.
 2. Open the downloaded APK and allow **Install from unknown sources** if prompted.
 3. Launch **Hyper120** — it automatically detects your installed games and applies 120Hz.
@@ -30,7 +35,7 @@ Unlike other workarounds that force you to disable `com.miui.powerkeeper` (hurti
    * Enable **Autostart**
    * Set **Battery saver** to **No restrictions**
 
-### Option B: Via ADB (Optional)
+### Option C: Via ADB (Optional)
 ```bash
 adb install -r Hyper120.apk
 adb shell dumpsys deviceidle whitelist +com.custom.game120hz
@@ -80,7 +85,25 @@ fpsconfig mPrivGames={com.roblox.client=120, com.tungsten.fcl=120, com.block.jug
 
 On HyperOS / MIUI, `com.miui.powerkeeper` (`DisplayFrameSetting`) checks `mPrivGames` and `mDefaultGameApp(60)` whenever an app enters the foreground. Games in `mDefaultGameApp(60)` get clamped to 60Hz via `DisplayFeatureManager.setScreenEffect(...)`.
 
-**Hyper120** sends `com.xiaomi.joyose.OVERRIDE_GAME_FRESHRATE` (`override_pkg_name`, `override_freshrate=120`) directly to `com.miui.powerkeeper`, registering your selected apps in `mPrivGames` at `120` without disabling PowerKeeper.
+**Hyper120** sends `com.xiaomi.joyose.OVERRIDE_GAME_FRESHRATE` (`override_pkg_name`, `override_freshrate=<target_fps>`) directly to `com.miui.powerkeeper`, registering your selected apps in `mPrivGames` without disabling PowerKeeper.
+
+*(Privacy note: v3.6+ sends one anonymous random-UUID ping every 12h to count active app users; no device IDs or personal data are collected.)*
+
+---
+
+## Device Compatibility
+
+### Verified & Tested
+- **Xiaomi 14 (`houji`)** — HyperOS / Android 16 (China ROM)
+
+### Probable Supported Devices (Untested)
+Any Xiaomi, Redmi, or POCO device with a **90Hz / 120Hz / 144Hz display** running **HyperOS or MIUI** with `com.miui.powerkeeper` should likely work, including:
+- **Xiaomi Flagships:** Xiaomi 15 / 15 Pro / 15 Ultra, Xiaomi 14 / 14 Pro / 14 Ultra / 14T / 14T Pro, Xiaomi 13 / 13 Pro / 13 Ultra / 13T / 13T Pro, Xiaomi 12 / 12 Pro / 12T / 12T Pro
+- **Redmi K & Note Series:** Redmi K80 / K70 / K60 / K50 series, Redmi Note 14 Pro / Pro+, Redmi Note 13 Pro / Pro+, Redmi Note 12 Pro / Turbo
+- **POCO Series:** POCO F6 / F6 Pro, POCO F5 / F5 Pro, POCO X7 / X7 Pro, POCO X6 / X6 Pro, POCO M6 Pro
+- **Tablets:** Xiaomi Pad 6 / Pad 6 Pro / Pad 7 / Pad 7 Pro
+
+*(Compatibility can vary by regional ROM or security patch — feel free to open an issue or PR with your device result!)*
 
 ---
 
