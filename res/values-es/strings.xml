@@ -131,7 +131,7 @@
     <string name="ob2_tag90">Puede llegar a 90.</string>
     <string name="ob2_tag60">El juego se queda en 60. Nada puede hacerlo más rápido.</string>
     <string name="ob3_title">Mantenlo activo</string>
-    <string name="ob3_body">HyperOS cierra las apps en segundo plano con frecuencia. Haz los dos pasos para que Hyper120 siga funcionando al salir de la app.</string>
+    <string name="ob3_body">HyperOS cierra las apps en segundo plano con frecuencia. Haz estos pasos para que Hyper120 siga funcionando al salir de la app.</string>
     <string name="ob3_battery">1. Ahorro de batería: Sin restricciones</string>
     <string name="ob3_battery_done">✓ Límites de batería quitados</string>
     <string name="ob3_battery_hint">Abre Información de la app. Toca Ahorro de batería y elige Sin restricciones.</string>
@@ -151,4 +151,13 @@
     <string name="widget_perm_body">HyperOS no deja añadir widgets hasta que Hyper120 tenga este permiso. Toca Abrir permisos, busca Accesos directos en la pantalla de inicio y ponlo en Permitir. Luego vuelve y toca Añadir widget otra vez.</string>
     <string name="widget_perm_open">Abrir permisos</string>
     <string name="widget_perm_manual">Añadirlo desde la pantalla de inicio</string>
+
+    <!-- Phone refresh-rate setting -->
+    <string name="health_refresh_title">Tu pantalla está a %dHz</string>
+    <string name="health_refresh_body">Los juegos no pueden ir más rápido que la tasa de refresco del móvil. Abre Ajustes → Pantalla → Tasa de refresco y elige 120Hz (Alta).</string>
+    <string name="health_open_display">Abrir ajustes de pantalla</string>
+    <string name="ob3_refresh">3. Tasa de refresco: 120Hz</string>
+    <string name="ob3_refresh_done">✓ Tasa de refresco: %dHz</string>
+    <string name="ob3_refresh_hint">En Pantalla → Tasa de refresco, elige 120Hz (Alta). Los juegos no pueden ir más rápido que esto.</string>
+    <string name="v_clamped_refresh">Primero comprueba que Ajustes → Pantalla → Tasa de refresco esté en 120Hz (Alta). En 60Hz (Estándar) nada puede subir.</string>
 </resources>

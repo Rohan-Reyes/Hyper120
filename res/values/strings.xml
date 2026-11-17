@@ -138,7 +138,7 @@
     <string name="ob2_tag90">Can go up to 90.</string>
     <string name="ob2_tag60">The game stops at 60. Nothing can make it faster.</string>
     <string name="ob3_title">Keep it running</string>
-    <string name="ob3_body">HyperOS closes background apps aggressively. Do both steps so Hyper120 keeps working after you leave the app.</string>
+    <string name="ob3_body">HyperOS closes background apps aggressively. Do these steps so Hyper120 keeps working after you leave the app.</string>
     <string name="ob3_battery">1. Battery saver: No restrictions</string>
     <string name="ob3_battery_done">✓ Battery limits removed</string>
     <string name="ob3_battery_hint">Opens App info. Tap Battery saver and choose No restrictions.</string>
@@ -158,4 +158,13 @@
     <string name="widget_perm_body">HyperOS blocks adding widgets until Hyper120 has this permission. Tap Open permissions, find Home screen shortcuts and set it to Allow, then come back and tap Add widget again.</string>
     <string name="widget_perm_open">Open permissions</string>
     <string name="widget_perm_manual">Add it from the home screen instead</string>
+
+    <!-- Phone refresh-rate setting -->
+    <string name="health_refresh_title">Your screen is set to %dHz</string>
+    <string name="health_refresh_body">Games can\'t go faster than your phone\'s own refresh rate. Open Settings → Display → Refresh rate and choose 120Hz (High).</string>
+    <string name="health_open_display">Open display settings</string>
+    <string name="ob3_refresh">3. Screen refresh rate: 120Hz</string>
+    <string name="ob3_refresh_done">✓ Screen refresh rate: %dHz</string>
+    <string name="ob3_refresh_hint">In Display → Refresh rate, choose 120Hz (High). Games can\'t go faster than this.</string>
+    <string name="v_clamped_refresh">First check Settings → Display → Refresh rate is set to 120Hz (High). On 60Hz (Standard) nothing can go higher.</string>
 </resources>

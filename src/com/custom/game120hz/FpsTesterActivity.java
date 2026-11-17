@@ -404,7 +404,8 @@ public class FpsTesterActivity extends Activity implements Choreographer.FrameCa
             verdictText.setText(getString(R.string.v_works_body, Math.round(measuredFps), expected));
         } else if (sampleCount >= 3) {
             UiHelper.setChip(this, verdictChip, getString(R.string.v_clamped, Math.round(measuredFps)), UiHelper.COL_ERROR);
-            verdictText.setText(getString(R.string.v_clamped_body, Math.round(displayHz), expected));
+            verdictText.setText(getString(R.string.v_clamped_body, Math.round(displayHz), expected)
+                + "\n\n" + getString(R.string.v_clamped_refresh));
         }
     }
 

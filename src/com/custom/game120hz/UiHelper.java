@@ -360,6 +360,15 @@ public final class UiHelper {
         }
     }
 
+    /** Settings → Display, where HyperOS keeps "Refresh rate". */
+    public static void openDisplaySettings(Activity act) {
+        try {
+            act.startActivity(new Intent(android.provider.Settings.ACTION_DISPLAY_SETTINGS));
+        } catch (Exception e) {
+            act.startActivity(new Intent(android.provider.Settings.ACTION_SETTINGS));
+        }
+    }
+
     public static void openAppInfo(Activity act) {
         act.startActivity(new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
             Uri.fromParts("package", act.getPackageName(), null)));

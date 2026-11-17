@@ -130,7 +130,7 @@
     <string name="ob2_tag90">Bisa sampai 90.</string>
     <string name="ob2_tag60">Game tetap di 60. Tidak ada yang bisa membuatnya lebih cepat.</string>
     <string name="ob3_title">Agar tetap berjalan</string>
-    <string name="ob3_body">HyperOS sering menutup aplikasi di latar belakang. Lakukan kedua langkah ini agar Hyper120 tetap bekerja setelah kamu keluar dari aplikasi.</string>
+    <string name="ob3_body">HyperOS sering menutup aplikasi di latar belakang. Lakukan langkah-langkah ini agar Hyper120 tetap bekerja setelah kamu keluar dari aplikasi.</string>
     <string name="ob3_battery">1. Penghemat baterai: Tanpa batasan</string>
     <string name="ob3_battery_done">✓ Batasan baterai dihapus</string>
     <string name="ob3_battery_hint">Membuka Info aplikasi. Ketuk Penghemat baterai lalu pilih Tanpa batasan.</string>
@@ -150,4 +150,13 @@
     <string name="widget_perm_body">HyperOS memblokir penambahan widget sampai Hyper120 punya izin ini. Ketuk Buka izin, cari Pintasan layar utama lalu pilih Izinkan, kemudian kembali dan ketuk Tambah widget lagi.</string>
     <string name="widget_perm_open">Buka izin</string>
     <string name="widget_perm_manual">Tambahkan dari layar utama saja</string>
+
+    <!-- Phone refresh-rate setting -->
+    <string name="health_refresh_title">Layar kamu diatur ke %dHz</string>
+    <string name="health_refresh_body">Game tidak bisa lebih cepat dari refresh rate HP kamu. Buka Setelan → Tampilan → Kecepatan refresh lalu pilih 120Hz (Tinggi).</string>
+    <string name="health_open_display">Buka setelan tampilan</string>
+    <string name="ob3_refresh">3. Refresh rate layar: 120Hz</string>
+    <string name="ob3_refresh_done">✓ Refresh rate layar: %dHz</string>
+    <string name="ob3_refresh_hint">Di Tampilan → Kecepatan refresh, pilih 120Hz (Tinggi). Game tidak bisa lebih cepat dari ini.</string>
+    <string name="v_clamped_refresh">Pastikan dulu Setelan → Tampilan → Kecepatan refresh diatur ke 120Hz (Tinggi). Di 60Hz (Standar) tidak ada yang bisa lebih tinggi.</string>
 </resources>

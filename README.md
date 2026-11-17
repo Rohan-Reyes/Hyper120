@@ -72,7 +72,8 @@ HyperOS and MIUI quietly cap many games at **60Hz**, even when your screen is se
 1. Download **Hyper120.apk** from the [latest release](https://github.com/Rohan-Reyes/Hyper120/releases/latest) on your phone, or add it to [Obtainium](https://apps.obtainium.imranr.dev/redirect.html?r=obtainium://app/%7B%22id%22%3A%22com.custom.game120hz%22%2C%22url%22%3A%22https%3A%2F%2Fgithub.com%2FRohan-Reyes%2FHyper120%22%2C%22author%22%3A%22Rohan-Reyes%22%2C%22name%22%3A%22Hyper120%22%7D) for automatic updates.
 2. Open it and allow installs from unknown sources if asked.
 3. Launch **Hyper120**. Your games are detected and unlocked straight away.
-4. **Important on HyperOS:** open **About → Open App info**, turn on **Autostart** and set **Battery saver** to **No restrictions**. Otherwise HyperOS may stop the background service.
+4. **Set your phone to 120Hz:** Settings → Display → Refresh rate → **120Hz (High)**. Hyper120 can't make games faster than this setting. The app warns you if it's on 60Hz.
+5. **Important on HyperOS:** open **About → Open App info**, turn on **Autostart** and set **Battery saver** to **No restrictions**. Otherwise HyperOS may stop the background service.
 
 To go back to normal for a game, untick it (or pick 60Hz and tap Apply). PowerKeeper keeps the last value in memory until it restarts.
 
@@ -103,6 +104,7 @@ Open the **FPS tester** (gauge icon, top right). It runs the override against it
 | Status | Devices |
 |---|---|
 | ✅ **Verified** | Xiaomi 14 (`houji`), HyperOS / Android 16, China ROM: 60, 90 and 120Hz all confirmed |
+| ✅ **Reported working** | Xiaomi 17 (`pudding`), Global HyperOS 3 ([#1](https://github.com/Rohan-Reyes/Hyper120/issues/1), after setting the phone to 120Hz) · POCO X8 Pro (`klee`), EEA HyperOS 3, 121 FPS ([#2](https://github.com/Rohan-Reyes/Hyper120/issues/2)) · HyperOS 4 (World of Tanks Blitz at 120 FPS) |
 | ✅ **Expected to work** | Any Xiaomi, Redmi or POCO phone with HyperOS or MIUI and a 90Hz+ screen, including the Xiaomi 15 / 14 / 13 / 12 series (incl. T and Ultra), Redmi K80 / K70 / K60 / K50 and Note 14 / 13 / 12 Pro & Turbo, POCO F / X / M series, and Xiaomi Pad 6 / 7 |
 
 If the tester says **works** but a game still runs at 60, the game itself is the limit (see the [game list](#game-list-which-games-can-actually-go-above-60)). If the tester says **Clamped**, tap **Report** so we can look into your ROM.
@@ -127,24 +129,57 @@ The app tags these games in its list (`UP TO 120`, `90 MAX`, `60 MAX`) and downl
 | **Clash of Clans**: 120 FPS, reported by a Hyper120 tester |  | **Truckers of Europe 3**: In-game frame-rate setting tops out at 60 |
 | **Minecraft**: Measured: 120 FPS on a Xiaomi 14 with Hyper120 |  | **eFootball**: Graphics → Frame Rate tops out at 60 |
 | **Asphalt Legends**: Graphics → Frame Rate, 120 on high-end phones |  | **Monster Hunter Now**: 30 on the map, 60 in hunts |
-| **CSR 2**: Up to 120 |  |  |
+| **CSR 2**: Up to 120 |  | **Archero 2**: Measured: 60 FPS in the lobby on a Xiaomi 14 |
 | **Top Drives**: Settings → High FPS (120 if supported) |  |  |
 | **Pokémon GO**: Settings → Advanced → Native refresh rate |  |  |
 | **EA SPORTS FC Mobile**: 90 / 120 only on some phones |  |  |
+| **World of Tanks Blitz**: 120 FPS, reported by a Hyper120 user on HyperOS 4 |  |  |
+| **Block Blast!**: Measured: 120 FPS on a Xiaomi 14 with Hyper120 |  |  |
+| **Spaceflight Simulator**: Measured: 120 FPS on a Xiaomi 14 with Hyper120 |  |  |
+| **8 Ball Pool**: 120 FPS in 2020 high-refresh game lists (untested) |  |  |
+| **Subway Surfers**: 120 FPS in 2020 high-refresh game lists (untested) |  |  |
+| **Shadow Fight 2**: 120 FPS in 2020 high-refresh game lists (untested) |  |  |
+| **Shadow Fight 3**: 120 FPS in 2020 high-refresh game lists (untested) |  |  |
+| **Shadowgun Legends**: 120 FPS in 2020 high-refresh game lists (untested) |  |  |
+| **Dead Trigger 2**: 120 FPS in 2020 high-refresh game lists (untested) |  |  |
+| **Pixel Gun 3D**: 120 FPS in 2020 high-refresh game lists (untested) |  |  |
+| **Plants vs Zombies 2**: 120 FPS in 2020 high-refresh game lists (untested) |  |  |
+| **Soul Knight**: 120 FPS in 2020 high-refresh game lists (untested) |  |  |
+| **Hill Climb Racing 2**: 120 FPS in 2020 high-refresh game lists (untested) |  |  |
+| **Temple Run 2**: 120 FPS in 2020 high-refresh game lists (untested) |  |  |
+| **Sonic Dash**: 120 FPS in 2020 high-refresh game lists (untested) |  |  |
+| **Marvel Contest of Champions**: 120 FPS in 2020 high-refresh game lists (untested) |  |  |
+| **Mortal Kombat**: 120 FPS in 2020 high-refresh game lists (untested) |  |  |
+| **Injustice 2**: 120 FPS in 2020 high-refresh game lists (untested) |  |  |
+| **Summoners War**: 120 FPS in 2020 high-refresh game lists (untested) |  |  |
+| **Toon Blast**: 120 FPS in 2020 high-refresh game lists (untested) |  |  |
+| **Tank Stars**: 120 FPS in 2020 high-refresh game lists (untested) |  |  |
+| **Stick War: Legacy**: 120 FPS in 2020 high-refresh game lists (untested) |  |  |
+| **Traffic Rider**: 120 FPS in 2020 high-refresh game lists (untested) |  |  |
+| **Bullet Force**: 120 FPS in 2020 high-refresh game lists (untested) |  |  |
+| **Mini Metro**: 120 FPS in 2020 high-refresh game lists (untested) |  |  |
+| **Alto's Odyssey**: 120 FPS in 2020 high-refresh game lists (untested) |  |  |
+| **Grimvalor**: 120 FPS in 2020 high-refresh game lists (untested) |  |  |
+| **Super Mario Run**: 120 FPS in 2020 high-refresh game lists (untested) |  |  |
+| **Dragon Ball Legends**: 120 FPS in 2020 high-refresh game lists (untested) |  |  |
+| **Old School RuneScape**: 120 FPS in 2020 high-refresh game lists (untested) |  |  |
 <!-- /games:table -->
 
 <sub>Compiled from developer pages, patch coverage and player reports as of November 2026. Games change their limits in updates. Know a game that belongs here? <a href="https://github.com/Rohan-Reyes/Hyper120/issues/new/choose">Open an issue</a>.</sub>
 
 ## FAQ
 
+**The tester says "Clamped at 60". What now?**
+First check **Settings → Display → Refresh rate** is set to **120Hz (High)**. On 60Hz (Standard) the phone itself stays at 60 and nothing can go higher. This fixed it on a Xiaomi 17 ([#1](https://github.com/Rohan-Reyes/Hyper120/issues/1)).
+
 **It works in the tester, but my game still runs at 60. Why?**
 The game has its own limit. The tester proves the phone's cap is gone; games like Roblox and Genshin Impact are built to stop at 60 on Android. Check the [game list](#game-list-which-games-can-actually-go-above-60).
 
 **Which popular games are stuck at 60?**
-<!-- games:names60 -->Roblox, Genshin Impact, Honkai: Star Rail, Zenless Zone Zero, Wuthering Waves, Pokémon UNITE, PPSSPP (PSP games), Bus Simulator Indonesia, Truckers of Europe 3, eFootball and Monster Hunter Now<!-- /games:names60 -->. They limit themselves, so they stay at 60 even with Hyper120 on. The app tags them `60 MAX`.
+<!-- games:names60 -->Roblox, Genshin Impact, Honkai: Star Rail, Zenless Zone Zero, Wuthering Waves, Pokémon UNITE, PPSSPP (PSP games), Bus Simulator Indonesia, Truckers of Europe 3, eFootball, Monster Hunter Now and Archero 2<!-- /games:names60 -->. They limit themselves, so they stay at 60 even with Hyper120 on. The app tags them `60 MAX`.
 
 **Which games can go above 60?**
-<!-- games:names120 -->Mobile Legends: Bang Bang, Call of Duty: Mobile, PUBG Mobile / BGMI, Honor of Kings, League of Legends: Wild Rift, Delta Force, Standoff 2, Brawl Stars, Clash of Clans, Minecraft, Asphalt Legends, CSR 2, Top Drives, Pokémon GO and EA SPORTS FC Mobile<!-- /games:names120 -->, once you turn on the high frame rate in the game's settings. Many only show that option on phones the developer has approved. <!-- games:names90 -->Free Fire / Free Fire MAX and Fortnite<!-- /games:names90 --> top out at 90.
+<!-- games:names120 -->Mobile Legends: Bang Bang, Call of Duty: Mobile, PUBG Mobile / BGMI, Honor of Kings, League of Legends: Wild Rift, Delta Force, Standoff 2, Brawl Stars, Clash of Clans, Minecraft, Asphalt Legends, CSR 2, Top Drives, Pokémon GO, EA SPORTS FC Mobile, World of Tanks Blitz, Block Blast!, Spaceflight Simulator, 8 Ball Pool, Subway Surfers, Shadow Fight 2, Shadow Fight 3, Shadowgun Legends, Dead Trigger 2, Pixel Gun 3D, Plants vs Zombies 2, Soul Knight, Hill Climb Racing 2, Temple Run 2, Sonic Dash, Marvel Contest of Champions, Mortal Kombat, Injustice 2, Summoners War, Toon Blast, Tank Stars, Stick War: Legacy, Traffic Rider, Bullet Force, Mini Metro, Alto's Odyssey, Grimvalor, Super Mario Run, Dragon Ball Legends and Old School RuneScape<!-- /games:names120 -->, once you turn on the high frame rate in the game's settings. Many only show that option on phones the developer has approved. <!-- games:names90 -->Free Fire / Free Fire MAX and Fortnite<!-- /games:names90 --> top out at 90.
 
 **My game isn't on the list. How do I know?**
 Look in the game's graphics settings for a frame-rate option. If the highest choice is 60 (or there's none), the game is most likely capped at 60. Confirm with Game Turbo's FPS counter, then long-press the game in Hyper120 and tap **Report how it runs** so it can be added.

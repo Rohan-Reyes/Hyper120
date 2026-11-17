@@ -283,6 +283,36 @@ public final class FpsApplier {
         ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().putBoolean(KEY_ONBOARDED, true).apply();
     }
 
+    // ---------------------------------------------------------------- system refresh-rate setting
+
+    /**
+     * The refresh rate chosen in the phone's own Settings → Display → Refresh rate, or -1 if it
+     * can't be read. PowerKeeper can't raise a game above this, so 60 here means no game gets 120.
+     * HyperOS keeps it in Secure "user_refresh_rate" / "miui_refresh_rate"; AOSP in System "peak_refresh_rate".
+     */
+    public static int getSystemRefreshSetting(Context ctx) {
+        android.content.ContentResolver cr = ctx.getContentResolver();
+        for (String key : new String[]{"user_refresh_rate", "miui_refresh_rate"}) {
+            try {
+                int v = android.provider.Settings.Secure.getInt(cr, key, -1);
+                if (v > 0) return v;
+            } catch (Throwable ignored) {
+            }
+        }
+        try {
+            float v = android.provider.Settings.System.getFloat(cr, "peak_refresh_rate", -1f);
+            if (v > 0 && !Float.isInfinite(v)) return Math.round(v);
+        } catch (Throwable ignored) {
+        }
+        return -1;
+    }
+
+    /** True when the phone itself is set to a low refresh rate (e.g. 60Hz "Standard"). */
+    public static boolean isSystemRefreshTooLow(Context ctx) {
+        int v = getSystemRefreshSetting(ctx);
+        return v > 0 && v < 90 && getMaxSupportedFps(ctx) >= 90;
+    }
+
     // ---------------------------------------------------------------- device / ROM info
 
     private static String prop(String key) {
@@ -328,7 +358,8 @@ public final class FpsApplier {
         return "Device: " + getDeviceName(ctx) + " (" + Build.MODEL + ", " + Build.DEVICE + ")\n"
             + "ROM: " + romVersion() + " | Region: " + romRegion() + "\n"
             + "Android: " + Build.VERSION.RELEASE + " (SDK " + Build.VERSION.SDK_INT + ")\n"
-            + "Panel max: " + getMaxSupportedFps(ctx) + "Hz | Target: " + getTargetFps(ctx) + "Hz\n"
+            + "Panel max: " + getMaxSupportedFps(ctx) + "Hz | Target: " + getTargetFps(ctx) + "Hz"
+            + " | Phone refresh setting: " + (getSystemRefreshSetting(ctx) > 0 ? getSystemRefreshSetting(ctx) + "Hz" : "unknown") + "\n"
             + "PowerKeeper: " + (isPowerKeeperInstalled(ctx) ? "found" : "missing")
             + " | Hyper120 v" + appVersion(ctx);
     }

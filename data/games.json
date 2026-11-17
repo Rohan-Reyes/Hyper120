@@ -1,92 +1,545 @@
 {
-  "version": 3,
+  "version": 5,
   "updated": "2026-11-17",
   "games": [
-    {"name": "Mobile Legends: Bang Bang", "cap": 120, "packages": ["com.mobile.legends"],
-     "short": "Graphics → Ultra (120) or Super (90)",
-     "tip": "In Graphics, pick Ultra (120) or Super (90). The option only appears on phones Moonton has approved."},
-    {"name": "Call of Duty: Mobile", "cap": 120, "packages": ["com.garena.game.codm", "com.activision.callofduty.shooter"],
-     "short": "Graphics → Frame Rate → Max / Ultra",
-     "tip": "In Graphics, set Frame Rate to Max / Ultra. 120 is only offered on approved phones."},
-    {"name": "PUBG Mobile / BGMI", "cap": 120, "packages": ["com.tencent.ig", "com.pubg.imobile", "com.vng.pubgmobile", "com.pubg.krmobile", "com.rekoo.pubgm"],
-     "short": "Graphics: Smooth → Frame Rate: Ultra Extreme",
-     "tip": "Set Graphics to Smooth, then Frame Rate to Ultra Extreme (120). Approved phones only."},
-    {"name": "Honor of Kings", "cap": 120, "packages": ["com.levelinfinite.sgameGlobal"],
-     "short": "Settings → Graphics → 120 FPS",
-     "tip": "Settings, Graphics, 120 FPS. Only on supported phones."},
-    {"name": "League of Legends: Wild Rift", "cap": 120, "packages": ["com.riotgames.league.wildrift"],
-     "short": "Graphics → 90 / 120 on supported phones",
-     "tip": "In Graphics, pick 90 or 120 frame rate. Only shown on supported phones."},
-    {"name": "Delta Force", "cap": 120, "packages": ["com.proxima.dfm", "com.garena.game.df"],
-     "short": "Up to 90 / 120 on supported phones",
-     "tip": "Up to 90 or 120 FPS on supported phones, set in Graphics."},
-    {"name": "Standoff 2", "cap": 120, "packages": ["com.axlebolt.standoff2"],
-     "short": "Settings → Video → Target frame rate 120",
-     "tip": "Settings, Video, set Target frame rate to 120."},
-    {"name": "Brawl Stars", "cap": 120, "packages": ["com.supercell.brawlstars"],
-     "short": "120 in matches, 60 in menus",
-     "tip": "Runs at 120 in matches; menus stay at 60."},
-    {"name": "Clash of Clans", "cap": 120, "packages": ["com.supercell.clashofclans"],
-     "short": "120 FPS, reported by a Hyper120 tester",
-     "tip": "A Hyper120 tester reports 120 FPS with the override on."},
-    {"name": "Minecraft", "cap": 120, "packages": ["com.mojang.minecraftpe"],
-     "short": "Measured: 120 FPS on a Xiaomi 14 with Hyper120",
-     "tip": "Measured at 120 FPS on a Xiaomi 14 with Hyper120. In Settings, Video, make sure Max Framerate isn't limited."},
-    {"name": "Asphalt Legends", "cap": 120, "packages": ["com.gameloft.android.ANMP.GloftA9HM"],
-     "short": "Graphics → Frame Rate, 120 on high-end phones",
-     "tip": "Settings, Graphics, Frame Rate. 120 on high-end phones; use the Performance preset."},
-    {"name": "CSR 2", "cap": 120, "packages": ["com.naturalmotion.customstreetracer2"],
-     "short": "Up to 120",
-     "tip": "Supports up to 120."},
-    {"name": "Top Drives", "cap": 120, "packages": ["com.hutchgames.cccg"],
-     "short": "Settings → High FPS (120 if supported)",
-     "tip": "Settings (gear icon), tick High FPS. Runs at 120 if your phone supports it."},
-    {"name": "Pokémon GO", "cap": 120, "packages": ["com.nianticlabs.pokemongo"],
-     "short": "Settings → Advanced → Native refresh rate",
-     "tip": "Settings, Advanced settings, turn on Native refresh rate."},
-    {"name": "EA SPORTS FC Mobile", "cap": 120, "packages": ["com.ea.gp.fifamobile"],
-     "short": "90 / 120 only on some phones",
-     "tip": "90/120 options only appear on some phones; many stay at 60."},
-
-    {"name": "Free Fire / Free Fire MAX", "cap": 90, "packages": ["com.dts.freefireth", "com.dts.freefiremax"],
-     "short": "High FPS mode gives 90 on some phones",
-     "tip": "High FPS mode gives 90 on some phones. There is no 120 option."},
-    {"name": "Fortnite", "cap": 90, "packages": ["com.epicgames.fortnite"],
-     "short": "60 on most Android phones, 90 on a few",
-     "tip": "60 FPS on most Android phones, 90 on a few. No 120 on Android."},
-
-    {"name": "Roblox", "cap": 60, "packages": ["com.roblox.client"],
-     "short": "Capped at 60. Measured: 60 FPS while the screen ran at 120Hz",
-     "tip": "Roblox caps its mobile app at 60 FPS on every phone."},
-    {"name": "Genshin Impact", "cap": 60, "packages": ["com.miHoYo.GenshinImpact"],
-     "short": "120 is iPhone / iPad only",
-     "tip": "60 FPS on Android. The 120 option is iPhone/iPad only."},
-    {"name": "Honkai: Star Rail", "cap": 60, "packages": ["com.HoYoverse.hkrpgoversea"],
-     "short": "120 is iPhone / iPad only",
-     "tip": "60 FPS on Android. The 120 option is iPhone/iPad only."},
-    {"name": "Zenless Zone Zero", "cap": 60, "packages": ["com.HoYoverse.Nap"],
-     "short": "Locked to 60 on phones",
-     "tip": "Locked to 60 FPS on phones."},
-    {"name": "Wuthering Waves", "cap": 60, "packages": ["com.kurogame.wutheringwaves.global"],
-     "short": "The 120 option was removed",
-     "tip": "The 120 FPS option was removed; phones run at 60."},
-    {"name": "Pokémon UNITE", "cap": 60, "packages": ["jp.pokemon.pokemonunite"],
-     "short": "High frame rate mode = 60",
-     "tip": "High frame rate mode is 60 FPS."},
-    {"name": "PPSSPP (PSP games)", "cap": 60, "packages": ["org.ppsspp.ppsspp", "org.ppsspp.ppssppgold"],
-     "short": "PSP games run at their original 60 / 30",
-     "tip": "PSP games run at their original 60 (or 30) FPS. A faster screen can't add frames."},
-    {"name": "Bus Simulator Indonesia", "cap": 60, "packages": ["com.maleo.bussimulatorid"],
-     "short": "In-game frame-rate setting tops out at 60",
-     "tip": "The game's own frame-rate setting goes up to 60. Pick 60 in its graphics settings."},
-    {"name": "Truckers of Europe 3", "cap": 60, "packages": ["com.WandaSoftware.TruckersofEurope3"],
-     "short": "In-game frame-rate setting tops out at 60",
-     "tip": "The game's own frame-rate setting goes up to 60. Pick 60 in its graphics settings."},
-    {"name": "eFootball", "cap": 60, "packages": ["jp.konami.pesam"],
-     "short": "Graphics → Frame Rate tops out at 60",
-     "tip": "The game's own frame-rate setting goes up to 60. Pick 60 in its graphics settings."},
-    {"name": "Monster Hunter Now", "cap": 60, "packages": ["com.nianticlabs.monsterhunter"],
-     "short": "30 on the map, 60 in hunts",
-     "tip": "30 FPS on the map and 60 FPS in hunts."}
+    {
+      "name": "Mobile Legends: Bang Bang",
+      "cap": 120,
+      "packages": [
+        "com.mobile.legends"
+      ],
+      "short": "Graphics → Ultra (120) or Super (90)",
+      "tip": "In Graphics, pick Ultra (120) or Super (90). The option only appears on phones Moonton has approved."
+    },
+    {
+      "name": "Call of Duty: Mobile",
+      "cap": 120,
+      "packages": [
+        "com.garena.game.codm",
+        "com.activision.callofduty.shooter"
+      ],
+      "short": "Graphics → Frame Rate → Max / Ultra",
+      "tip": "In Graphics, set Frame Rate to Max / Ultra. 120 is only offered on approved phones."
+    },
+    {
+      "name": "PUBG Mobile / BGMI",
+      "cap": 120,
+      "packages": [
+        "com.tencent.ig",
+        "com.pubg.imobile",
+        "com.vng.pubgmobile",
+        "com.pubg.krmobile",
+        "com.rekoo.pubgm"
+      ],
+      "short": "Graphics: Smooth → Frame Rate: Ultra Extreme",
+      "tip": "Set Graphics to Smooth, then Frame Rate to Ultra Extreme (120). Approved phones only."
+    },
+    {
+      "name": "Honor of Kings",
+      "cap": 120,
+      "packages": [
+        "com.levelinfinite.sgameGlobal"
+      ],
+      "short": "Settings → Graphics → 120 FPS",
+      "tip": "Settings, Graphics, 120 FPS. Only on supported phones."
+    },
+    {
+      "name": "League of Legends: Wild Rift",
+      "cap": 120,
+      "packages": [
+        "com.riotgames.league.wildrift"
+      ],
+      "short": "Graphics → 90 / 120 on supported phones",
+      "tip": "In Graphics, pick 90 or 120 frame rate. Only shown on supported phones."
+    },
+    {
+      "name": "Delta Force",
+      "cap": 120,
+      "packages": [
+        "com.proxima.dfm",
+        "com.garena.game.df"
+      ],
+      "short": "Up to 90 / 120 on supported phones",
+      "tip": "Up to 90 or 120 FPS on supported phones, set in Graphics."
+    },
+    {
+      "name": "Standoff 2",
+      "cap": 120,
+      "packages": [
+        "com.axlebolt.standoff2"
+      ],
+      "short": "Settings → Video → Target frame rate 120",
+      "tip": "Settings, Video, set Target frame rate to 120."
+    },
+    {
+      "name": "Brawl Stars",
+      "cap": 120,
+      "packages": [
+        "com.supercell.brawlstars"
+      ],
+      "short": "120 in matches, 60 in menus",
+      "tip": "Runs at 120 in matches; menus stay at 60."
+    },
+    {
+      "name": "Clash of Clans",
+      "cap": 120,
+      "packages": [
+        "com.supercell.clashofclans"
+      ],
+      "short": "120 FPS, reported by a Hyper120 tester",
+      "tip": "A Hyper120 tester reports 120 FPS with the override on."
+    },
+    {
+      "name": "Minecraft",
+      "cap": 120,
+      "packages": [
+        "com.mojang.minecraftpe"
+      ],
+      "short": "Measured: 120 FPS on a Xiaomi 14 with Hyper120",
+      "tip": "Measured at 120 FPS on a Xiaomi 14 with Hyper120. In Settings, Video, make sure Max Framerate isn't limited."
+    },
+    {
+      "name": "Asphalt Legends",
+      "cap": 120,
+      "packages": [
+        "com.gameloft.android.ANMP.GloftA9HM"
+      ],
+      "short": "Graphics → Frame Rate, 120 on high-end phones",
+      "tip": "Settings, Graphics, Frame Rate. 120 on high-end phones; use the Performance preset."
+    },
+    {
+      "name": "CSR 2",
+      "cap": 120,
+      "packages": [
+        "com.naturalmotion.customstreetracer2"
+      ],
+      "short": "Up to 120",
+      "tip": "Supports up to 120."
+    },
+    {
+      "name": "Top Drives",
+      "cap": 120,
+      "packages": [
+        "com.hutchgames.cccg"
+      ],
+      "short": "Settings → High FPS (120 if supported)",
+      "tip": "Settings (gear icon), tick High FPS. Runs at 120 if your phone supports it."
+    },
+    {
+      "name": "Pokémon GO",
+      "cap": 120,
+      "packages": [
+        "com.nianticlabs.pokemongo"
+      ],
+      "short": "Settings → Advanced → Native refresh rate",
+      "tip": "Settings, Advanced settings, turn on Native refresh rate."
+    },
+    {
+      "name": "EA SPORTS FC Mobile",
+      "cap": 120,
+      "packages": [
+        "com.ea.gp.fifamobile"
+      ],
+      "short": "90 / 120 only on some phones",
+      "tip": "90/120 options only appear on some phones; many stay at 60."
+    },
+    {
+      "name": "World of Tanks Blitz",
+      "cap": 120,
+      "packages": [
+        "net.wargaming.wot.blitz"
+      ],
+      "short": "120 FPS, reported by a Hyper120 user on HyperOS 4",
+      "tip": "A Hyper120 user reports 120 FPS on HyperOS 4. Set the frame rate to the highest option in the game's graphics settings."
+    },
+    {
+      "name": "Block Blast!",
+      "cap": 120,
+      "packages": [
+        "com.block.juggle"
+      ],
+      "short": "Measured: 120 FPS on a Xiaomi 14 with Hyper120",
+      "tip": "Measured at 120 FPS on a Xiaomi 14 with Hyper120. No setting needed."
+    },
+    {
+      "name": "Spaceflight Simulator",
+      "cap": 120,
+      "packages": [
+        "com.StefMorojna.SpaceflightSimulator"
+      ],
+      "short": "Measured: 120 FPS on a Xiaomi 14 with Hyper120",
+      "tip": "Measured at 120 FPS on a Xiaomi 14 with Hyper120. No setting needed."
+    },
+    {
+      "name": "8 Ball Pool",
+      "cap": 120,
+      "packages": [
+        "com.miniclip.eightballpool"
+      ],
+      "short": "120 FPS in 2020 high-refresh game lists (untested)",
+      "tip": "Listed as supporting 120 FPS in 2020 high-refresh game lists. Not tested with Hyper120 yet; long-press and Report how it runs!"
+    },
+    {
+      "name": "Subway Surfers",
+      "cap": 120,
+      "packages": [
+        "com.kiloo.subwaysurf"
+      ],
+      "short": "120 FPS in 2020 high-refresh game lists (untested)",
+      "tip": "Listed as supporting 120 FPS in 2020 high-refresh game lists. Not tested with Hyper120 yet; long-press and Report how it runs!"
+    },
+    {
+      "name": "Shadow Fight 2",
+      "cap": 120,
+      "packages": [
+        "com.nekki.shadowfight"
+      ],
+      "short": "120 FPS in 2020 high-refresh game lists (untested)",
+      "tip": "Listed as supporting 120 FPS in 2020 high-refresh game lists. Not tested with Hyper120 yet; long-press and Report how it runs!"
+    },
+    {
+      "name": "Shadow Fight 3",
+      "cap": 120,
+      "packages": [
+        "com.nekki.shadowfight3"
+      ],
+      "short": "120 FPS in 2020 high-refresh game lists (untested)",
+      "tip": "Listed as supporting 120 FPS in 2020 high-refresh game lists. Not tested with Hyper120 yet; long-press and Report how it runs!"
+    },
+    {
+      "name": "Shadowgun Legends",
+      "cap": 120,
+      "packages": [
+        "com.madfingergames.legends"
+      ],
+      "short": "120 FPS in 2020 high-refresh game lists (untested)",
+      "tip": "Listed as supporting 120 FPS in 2020 high-refresh game lists. Not tested with Hyper120 yet; long-press and Report how it runs!"
+    },
+    {
+      "name": "Dead Trigger 2",
+      "cap": 120,
+      "packages": [
+        "com.madfingergames.deadtrigger2"
+      ],
+      "short": "120 FPS in 2020 high-refresh game lists (untested)",
+      "tip": "Listed as supporting 120 FPS in 2020 high-refresh game lists. Not tested with Hyper120 yet; long-press and Report how it runs!"
+    },
+    {
+      "name": "Pixel Gun 3D",
+      "cap": 120,
+      "packages": [
+        "com.pixel.gun3d"
+      ],
+      "short": "120 FPS in 2020 high-refresh game lists (untested)",
+      "tip": "Listed as supporting 120 FPS in 2020 high-refresh game lists. Not tested with Hyper120 yet; long-press and Report how it runs!"
+    },
+    {
+      "name": "Plants vs Zombies 2",
+      "cap": 120,
+      "packages": [
+        "com.ea.game.pvz2_row"
+      ],
+      "short": "120 FPS in 2020 high-refresh game lists (untested)",
+      "tip": "Listed as supporting 120 FPS in 2020 high-refresh game lists. Not tested with Hyper120 yet; long-press and Report how it runs!"
+    },
+    {
+      "name": "Soul Knight",
+      "cap": 120,
+      "packages": [
+        "com.ChillyRoom.DungeonShooter"
+      ],
+      "short": "120 FPS in 2020 high-refresh game lists (untested)",
+      "tip": "Listed as supporting 120 FPS in 2020 high-refresh game lists. Not tested with Hyper120 yet; long-press and Report how it runs!"
+    },
+    {
+      "name": "Hill Climb Racing 2",
+      "cap": 120,
+      "packages": [
+        "com.fingersoft.hcr2"
+      ],
+      "short": "120 FPS in 2020 high-refresh game lists (untested)",
+      "tip": "Listed as supporting 120 FPS in 2020 high-refresh game lists. Not tested with Hyper120 yet; long-press and Report how it runs!"
+    },
+    {
+      "name": "Temple Run 2",
+      "cap": 120,
+      "packages": [
+        "com.imangi.templerun2"
+      ],
+      "short": "120 FPS in 2020 high-refresh game lists (untested)",
+      "tip": "Listed as supporting 120 FPS in 2020 high-refresh game lists. Not tested with Hyper120 yet; long-press and Report how it runs!"
+    },
+    {
+      "name": "Sonic Dash",
+      "cap": 120,
+      "packages": [
+        "com.sega.sonicdash"
+      ],
+      "short": "120 FPS in 2020 high-refresh game lists (untested)",
+      "tip": "Listed as supporting 120 FPS in 2020 high-refresh game lists. Not tested with Hyper120 yet; long-press and Report how it runs!"
+    },
+    {
+      "name": "Marvel Contest of Champions",
+      "cap": 120,
+      "packages": [
+        "com.kabam.marvelbattle"
+      ],
+      "short": "120 FPS in 2020 high-refresh game lists (untested)",
+      "tip": "Listed as supporting 120 FPS in 2020 high-refresh game lists. Not tested with Hyper120 yet; long-press and Report how it runs!"
+    },
+    {
+      "name": "Mortal Kombat",
+      "cap": 120,
+      "packages": [
+        "com.wb.goog.mkx"
+      ],
+      "short": "120 FPS in 2020 high-refresh game lists (untested)",
+      "tip": "Listed as supporting 120 FPS in 2020 high-refresh game lists. Not tested with Hyper120 yet; long-press and Report how it runs!"
+    },
+    {
+      "name": "Injustice 2",
+      "cap": 120,
+      "packages": [
+        "com.wb.goog.injustice.brawler2017"
+      ],
+      "short": "120 FPS in 2020 high-refresh game lists (untested)",
+      "tip": "Listed as supporting 120 FPS in 2020 high-refresh game lists. Not tested with Hyper120 yet; long-press and Report how it runs!"
+    },
+    {
+      "name": "Summoners War",
+      "cap": 120,
+      "packages": [
+        "com.com2us.smon.normal.freefull.google.kr.android.common"
+      ],
+      "short": "120 FPS in 2020 high-refresh game lists (untested)",
+      "tip": "Listed as supporting 120 FPS in 2020 high-refresh game lists. Not tested with Hyper120 yet; long-press and Report how it runs!"
+    },
+    {
+      "name": "Toon Blast",
+      "cap": 120,
+      "packages": [
+        "net.peakgames.toonblast"
+      ],
+      "short": "120 FPS in 2020 high-refresh game lists (untested)",
+      "tip": "Listed as supporting 120 FPS in 2020 high-refresh game lists. Not tested with Hyper120 yet; long-press and Report how it runs!"
+    },
+    {
+      "name": "Tank Stars",
+      "cap": 120,
+      "packages": [
+        "com.playgendary.tanks"
+      ],
+      "short": "120 FPS in 2020 high-refresh game lists (untested)",
+      "tip": "Listed as supporting 120 FPS in 2020 high-refresh game lists. Not tested with Hyper120 yet; long-press and Report how it runs!"
+    },
+    {
+      "name": "Stick War: Legacy",
+      "cap": 120,
+      "packages": [
+        "com.maxgames.stickwarlegacy"
+      ],
+      "short": "120 FPS in 2020 high-refresh game lists (untested)",
+      "tip": "Listed as supporting 120 FPS in 2020 high-refresh game lists. Not tested with Hyper120 yet; long-press and Report how it runs!"
+    },
+    {
+      "name": "Traffic Rider",
+      "cap": 120,
+      "packages": [
+        "com.skgames.trafficrider"
+      ],
+      "short": "120 FPS in 2020 high-refresh game lists (untested)",
+      "tip": "Listed as supporting 120 FPS in 2020 high-refresh game lists. Not tested with Hyper120 yet; long-press and Report how it runs!"
+    },
+    {
+      "name": "Bullet Force",
+      "cap": 120,
+      "packages": [
+        "com.blayzegames.iosfps"
+      ],
+      "short": "120 FPS in 2020 high-refresh game lists (untested)",
+      "tip": "Listed as supporting 120 FPS in 2020 high-refresh game lists. Not tested with Hyper120 yet; long-press and Report how it runs!"
+    },
+    {
+      "name": "Mini Metro",
+      "cap": 120,
+      "packages": [
+        "nz.co.codepoint.minimetro"
+      ],
+      "short": "120 FPS in 2020 high-refresh game lists (untested)",
+      "tip": "Listed as supporting 120 FPS in 2020 high-refresh game lists. Not tested with Hyper120 yet; long-press and Report how it runs!"
+    },
+    {
+      "name": "Alto's Odyssey",
+      "cap": 120,
+      "packages": [
+        "com.noodlecake.altosodyssey"
+      ],
+      "short": "120 FPS in 2020 high-refresh game lists (untested)",
+      "tip": "Listed as supporting 120 FPS in 2020 high-refresh game lists. Not tested with Hyper120 yet; long-press and Report how it runs!"
+    },
+    {
+      "name": "Grimvalor",
+      "cap": 120,
+      "packages": [
+        "com.direlight.grimvalor"
+      ],
+      "short": "120 FPS in 2020 high-refresh game lists (untested)",
+      "tip": "Listed as supporting 120 FPS in 2020 high-refresh game lists. Not tested with Hyper120 yet; long-press and Report how it runs!"
+    },
+    {
+      "name": "Super Mario Run",
+      "cap": 120,
+      "packages": [
+        "com.nintendo.zara"
+      ],
+      "short": "120 FPS in 2020 high-refresh game lists (untested)",
+      "tip": "Listed as supporting 120 FPS in 2020 high-refresh game lists. Not tested with Hyper120 yet; long-press and Report how it runs!"
+    },
+    {
+      "name": "Dragon Ball Legends",
+      "cap": 120,
+      "packages": [
+        "com.bandainamcoent.dblegends_ww"
+      ],
+      "short": "120 FPS in 2020 high-refresh game lists (untested)",
+      "tip": "Listed as supporting 120 FPS in 2020 high-refresh game lists. Not tested with Hyper120 yet; long-press and Report how it runs!"
+    },
+    {
+      "name": "Old School RuneScape",
+      "cap": 120,
+      "packages": [
+        "com.jagex.oldscape.android"
+      ],
+      "short": "120 FPS in 2020 high-refresh game lists (untested)",
+      "tip": "Listed as supporting 120 FPS in 2020 high-refresh game lists. Not tested with Hyper120 yet; long-press and Report how it runs!"
+    },
+    {
+      "name": "Free Fire / Free Fire MAX",
+      "cap": 90,
+      "packages": [
+        "com.dts.freefireth",
+        "com.dts.freefiremax"
+      ],
+      "short": "High FPS mode gives 90 on some phones",
+      "tip": "High FPS mode gives 90 on some phones. There is no 120 option."
+    },
+    {
+      "name": "Fortnite",
+      "cap": 90,
+      "packages": [
+        "com.epicgames.fortnite"
+      ],
+      "short": "60 on most Android phones, 90 on a few",
+      "tip": "60 FPS on most Android phones, 90 on a few. No 120 on Android."
+    },
+    {
+      "name": "Roblox",
+      "cap": 60,
+      "packages": [
+        "com.roblox.client"
+      ],
+      "short": "Capped at 60. Measured: 60 FPS while the screen ran at 120Hz",
+      "tip": "Roblox caps its mobile app at 60 FPS on every phone."
+    },
+    {
+      "name": "Genshin Impact",
+      "cap": 60,
+      "packages": [
+        "com.miHoYo.GenshinImpact"
+      ],
+      "short": "120 is iPhone / iPad only",
+      "tip": "60 FPS on Android. The 120 option is iPhone/iPad only."
+    },
+    {
+      "name": "Honkai: Star Rail",
+      "cap": 60,
+      "packages": [
+        "com.HoYoverse.hkrpgoversea"
+      ],
+      "short": "120 is iPhone / iPad only",
+      "tip": "60 FPS on Android. The 120 option is iPhone/iPad only."
+    },
+    {
+      "name": "Zenless Zone Zero",
+      "cap": 60,
+      "packages": [
+        "com.HoYoverse.Nap"
+      ],
+      "short": "Locked to 60 on phones",
+      "tip": "Locked to 60 FPS on phones."
+    },
+    {
+      "name": "Wuthering Waves",
+      "cap": 60,
+      "packages": [
+        "com.kurogame.wutheringwaves.global"
+      ],
+      "short": "The 120 option was removed",
+      "tip": "The 120 FPS option was removed; phones run at 60."
+    },
+    {
+      "name": "Pokémon UNITE",
+      "cap": 60,
+      "packages": [
+        "jp.pokemon.pokemonunite"
+      ],
+      "short": "High frame rate mode = 60",
+      "tip": "High frame rate mode is 60 FPS."
+    },
+    {
+      "name": "PPSSPP (PSP games)",
+      "cap": 60,
+      "packages": [
+        "org.ppsspp.ppsspp",
+        "org.ppsspp.ppssppgold"
+      ],
+      "short": "PSP games run at their original 60 / 30",
+      "tip": "PSP games run at their original 60 (or 30) FPS. A faster screen can't add frames."
+    },
+    {
+      "name": "Bus Simulator Indonesia",
+      "cap": 60,
+      "packages": [
+        "com.maleo.bussimulatorid"
+      ],
+      "short": "In-game frame-rate setting tops out at 60",
+      "tip": "The game's own frame-rate setting goes up to 60. Pick 60 in its graphics settings."
+    },
+    {
+      "name": "Truckers of Europe 3",
+      "cap": 60,
+      "packages": [
+        "com.WandaSoftware.TruckersofEurope3"
+      ],
+      "short": "In-game frame-rate setting tops out at 60",
+      "tip": "The game's own frame-rate setting goes up to 60. Pick 60 in its graphics settings."
+    },
+    {
+      "name": "eFootball",
+      "cap": 60,
+      "packages": [
+        "jp.konami.pesam"
+      ],
+      "short": "Graphics → Frame Rate tops out at 60",
+      "tip": "The game's own frame-rate setting goes up to 60. Pick 60 in its graphics settings."
+    },
+    {
+      "name": "Monster Hunter Now",
+      "cap": 60,
+      "packages": [
+        "com.nianticlabs.monsterhunter"
+      ],
+      "short": "30 on the map, 60 in hunts",
+      "tip": "30 FPS on the map and 60 FPS in hunts."
+    },
+    {
+      "name": "Archero 2",
+      "cap": 60,
+      "packages": [
+        "com.xq.archeroii"
+      ],
+      "short": "Measured: 60 FPS in the lobby on a Xiaomi 14",
+      "tip": "Measured 60 FPS in the lobby with Hyper120 on (default settings). If its settings have a frame-rate option, pick the highest and report how it runs."
+    }
   ]
 }

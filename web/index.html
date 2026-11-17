@@ -291,6 +291,8 @@
     .support h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); margin: 0 0 8px; }
     .support p { color: var(--muted); max-width: 520px; }
     .btn-coffee { background: #ffdd00; color: #101820; box-shadow: 0 10px 30px -10px rgba(255,221,0,.5); }
+    .btn-coffee:hover { box-shadow: 0 14px 40px -10px rgba(255,221,0,.75); }
+    .nav-links .nav-coffee { margin-right: -14px; }
 
     footer { border-top: 1px solid var(--line); padding: 34px 0 48px; color: var(--dim); font-size: 0.88rem; }
     .foot { display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: center; }
@@ -319,9 +321,15 @@
       .games { grid-template-columns: 1fr 1fr; }
       .install, .proof, .explain, .caps { grid-template-columns: 1fr; }
     }
+    @media (max-width: 430px) {
+      .nav-coffee span { display: none; }
+      .nav-coffee { padding: 0 12px; }
+    }
     @media (max-width: 720px) {
       .wrap { padding: 0 16px; }
       .nav-links a:not(.btn) { display: none; }
+      .nav-links { gap: 10px; }
+      .nav-links .nav-coffee { margin-right: 0; }
       .hero { padding-top: 40px; }
       section { padding: 64px 0; }
       .lane { grid-template-columns: 1fr; gap: 8px; }
@@ -366,6 +374,7 @@
         <a href="#devices">Devices</a>
         <a href="#games">Games</a>
         <a href="#faq">FAQ</a>
+        <a class="btn btn-coffee btn-sm nav-coffee" href="https://buymeacoffee.com/rohan_reyes" target="_blank" rel="noopener" aria-label="Buy me a coffee"><svg><use href="#i-coffee"/></svg><span>Buy me a coffee</span></a>
         <a class="btn btn-primary btn-sm js-dl" href="https://github.com/Rohan-Reyes/Hyper120/releases/latest" target="_blank" rel="noopener">Download</a>
       </nav>
     </div>
@@ -503,6 +512,7 @@ extras   override_pkg_name  = <span class="s">"com.mobile.legends"</span>
           <ol class="card steps">
             <li><b>Download the APK</b>If your phone warns that the app isn't safe, tap <i>More details → Install anyway</i> (see <a href="#faq" style="color:var(--sky)">FAQ</a>). Get <code>Hyper120.apk</code> from <a href="https://github.com/Rohan-Reyes/Hyper120/releases/latest" target="_blank" rel="noopener" style="color:var(--sky)">GitHub Releases</a> and open it. Allow installs from unknown sources if asked.</li>
             <li><b>Open Hyper120</b>Your games are found and set to your screen's top rate straight away.</li>
+            <li><b>Set your phone to 120Hz</b>Settings → Display → Refresh rate → <b style="display:inline">120Hz (High)</b>. Games can't go faster than this, and Hyper120 warns you if it's on 60Hz.</li>
             <li><b>Let it run in the background</b>In <b style="display:inline">About → Open App info</b>, turn on Autostart and set Battery saver to No restrictions.</li>
             <li><b>Check it worked</b>Tap the gauge icon to open the FPS tester. You should see "120 Hz works".</li>
           </ol>
@@ -534,6 +544,7 @@ adb shell appops set com.custom.game120hz RUN_ANY_IN_BACKGROUND allow</pre>
         </div>
         <div class="card compat reveal">
           <div class="row"><span><span class="pill p-ok"><i></i>Verified</span></span><p><b>Xiaomi 14</b> (<code>houji</code>), HyperOS · Android 16, China ROM. 60, 90 and 120Hz confirmed with <code>dumpsys</code>.</p></div>
+          <div class="row"><span><span class="pill p-ok"><i></i>Reported working</span></span><p><b>Xiaomi 17</b>, Global HyperOS 3 (after setting the phone to 120Hz) · <b>POCO X8 Pro</b>, EEA HyperOS 3, 121 FPS · <b>HyperOS 4</b>: World of Tanks Blitz at 120 FPS.</p></div>
           <div class="row"><span><span class="pill p-ok"><i></i>Expected to work</span></span><p>Any <b>Xiaomi</b>, <b>Redmi</b> or <b>POCO</b> phone with HyperOS or MIUI and a 90Hz+ screen, including the Xiaomi 15 / 14 / 13 / 12 series, Redmi K and Note Pro series, POCO F / X / M series and Xiaomi Pad 6 / 7.</p></div>
           <div class="row"><span><span class="pill p-amb"><i></i>Still 60?</span></span><p>If the FPS tester says <b>works</b> but a game stays at 60, the game itself is the limit. Check the <a href="#games" style="color:var(--sky)">game list</a>.</p></div>
         </div>
@@ -602,6 +613,36 @@ mPrivGames={com.mobile.legends=120, ...}</pre>
               <li><b>Top Drives</b><span>Settings → High FPS (120 if supported)</span></li>
               <li><b>Pokémon GO</b><span>Settings → Advanced → Native refresh rate</span></li>
               <li><b>EA SPORTS FC Mobile</b><span>90 / 120 only on some phones</span></li>
+              <li><b>World of Tanks Blitz</b><span>120 FPS, reported by a Hyper120 user on HyperOS 4</span></li>
+              <li><b>Block Blast!</b><span>Measured: 120 FPS on a Xiaomi 14 with Hyper120</span></li>
+              <li><b>Spaceflight Simulator</b><span>Measured: 120 FPS on a Xiaomi 14 with Hyper120</span></li>
+              <li><b>8 Ball Pool</b><span>120 FPS in 2020 high-refresh game lists (untested)</span></li>
+              <li><b>Subway Surfers</b><span>120 FPS in 2020 high-refresh game lists (untested)</span></li>
+              <li><b>Shadow Fight 2</b><span>120 FPS in 2020 high-refresh game lists (untested)</span></li>
+              <li><b>Shadow Fight 3</b><span>120 FPS in 2020 high-refresh game lists (untested)</span></li>
+              <li><b>Shadowgun Legends</b><span>120 FPS in 2020 high-refresh game lists (untested)</span></li>
+              <li><b>Dead Trigger 2</b><span>120 FPS in 2020 high-refresh game lists (untested)</span></li>
+              <li><b>Pixel Gun 3D</b><span>120 FPS in 2020 high-refresh game lists (untested)</span></li>
+              <li><b>Plants vs Zombies 2</b><span>120 FPS in 2020 high-refresh game lists (untested)</span></li>
+              <li><b>Soul Knight</b><span>120 FPS in 2020 high-refresh game lists (untested)</span></li>
+              <li><b>Hill Climb Racing 2</b><span>120 FPS in 2020 high-refresh game lists (untested)</span></li>
+              <li><b>Temple Run 2</b><span>120 FPS in 2020 high-refresh game lists (untested)</span></li>
+              <li><b>Sonic Dash</b><span>120 FPS in 2020 high-refresh game lists (untested)</span></li>
+              <li><b>Marvel Contest of Champions</b><span>120 FPS in 2020 high-refresh game lists (untested)</span></li>
+              <li><b>Mortal Kombat</b><span>120 FPS in 2020 high-refresh game lists (untested)</span></li>
+              <li><b>Injustice 2</b><span>120 FPS in 2020 high-refresh game lists (untested)</span></li>
+              <li><b>Summoners War</b><span>120 FPS in 2020 high-refresh game lists (untested)</span></li>
+              <li><b>Toon Blast</b><span>120 FPS in 2020 high-refresh game lists (untested)</span></li>
+              <li><b>Tank Stars</b><span>120 FPS in 2020 high-refresh game lists (untested)</span></li>
+              <li><b>Stick War: Legacy</b><span>120 FPS in 2020 high-refresh game lists (untested)</span></li>
+              <li><b>Traffic Rider</b><span>120 FPS in 2020 high-refresh game lists (untested)</span></li>
+              <li><b>Bullet Force</b><span>120 FPS in 2020 high-refresh game lists (untested)</span></li>
+              <li><b>Mini Metro</b><span>120 FPS in 2020 high-refresh game lists (untested)</span></li>
+              <li><b>Alto&#x27;s Odyssey</b><span>120 FPS in 2020 high-refresh game lists (untested)</span></li>
+              <li><b>Grimvalor</b><span>120 FPS in 2020 high-refresh game lists (untested)</span></li>
+              <li><b>Super Mario Run</b><span>120 FPS in 2020 high-refresh game lists (untested)</span></li>
+              <li><b>Dragon Ball Legends</b><span>120 FPS in 2020 high-refresh game lists (untested)</span></li>
+              <li><b>Old School RuneScape</b><span>120 FPS in 2020 high-refresh game lists (untested)</span></li>
             </ul>
           </div>
           <div class="card cap">
@@ -625,6 +666,7 @@ mPrivGames={com.mobile.legends=120, ...}</pre>
               <li><b>Truckers of Europe 3</b><span>In-game frame-rate setting tops out at 60</span></li>
               <li><b>eFootball</b><span>Graphics → Frame Rate tops out at 60</span></li>
               <li><b>Monster Hunter Now</b><span>30 on the map, 60 in hunts</span></li>
+              <li><b>Archero 2</b><span>Measured: 60 FPS in the lobby on a Xiaomi 14</span></li>
             </ul>
           </div>
         </div>
@@ -642,8 +684,8 @@ mPrivGames={com.mobile.legends=120, ...}</pre>
         </div>
         <div class="faq reveal">
           <details open><summary>It works in the tester, but my game still runs at 60. Why?</summary><p>Because the game has its own limit. Hyper120 lifts the phone's cap, which the FPS tester proves, but some games are built to stop at 60 on Android (Roblox, Genshin Impact, Honkai: Star Rail and others). Check the <a href="#games" style="color:var(--sky)">game list</a>. If your game is in the 60 max column, no app can push it higher without modding the game.</p></details>
-          <details><summary>Which popular games are stuck at 60?</summary><p><!-- games:names60 -->Roblox, Genshin Impact, Honkai: Star Rail, Zenless Zone Zero, Wuthering Waves, Pokémon UNITE, PPSSPP (PSP games), Bus Simulator Indonesia, Truckers of Europe 3, eFootball and Monster Hunter Now<!-- /games:names60 -->. These games limit themselves, so they stay at 60 even with Hyper120 on. The app tags them <b style="color:var(--amber)">60 MAX</b>. See the <a href="#games" style="color:var(--sky)">full game list</a>.</p></details>
-          <details><summary>Which games can go above 60?</summary><p><!-- games:names120 -->Mobile Legends: Bang Bang, Call of Duty: Mobile, PUBG Mobile / BGMI, Honor of Kings, League of Legends: Wild Rift, Delta Force, Standoff 2, Brawl Stars, Clash of Clans, Minecraft, Asphalt Legends, CSR 2, Top Drives, Pokémon GO and EA SPORTS FC Mobile<!-- /games:names120 --> can, but you must turn on the high frame rate in each game's settings, and many only show it on phones the developer has approved. <!-- games:names90 -->Free Fire / Free Fire MAX and Fortnite<!-- /games:names90 --> top out at 90.</p></details>
+          <details><summary>Which popular games are stuck at 60?</summary><p><!-- games:names60 -->Roblox, Genshin Impact, Honkai: Star Rail, Zenless Zone Zero, Wuthering Waves, Pokémon UNITE, PPSSPP (PSP games), Bus Simulator Indonesia, Truckers of Europe 3, eFootball, Monster Hunter Now and Archero 2<!-- /games:names60 -->. These games limit themselves, so they stay at 60 even with Hyper120 on. The app tags them <b style="color:var(--amber)">60 MAX</b>. See the <a href="#games" style="color:var(--sky)">full game list</a>.</p></details>
+          <details><summary>Which games can go above 60?</summary><p><!-- games:names120 -->Mobile Legends: Bang Bang, Call of Duty: Mobile, PUBG Mobile / BGMI, Honor of Kings, League of Legends: Wild Rift, Delta Force, Standoff 2, Brawl Stars, Clash of Clans, Minecraft, Asphalt Legends, CSR 2, Top Drives, Pokémon GO, EA SPORTS FC Mobile, World of Tanks Blitz, Block Blast!, Spaceflight Simulator, 8 Ball Pool, Subway Surfers, Shadow Fight 2, Shadow Fight 3, Shadowgun Legends, Dead Trigger 2, Pixel Gun 3D, Plants vs Zombies 2, Soul Knight, Hill Climb Racing 2, Temple Run 2, Sonic Dash, Marvel Contest of Champions, Mortal Kombat, Injustice 2, Summoners War, Toon Blast, Tank Stars, Stick War: Legacy, Traffic Rider, Bullet Force, Mini Metro, Alto&#x27;s Odyssey, Grimvalor, Super Mario Run, Dragon Ball Legends and Old School RuneScape<!-- /games:names120 --> can, but you must turn on the high frame rate in each game's settings, and many only show it on phones the developer has approved. <!-- games:names90 -->Free Fire / Free Fire MAX and Fortnite<!-- /games:names90 --> top out at 90.</p></details>
           <details><summary>My game isn't on the list. How do I know?</summary><p>Look in the game's graphics settings for a frame-rate option. If the highest choice is 60 (or there's no option at all), the game is most likely capped at 60. Then check with Game Turbo's FPS counter while playing, long-press the game in Hyper120 and tap <b style="color:var(--text)">Report how it runs</b>. We'll add it to the list.</p></details>
           <details><summary>My game has no 120 FPS option. Can Hyper120 add it?</summary><p>No. Games like Mobile Legends, PUBG Mobile and Call of Duty: Mobile decide which phones see their 90/120 option. If your phone isn't on the developer's list, the option stays hidden. Hyper120 makes sure the screen isn't the bottleneck once the game asks for more.</p></details>
           <details><summary>How do I see a game's real FPS?</summary><p>Use the FPS counter in Game Turbo (swipe in from the edge while in a game and turn on the performance overlay). Developer options → "Show refresh rate" shows the <b style="color:var(--text)">screen</b> rate, not the game's. In a 60-capped game it can say 120 while the game still draws 60.</p></details>
@@ -651,7 +693,7 @@ mPrivGames={com.mobile.legends=120, ...}</pre>
           <details><summary>My phone says the app isn't safe or won't install it.</summary><p>Hyper120 isn't on the Play Store, so your phone warns about it like any downloaded app. On <b style="color:var(--text)">Play Protect</b>, tap More details → Install anyway (you may need your fingerprint or PIN). On <b style="color:var(--text)">Xiaomi's security scan</b>, tap Continue installation. If it says "App not installed", uninstall any old copy first. Since v4.2.1 it's signed with a proper release key and asks for fewer permissions, which avoids most warnings. The source code is public on GitHub, and every release lists the APK checksum so you can check your download.</p></details>
           <details><summary>How do I turn 120Hz off for a game?</summary><p>Untick the game in the list. PowerKeeper remembers the last value until it restarts, so to switch back right away, pick 60 and tap Apply, or reboot. To stop everything, turn off Background override or uninstall the app.</p></details>
           <details><summary>Does it drain my battery?</summary><p>Only games you tick run faster, and only while they're open. PowerKeeper and adaptive refresh stay on, so the rest of the phone behaves exactly as before. The background service wakes for a moment every 15 seconds while the screen is on and sleeps while it's off.</p></details>
-          <details><summary>The tester says "Clamped". What now?</summary><p>Tap Re-apply, and make sure Autostart is on and Battery saver is set to No restrictions. If it still clamps, please tap Report so we can look into your ROM.</p></details>
+          <details><summary>The tester says "Clamped". What now?</summary><p>First check Settings → Display → Refresh rate is set to <b style="color:var(--text)">120Hz (High)</b>. On 60Hz (Standard) nothing can go higher; this fixed it on a Xiaomi 17. Then tap Re-apply, and make sure Autostart is on and Battery saver is set to No restrictions. If it still clamps, please tap Report so we can look into your ROM.</p></details>
           <details><summary>Is it safe? Does it need root or special permissions?</summary><p>No root, no ADB, no accessibility service. It sends the same broadcast Xiaomi's game service (Joyose) uses. The code is open on GitHub.</p></details>
           <details><summary>Does it collect data?</summary><p>No account, ads or analytics. Every 12 hours it sends a random ID (no device info) so I can count active installs.</p></details>
         </div>

@@ -19,6 +19,7 @@ public class OnboardingActivity extends Activity {
     private TextView nextBtn;
     private TextView skipBtn;
     private TextView batteryBtn;
+    private TextView refreshBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +95,7 @@ public class OnboardingActivity extends Activity {
     private void render() {
         body.removeAllViews();
         batteryBtn = null;
+        refreshBtn = null;
         int[] titles = {R.string.ob1_title, R.string.ob2_title, R.string.ob3_title};
         int[] bodies = {R.string.ob1_body, R.string.ob2_body, R.string.ob3_body};
         int[] icons = {R.drawable.ui_zap, R.drawable.ui_gamepad, R.drawable.ui_settings};
@@ -138,6 +140,23 @@ public class OnboardingActivity extends Activity {
                 UiHelper.COL_DIM, UiHelper.TF_REGULAR);
             hint.setPadding(dp(6), dp(10), 0, 0);
             body.addView(hint);
+            refreshBtn = UiHelper.button(this, "", R.drawable.ui_gauge, false, v -> UiHelper.openDisplaySettings(this));
+            ((LinearLayout.LayoutParams) refreshBtn.getLayoutParams()).topMargin = dp(14);
+            body.addView(refreshBtn);
+            TextView rh = UiHelper.text(this, getString(R.string.ob3_refresh_hint), 13, UiHelper.COL_DIM, UiHelper.TF_REGULAR);
+            rh.setPadding(dp(6), dp(10), 0, 0);
+            body.addView(rh);
+
+            // Optional support card, kept visually separate from the setup steps
+            LinearLayout coffee = UiHelper.card(this);
+            coffee.setLayoutParams(UiHelper.matchWrap(this, 28));
+            coffee.setPadding(dp(14), dp(4), dp(14), dp(4));
+            coffee.setBackground(UiHelper.pillBg(this, UiHelper.alpha(UiHelper.COL_COFFEE_BG, 0.07f),
+                UiHelper.alpha(UiHelper.COL_COFFEE_BG, 0.3f), 22));
+            coffee.addView(UiHelper.row(this, R.drawable.ui_coffee, UiHelper.COL_COFFEE_BG,
+                getString(R.string.about_coffee), getString(R.string.about_coffee_sub), null,
+                v -> UiHelper.openUrl(this, UiHelper.BUY_ME_A_COFFEE_URL)));
+            body.addView(coffee);
             updateBatteryBtn();
         }
 
@@ -174,6 +193,12 @@ public class OnboardingActivity extends Activity {
     }
 
     private void updateBatteryBtn() {
+        if (refreshBtn != null) {
+            int v = FpsApplier.getSystemRefreshSetting(this);
+            boolean ok = v >= 90 || v < 0;
+            refreshBtn.setText(v >= 90 ? getString(R.string.ob3_refresh_done, v) : getString(R.string.ob3_refresh));
+            refreshBtn.setTextColor(v >= 90 ? UiHelper.COL_TEAL : UiHelper.COL_TEXT);
+        }
         if (batteryBtn == null) return;
         boolean ok = UiHelper.isBatteryUnrestricted(this);
         batteryBtn.setText(getString(ok ? R.string.ob3_battery_done : R.string.ob3_battery));

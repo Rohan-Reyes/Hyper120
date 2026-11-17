@@ -151,7 +151,16 @@ public class MainActivity extends Activity {
 
     private void updateHealth() {
         healthSlot.removeAllViews();
-        if (serviceWasKilled) {
+        if (FpsApplier.isSystemRefreshTooLow(this)) {
+            LinearLayout card = (LinearLayout) healthCard(R.string.health_refresh_title, R.string.health_refresh_body, null);
+            LinearLayout actions = (LinearLayout) card.getChildAt(card.getChildCount() - 1);
+            actions.removeAllViews();
+            actions.addView(actionChip(getString(R.string.health_open_display), UiHelper.COL_WARN,
+                v -> UiHelper.openDisplaySettings(this)));
+            TextView title = (TextView) ((LinearLayout) card.getChildAt(0)).getChildAt(1);
+            title.setText(getString(R.string.health_refresh_title, FpsApplier.getSystemRefreshSetting(this)));
+            healthSlot.addView(card);
+        } else if (serviceWasKilled) {
             healthSlot.addView(healthCard(R.string.health_killed_title, R.string.health_killed_body, () -> {
                 serviceWasKilled = false;
                 updateHealth();
