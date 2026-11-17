@@ -96,8 +96,8 @@ public class MainActivity extends Activity {
         titleCol.addView(title);
 
         TextView subtitle = new TextView(this);
-        subtitle.setText("Xiaomi 120Hz PowerKeeper Override");
-        subtitle.setTextSize(12);
+        subtitle.setText(FpsApplier.getDeviceSummary(this));
+        subtitle.setTextSize(11.5f);
         subtitle.setTextColor(UiHelper.COL_MUTED);
         titleCol.addView(subtitle);
         topBar.addView(titleCol);
@@ -189,7 +189,7 @@ public class MainActivity extends Activity {
         fpsRow.addView(fpsLabel);
 
         fpsPills.clear();
-        for (int fps : FpsApplier.SUPPORTED_FPS) {
+        for (int fps : FpsApplier.detectSupportedFps(this)) {
             TextView pill = new TextView(this);
             pill.setText(fps + "Hz");
             pill.setTag(fps);
@@ -235,25 +235,41 @@ public class MainActivity extends Activity {
         });
         card.addView(applyBtn);
 
-        LinearLayout statusRow = new LinearLayout(this);
-        statusRow.setOrientation(LinearLayout.HORIZONTAL);
-        statusRow.setGravity(Gravity.CENTER_VERTICAL);
-        statusRow.setPadding(0, dp(10), 0, 0);
-
         statusText = new TextView(this);
         statusText.setTextColor(UiHelper.COL_TEAL);
         statusText.setTextSize(12);
-        statusText.setLayoutParams(new LinearLayout.LayoutParams(
-            0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
-        statusRow.addView(statusText);
+        statusText.setPadding(dp(2), dp(10), dp(2), 0);
+        card.addView(statusText);
+
+        LinearLayout toolsRow = new LinearLayout(this);
+        toolsRow.setOrientation(LinearLayout.HORIZONTAL);
+        toolsRow.setPadding(0, dp(8), 0, 0);
+
+        TextView testFpsBtn = new TextView(this);
+        testFpsBtn.setText("Test FPS");
+        testFpsBtn.setTextColor(UiHelper.COL_TEAL);
+        testFpsBtn.setTextSize(12);
+        testFpsBtn.setTypeface(Typeface.DEFAULT_BOLD);
+        testFpsBtn.setGravity(Gravity.CENTER);
+        testFpsBtn.setBackground(UiHelper.pillBg(this, UiHelper.COL_BG, UiHelper.COL_OUTLINE, 16));
+        LinearLayout.LayoutParams testParams = new LinearLayout.LayoutParams(
+            0, dp(34), 1f);
+        testParams.rightMargin = dp(6);
+        testFpsBtn.setLayoutParams(testParams);
+        testFpsBtn.setOnClickListener(v -> startActivity(new Intent(this, FpsTesterActivity.class)));
+        toolsRow.addView(testFpsBtn);
 
         logToggleBtn = new TextView(this);
         logToggleBtn.setText("Show Terminal");
         logToggleBtn.setTextColor(UiHelper.COL_MUTED);
-        logToggleBtn.setTextSize(11);
+        logToggleBtn.setTextSize(12);
         logToggleBtn.setTypeface(Typeface.DEFAULT_BOLD);
-        logToggleBtn.setPadding(dp(10), dp(5), dp(10), dp(5));
-        logToggleBtn.setBackground(UiHelper.pillBg(this, UiHelper.COL_BG, UiHelper.COL_OUTLINE, 14));
+        logToggleBtn.setGravity(Gravity.CENTER);
+        logToggleBtn.setBackground(UiHelper.pillBg(this, UiHelper.COL_BG, UiHelper.COL_OUTLINE, 16));
+        LinearLayout.LayoutParams logBtnParams = new LinearLayout.LayoutParams(
+            0, dp(34), 1f);
+        logBtnParams.leftMargin = dp(6);
+        logToggleBtn.setLayoutParams(logBtnParams);
         logToggleBtn.setOnClickListener(v -> {
             logVisible = !logVisible;
             logToggleBtn.setText(logVisible ? "Hide Terminal" : "Show Terminal");
@@ -266,8 +282,8 @@ public class MainActivity extends Activity {
                 logText.setVisibility(View.GONE);
             }
         });
-        statusRow.addView(logToggleBtn);
-        card.addView(statusRow);
+        toolsRow.addView(logToggleBtn);
+        card.addView(toolsRow);
 
         logText = new TextView(this);
         logText.setTypeface(Typeface.MONOSPACE);

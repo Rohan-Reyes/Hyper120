@@ -100,8 +100,11 @@ On HyperOS / MIUI, `com.miui.powerkeeper` (`DisplayFrameSetting`) checks `mPrivG
 Any Xiaomi, Redmi, or POCO device with a **90Hz / 120Hz / 144Hz display** running **HyperOS or MIUI** with `com.miui.powerkeeper` should likely work, including:
 - **Xiaomi Flagships:** Xiaomi 15 / 15 Pro / 15 Ultra, Xiaomi 14 / 14 Pro / 14 Ultra / 14T / 14T Pro, Xiaomi 13 / 13 Pro / 13 Ultra / 13T / 13T Pro, Xiaomi 12 / 12 Pro / 12T / 12T Pro
 - **Redmi K & Note Series:** Redmi K80 / K70 / K60 / K50 series, Redmi Note 14 Pro / Pro+, Redmi Note 13 Pro / Pro+, Redmi Note 12 Pro / Turbo
-- **POCO Series:** POCO F6 / F6 Pro, POCO F5 / F5 Pro, POCO X7 / X7 Pro, POCO X6 / X6 Pro, POCO M6 Pro
+- **POCO Series:** POCO F6 / F6 Pro, POCO F5 / F5 Pro, POCO X7 / X7 Pro, POCO X6 / X6 Pro
 - **Tablets:** Xiaomi Pad 6 / Pad 6 Pro / Pad 7 / Pad 7 Pro
+
+### Reported Not Working / Unconfirmed
+- **POCO M6 Pro 5G** *(90Hz panel; user reported 60Hz lock on Global HyperOS)*
 
 *(Compatibility can vary by regional ROM or security patch — feel free to open an issue or PR with your device result!)*
 

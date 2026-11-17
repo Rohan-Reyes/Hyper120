@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.custom.game120hz"
-    android:versionCode="10"
-    android:versionName="3.7">
+    android:versionCode="11"
+    android:versionName="3.8">
 
     <uses-sdk android:minSdkVersion="26" android:targetSdkVersion="35" />
 
@@ -35,6 +35,10 @@
 
         <activity
             android:name=".AboutActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".FpsTesterActivity"
             android:exported="false" />
 
         <service

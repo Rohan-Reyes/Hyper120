@@ -5,14 +5,19 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.hardware.display.DisplayManager;
+import android.os.Build;
 import android.util.Log;
+import android.view.Display;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.UUID;
 
 /** Sends Joyose-compatible refresh-rate override broadcasts to PowerKeeper and auto-detects games. */
@@ -100,9 +105,53 @@ public final class FpsApplier {
             .apply();
     }
 
+    public static int[] detectSupportedFps(Context ctx) {
+        TreeSet<Integer> rates = new TreeSet<>();
+        try {
+            DisplayManager dm = (DisplayManager) ctx.getSystemService(Context.DISPLAY_SERVICE);
+            Display d = dm != null ? dm.getDisplay(Display.DEFAULT_DISPLAY) : null;
+            if (d != null) {
+                for (Display.Mode m : d.getSupportedModes()) {
+                    int r = Math.round(m.getRefreshRate());
+                    if (r >= 60) {
+                        rates.add(r);
+                    }
+                }
+            }
+        } catch (Exception ignored) {
+        }
+        if (rates.isEmpty()) {
+            return new int[]{60, 90, 120};
+        }
+        int[] out = new int[rates.size()];
+        int i = 0;
+        for (int r : rates) {
+            out[i++] = r;
+        }
+        return out;
+    }
+
+    public static int getMaxSupportedFps(Context ctx) {
+        int[] supported = detectSupportedFps(ctx);
+        return supported[supported.length - 1];
+    }
+
+    public static String getDeviceSummary(Context ctx) {
+        String brand = Build.MANUFACTURER == null ? "" : Build.MANUFACTURER.trim();
+        String model = Build.MODEL == null ? "" : Build.MODEL.trim();
+        String name = model.toLowerCase().startsWith(brand.toLowerCase())
+            ? model : (brand + " " + model).trim();
+        return name + " (" + Build.DEVICE + ") \u2022 Android " + Build.VERSION.RELEASE
+            + " \u2022 Max " + getMaxSupportedFps(ctx) + "Hz";
+    }
+
     public static int getTargetFps(Context ctx) {
-        return ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
-            .getInt(KEY_TARGET_FPS, 120);
+        SharedPreferences sp = ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
+        int saved = sp.getInt(KEY_TARGET_FPS, -1);
+        if (saved > 0) {
+            return saved;
+        }
+        return getMaxSupportedFps(ctx);
     }
 
     public static void setTargetFps(Context ctx, int fps) {
