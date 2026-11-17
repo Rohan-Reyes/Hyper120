@@ -3,6 +3,8 @@ package com.custom.game120hz;
 import android.app.Activity;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -10,6 +12,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /** Dedicated Material About page for Hyper120. */
 public class AboutActivity extends Activity {
@@ -71,8 +79,9 @@ public class AboutActivity extends Activity {
         appName.setTextColor(UiHelper.COL_TEXT);
         heroCard.addView(appName);
 
+        String currentVer = getInstalledVersion();
         TextView version = new TextView(this);
-        version.setText("v3.3  \u2022  Rootless 120Hz Override");
+        version.setText("v" + currentVer + "  \u2022  Rootless 120Hz Override");
         version.setTextSize(13);
         version.setTextColor(UiHelper.COL_TEAL);
         version.setPadding(0, dp(4), 0, dp(14));
@@ -108,6 +117,21 @@ public class AboutActivity extends Activity {
         linksTitle.setPadding(0, 0, 0, dp(14));
         linksCard.addView(linksTitle);
 
+        // Check for Updates Pill Button
+        Button updatePill = new Button(this);
+        updatePill.setText("Check for Updates");
+        updatePill.setAllCaps(false);
+        updatePill.setTextSize(15);
+        updatePill.setTypeface(Typeface.DEFAULT_BOLD);
+        updatePill.setTextColor(UiHelper.COL_TEXT);
+        updatePill.setBackground(UiHelper.pillBg(this, UiHelper.COL_BG, UiHelper.COL_OUTLINE, 32));
+        LinearLayout.LayoutParams updateParams = new LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT, dp(50));
+        updateParams.bottomMargin = dp(12);
+        updatePill.setLayoutParams(updateParams);
+        updatePill.setOnClickListener(v -> checkForUpdates(updatePill, currentVer));
+        linksCard.addView(updatePill);
+
         // Buy Me a Coffee Pill Button
         Button coffeePill = new Button(this);
         coffeePill.setText("\u2615  buymeacoffee.com/rohan_reyes");
@@ -142,6 +166,96 @@ public class AboutActivity extends Activity {
         scroll.setBackgroundColor(UiHelper.COL_BG);
         scroll.addView(root);
         setContentView(scroll);
+    }
+
+    private String getInstalledVersion() {
+        try {
+            return getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+        } catch (Exception e) {
+            return "3.7";
+        }
+    }
+
+    private void checkForUpdates(Button btn, String currentVer) {
+        btn.setEnabled(false);
+        btn.setText("Checking GitHub releases...");
+        Handler main = new Handler(Looper.getMainLooper());
+        new Thread(() -> {
+            HttpURLConnection conn = null;
+            try {
+                URL url = new URL("https://api.github.com/repos/Rohan-Reyes/Hyper120/releases/latest");
+                conn = (HttpURLConnection) url.openConnection();
+                conn.setConnectTimeout(5000);
+                conn.setReadTimeout(5000);
+                conn.setRequestProperty("Accept", "application/vnd.github+json");
+                conn.setRequestProperty("User-Agent", "Hyper120/" + currentVer);
+                if (conn.getResponseCode() != 200) {
+                    throw new RuntimeException("HTTP " + conn.getResponseCode());
+                }
+                BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                StringBuilder sb = new StringBuilder();
+                String line;
+                while ((line = br.readLine()) != null) sb.append(line);
+                br.close();
+
+                JSONObject json = new JSONObject(sb.toString());
+                String tag = json.optString("tag_name", "").replaceFirst("^v", "");
+                String releaseUrl = json.optString("html_url", UiHelper.GITHUB_REPO_URL + "/releases/latest");
+                String apkUrl = releaseUrl;
+                JSONArray assets = json.optJSONArray("assets");
+                if (assets != null) {
+                    for (int i = 0; i < assets.length(); i++) {
+                        JSONObject a = assets.getJSONObject(i);
+                        if (a.optString("name", "").endsWith(".apk")) {
+                            apkUrl = a.optString("browser_download_url", releaseUrl);
+                            break;
+                        }
+                    }
+                }
+                final String targetUrl = apkUrl;
+                final boolean newer = compareVersions(tag, currentVer) > 0;
+                main.post(() -> {
+                    btn.setEnabled(true);
+                    if (newer) {
+                        btn.setText("Update available: v" + tag + " (Tap to download)");
+                        btn.setTextColor(UiHelper.COL_ON_PRIMARY);
+                        btn.setBackground(UiHelper.pillBg(this, UiHelper.COL_TEAL, 0, 32));
+                        btn.setOnClickListener(v -> UiHelper.openUrl(this, targetUrl));
+                    } else {
+                        btn.setText("\u2713 Up to date (v" + currentVer + ")");
+                        btn.setTextColor(UiHelper.COL_TEAL);
+                    }
+                });
+            } catch (Exception e) {
+                main.post(() -> {
+                    btn.setEnabled(true);
+                    btn.setText("Check failed \u2014 Tap to open Releases");
+                    btn.setOnClickListener(v -> UiHelper.openUrl(this, UiHelper.GITHUB_REPO_URL + "/releases/latest"));
+                });
+            } finally {
+                if (conn != null) conn.disconnect();
+            }
+        }).start();
+    }
+
+    private static int compareVersions(String a, String b) {
+        String[] pa = a.split("\\.");
+        String[] pb = b.split("\\.");
+        int len = Math.max(pa.length, pb.length);
+        for (int i = 0; i < len; i++) {
+            int va = i < pa.length ? parseDigits(pa[i]) : 0;
+            int vb = i < pb.length ? parseDigits(pb[i]) : 0;
+            if (va != vb) return Integer.compare(va, vb);
+        }
+        return 0;
+    }
+
+    private static int parseDigits(String s) {
+        try {
+            return Integer.parseInt(s.replaceAll("[^0-9]", ""));
+        } catch (Exception e) {
+            return 0;
+        }
     }
 
     private int dp(int v) {
