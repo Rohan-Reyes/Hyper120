@@ -375,7 +375,7 @@
         <a href="#games">Games</a>
         <a href="#faq">FAQ</a>
         <a class="btn btn-coffee btn-sm nav-coffee" href="https://buymeacoffee.com/rohan_reyes" target="_blank" rel="noopener" aria-label="Buy me a coffee"><svg><use href="#i-coffee"/></svg><span>Buy me a coffee</span></a>
-        <a class="btn btn-primary btn-sm js-dl" href="https://github.com/Rohan-Reyes/Hyper120/releases/latest" target="_blank" rel="noopener">Download</a>
+        <a class="btn btn-primary btn-sm js-dl" href="/download?src=header" rel="noopener">Download</a>
       </nav>
     </div>
   </header>
@@ -392,7 +392,7 @@
             <b>only for the games you choose</b>, on Xiaomi, Redmi and POCO, with no root and no PC.
           </p>
           <div class="cta">
-            <a class="btn btn-primary js-dl" href="https://github.com/Rohan-Reyes/Hyper120/releases/latest" target="_blank" rel="noopener">
+            <a class="btn btn-primary js-dl" href="/download?src=hero" rel="noopener">
               <svg><use href="#i-download"/></svg><span class="js-dl-label">Download APK</span>
             </a>
             <a class="btn btn-ghost" href="https://github.com/Rohan-Reyes/Hyper120" target="_blank" rel="noopener">
@@ -510,7 +510,7 @@ extras   override_pkg_name  = <span class="s">"com.mobile.legends"</span>
         </div>
         <div class="install reveal">
           <ol class="card steps">
-            <li><b>Download the APK</b>If your phone warns that the app isn't safe, tap <i>More details → Install anyway</i> (see <a href="#faq" style="color:var(--sky)">FAQ</a>). Get <code>Hyper120.apk</code> from <a href="https://github.com/Rohan-Reyes/Hyper120/releases/latest" target="_blank" rel="noopener" style="color:var(--sky)">GitHub Releases</a> and open it. Allow installs from unknown sources if asked.</li>
+            <li><b>Download the APK</b>If your phone warns that the app isn't safe, tap <i>More details → Install anyway</i> (see <a href="#faq" style="color:var(--sky)">FAQ</a>). Get <code>Hyper120.apk</code> from <a href="/download?src=install" style="color:var(--sky)">here</a> or <a href="https://github.com/Rohan-Reyes/Hyper120/releases/latest" target="_blank" rel="noopener" style="color:var(--sky)">GitHub Releases</a> and open it. Allow installs from unknown sources if asked.</li>
             <li><b>Open Hyper120</b>Your games are found and set to your screen's top rate straight away.</li>
             <li><b>Set your phone to 120Hz</b>Settings → Display → Refresh rate → <b style="display:inline">120Hz (High)</b>. Games can't go faster than this, and Hyper120 warns you if it's on 60Hz.</li>
             <li><b>Let it run in the background</b>In <b style="display:inline">About → Open App info</b>, turn on Autostart and set Battery saver to No restrictions.</li>
@@ -796,7 +796,7 @@ mPrivGames={com.mobile.legends=120, ...}</pre>
         document.querySelectorAll('.js-ver-badge').forEach(e => e.textContent = v);
         document.querySelectorAll('.js-dl-label').forEach(e => e.textContent = 'Download APK · ' + v);
         const apk = (j.assets || []).find(a => a.name.endsWith('.apk'));
-        if (apk) document.querySelectorAll('.js-dl').forEach(a => a.href = apk.browser_download_url);
+        // Download buttons go through /download (counted on the Pi, then redirected to the latest APK)
       }).catch(() => {});
 
     // Lightbox
