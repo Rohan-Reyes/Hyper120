@@ -93,10 +93,9 @@ Open the **FPS tester** (gauge icon, top right). It runs the override against it
 | Status | Devices |
 |---|---|
 | ✅ **Verified** | Xiaomi 14 (`houji`), HyperOS / Android 16, China ROM: 60, 90 and 120Hz all confirmed |
-| 🟡 **Likely** (untested) | Xiaomi 15 / 14 / 13 / 12 series incl. T and Ultra · Redmi K80 / K70 / K60 / K50, Note 14 / 13 / 12 Pro & Turbo · POCO F6 / F5 / X7 / X6 · Xiaomi Pad 6 / 7 series |
-| ❌ **Reported not working** | POCO M6 Pro 5G (Global HyperOS stays at 60Hz) |
+| ✅ **Expected to work** | Any Xiaomi, Redmi or POCO phone with HyperOS or MIUI and a 90Hz+ screen, including the Xiaomi 15 / 14 / 13 / 12 series (incl. T and Ultra), Redmi K80 / K70 / K60 / K50 and Note 14 / 13 / 12 Pro & Turbo, POCO F / X / M series, and Xiaomi Pad 6 / 7 |
 
-Some Global and POCO builds appear to accept this override only from system apps. If the tester says **Clamped**, tap **Report** so your ROM can be added to this table.
+If the tester says **works** but a game still runs at 60, the game itself is the limit (see the [game list](#game-list-which-games-can-actually-go-above-60)). If the tester says **Clamped**, tap **Report** so we can look into your ROM.
 
 ## Game list: which games can actually go above 60?
 
