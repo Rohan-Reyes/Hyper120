@@ -126,6 +126,10 @@ public class OnboardingActivity extends Activity {
                 v -> UiHelper.requestBatteryExemption(this));
             ((LinearLayout.LayoutParams) batteryBtn.getLayoutParams()).topMargin = dp(24);
             body.addView(batteryBtn);
+            TextView bh = UiHelper.text(this, getString(R.string.ob3_battery_hint), 13,
+                UiHelper.COL_DIM, UiHelper.TF_REGULAR);
+            bh.setPadding(dp(6), dp(8), 0, dp(4));
+            body.addView(bh);
             TextView auto = UiHelper.button(this, getString(R.string.ob3_autostart), R.drawable.ui_settings, false,
                 v -> UiHelper.openAutostart(this));
             ((LinearLayout.LayoutParams) auto.getLayoutParams()).topMargin = dp(10);

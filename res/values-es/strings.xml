@@ -132,8 +132,9 @@
     <string name="ob2_tag60">El juego se queda en 60. Nada puede hacerlo más rápido.</string>
     <string name="ob3_title">Mantenlo activo</string>
     <string name="ob3_body">HyperOS cierra las apps en segundo plano con frecuencia. Haz los dos pasos para que Hyper120 siga funcionando al salir de la app.</string>
-    <string name="ob3_battery">1. Quitar límites de batería</string>
+    <string name="ob3_battery">1. Ahorro de batería: Sin restricciones</string>
     <string name="ob3_battery_done">✓ Límites de batería quitados</string>
+    <string name="ob3_battery_hint">Abre Información de la app. Toca Ahorro de batería y elige Sin restricciones.</string>
     <string name="ob3_autostart">2. Permitir inicio automático</string>
     <string name="ob3_autostart_hint">Busca Hyper120 en la lista y actívalo.</string>
 

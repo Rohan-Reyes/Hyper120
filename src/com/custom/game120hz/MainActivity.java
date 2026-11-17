@@ -568,6 +568,28 @@ public class MainActivity extends Activity {
         selectedCountText.setText(getString(R.string.apps_selected, selectedPackages.size()));
     }
 
+    /**
+     * Renders an app icon into a bitmap at the size we actually show (48dp). Apps ship icons up to
+     * 512px+, and keeping ~150 of those decoded cost ~180 MB, which made HyperOS likely to kill
+     * the process (and the background service with it).
+     */
+    private Drawable smallIcon(Drawable d) {
+        int px = dp(48);
+        android.graphics.Bitmap b = android.graphics.Bitmap.createBitmap(px, px, android.graphics.Bitmap.Config.ARGB_8888);
+        android.graphics.Canvas c = new android.graphics.Canvas(b);
+        d.setBounds(0, 0, px, px);
+        d.draw(c);
+        return new android.graphics.drawable.BitmapDrawable(getResources(), b);
+    }
+
+    @Override
+    protected void onDestroy() {
+        // Let the icons go as soon as the screen closes; the background service stays light.
+        allApps.clear();
+        if (listCard != null) listCard.removeAllViews();
+        super.onDestroy();
+    }
+
     private void loadInstalledAppsAsync() {
         new Thread(() -> {
             PackageManager pm = getPackageManager();
@@ -576,7 +598,7 @@ public class MainActivity extends Activity {
                 if (pm.getLaunchIntentForPackage(ai.packageName) == null) continue;
                 if (getPackageName().equals(ai.packageName)) continue;
                 list.add(new AppEntry(pm.getApplicationLabel(ai).toString(), ai.packageName,
-                    pm.getApplicationIcon(ai), FpsApplier.isGameApp(ai)));
+                    smallIcon(pm.getApplicationIcon(ai)), FpsApplier.isGameApp(ai)));
             }
             Collections.sort(list, (a, b) -> {
                 boolean as = selectedPackages.contains(a.packageName);

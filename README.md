@@ -76,6 +76,16 @@ HyperOS and MIUI quietly cap many games at **60Hz**, even when your screen is se
 
 To go back to normal for a game, untick it (or pick 60Hz and tap Apply). PowerKeeper keeps the last value in memory until it restarts.
 
+### "App not secure" or "blocked" while installing?
+
+Hyper120 isn't on the Play Store, so your phone shows a warning for it like it does for any app installed from a download. It's safe to continue:
+
+- **Google Play Protect** (*"Unsafe app blocked"* / *"App scan recommended"*): tap **More details → Install anyway**. Newer Android asks for your fingerprint or PIN to confirm.
+- **Xiaomi / HyperOS security scan** (*"This app may be risky"*): tap **Continue installation** / **Install anyway** (some phones make you wait a few seconds).
+- **"App not installed"**: you probably have an old copy from another source. Uninstall it, then install again.
+
+Since v4.2.1 the app is signed with a proper release key and asks for fewer permissions, which avoids most of these warnings. To check your download is genuine, compare the APK's SHA-256 with the one in the [release notes](https://github.com/Rohan-Reyes/Hyper120/releases/latest). The signing certificate SHA-256 is `B1:01:F1:83:C5:8F:3C:F8:4A:30:76:23:84:E5:E7:B5:A6:CD:0B:37:46:E4:33:B3:EA:E6:00:C5:E9:4B:C1:80`.
+
 <details>
 <summary>Optional: install and whitelist with ADB</summary>
 

@@ -131,8 +131,9 @@
     <string name="ob2_tag60">Game tetap di 60. Tidak ada yang bisa membuatnya lebih cepat.</string>
     <string name="ob3_title">Agar tetap berjalan</string>
     <string name="ob3_body">HyperOS sering menutup aplikasi di latar belakang. Lakukan kedua langkah ini agar Hyper120 tetap bekerja setelah kamu keluar dari aplikasi.</string>
-    <string name="ob3_battery">1. Hapus batasan baterai</string>
+    <string name="ob3_battery">1. Penghemat baterai: Tanpa batasan</string>
     <string name="ob3_battery_done">✓ Batasan baterai dihapus</string>
+    <string name="ob3_battery_hint">Membuka Info aplikasi. Ketuk Penghemat baterai lalu pilih Tanpa batasan.</string>
     <string name="ob3_autostart">2. Izinkan Mulai otomatis</string>
     <string name="ob3_autostart_hint">Cari Hyper120 di daftar lalu nyalakan.</string>
 

@@ -23,8 +23,20 @@ javac -nowarn -source 11 -target 11 -classpath "$JAR" -d build/classes \
 cp build/unsigned.apk build/unaligned.apk
 (cd build/dex && jar uf ../unaligned.apk classes.dex)
 "$BT/zipalign$EXE" -f 4 build/unaligned.apk build/aligned.apk
-"$SIGN" sign --ks build/debug.jks --ks-pass pass:android --key-pass pass:android \
-  --out build/Hyper120.apk build/aligned.apk
+# Release signing: if the release key exists, sign with key rotation (legacy key -> release key)
+# so installs signed with the old key keep updating. Otherwise fall back to the local debug key.
+KEYDIR="${HYPER120_KEYS:-$HOME/.hyper120-signing}"
+command -v cygpath >/dev/null && KEYDIR="$(cygpath -m "$KEYDIR")"   # Java on Windows needs C:/ paths
+if [[ -f "$KEYDIR/release.jks" && -f "$KEYDIR/lineage.bin" ]]; then
+  "$SIGN" sign --ks "$KEYDIR/legacy-debug.jks" --ks-pass pass:android --key-pass pass:android \
+    --next-signer --ks "$KEYDIR/release.jks" --ks-pass "file:$KEYDIR/release.pass" \
+    --lineage "$KEYDIR/lineage.bin" --out build/Hyper120.apk build/aligned.apk
+  echo "signed with release key (rotation from legacy key)"
+else
+  "$SIGN" sign --ks build/debug.jks --ks-pass pass:android --key-pass pass:android \
+    --out build/Hyper120.apk build/aligned.apk
+  echo "signed with local debug key"
+fi
 echo "built build/Hyper120.apk"
 if [[ "${1:-}" == "--install" ]]; then
   "$SDK/platform-tools/adb$EXE" install -r build/Hyper120.apk

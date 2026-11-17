@@ -340,15 +340,12 @@ public final class UiHelper {
         return pm != null && pm.isIgnoringBatteryOptimizations(ctx.getPackageName());
     }
 
-    /** System prompt to exempt Hyper120 from battery optimisation; falls back to App info. */
+    /**
+     * Opens App info, where HyperOS keeps "Battery saver → No restrictions". (We no longer use the
+     * REQUEST_IGNORE_BATTERY_OPTIMIZATIONS prompt: that permission made security scanners flag the app.)
+     */
     public static void requestBatteryExemption(Activity act) {
-        try {
-            Intent i = new Intent(android.provider.Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS,
-                Uri.parse("package:" + act.getPackageName()));
-            act.startActivity(i);
-        } catch (Exception e) {
-            openAppInfo(act);
-        }
+        openAppInfo(act);
     }
 
     /** HyperOS / MIUI Autostart manager; falls back to App info on other ROMs. */
