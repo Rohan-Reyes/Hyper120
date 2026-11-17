@@ -3,3 +3,4 @@ build/
 *.jks
 *.class
 *.dex
+CONTEXT.md

@@ -1,13 +1,14 @@
 package com.custom.game120hz;
 
 import android.app.Activity;
-import android.graphics.Typeface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.Settings;
 import android.view.Gravity;
-import android.view.ViewGroup;
-import android.widget.Button;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -19,181 +20,123 @@ import java.net.URL;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-/** Dedicated Material About page for Hyper120. */
+/** About, updates, support and setup help. */
 public class AboutActivity extends Activity {
+    private boolean checking = false;
+    private String updateUrl = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         UiHelper.setupDarkBars(this);
+        String currentVer = UiHelper.appVersion(this);
 
         LinearLayout root = new LinearLayout(this);
         root.setOrientation(LinearLayout.VERTICAL);
-        root.setBackgroundColor(UiHelper.COL_BG);
-        UiHelper.applyNotchSafePadding(this, root, 20, 18, 24);
+        root.addView(UiHelper.topBar(this, "About"));
 
-        // Top Bar with Back Pill
-        LinearLayout topBar = new LinearLayout(this);
-        topBar.setOrientation(LinearLayout.HORIZONTAL);
-        topBar.setGravity(Gravity.CENTER_VERTICAL);
-        topBar.setPadding(0, 0, 0, dp(20));
-
-        Button backBtn = new Button(this);
-        backBtn.setText("\u2190  Back");
-        backBtn.setAllCaps(false);
-        backBtn.setTextSize(14);
-        backBtn.setTextColor(UiHelper.COL_TEXT);
-        backBtn.setBackground(UiHelper.pillBg(this, UiHelper.COL_SURFACE, UiHelper.COL_OUTLINE, 20));
-        backBtn.setPadding(dp(16), 0, dp(16), 0);
-        backBtn.setLayoutParams(new LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.WRAP_CONTENT, dp(40)));
-        backBtn.setOnClickListener(v -> finish());
-        topBar.addView(backBtn);
-
-        TextView header = new TextView(this);
-        header.setText("About");
-        header.setTextSize(20);
-        header.setTypeface(Typeface.DEFAULT_BOLD);
-        header.setTextColor(UiHelper.COL_TEXT);
-        header.setPadding(dp(16), 0, 0, 0);
-        topBar.addView(header);
-        root.addView(topBar);
-
-        // Hero Card
-        LinearLayout heroCard = new LinearLayout(this);
-        heroCard.setOrientation(LinearLayout.VERTICAL);
-        heroCard.setGravity(Gravity.CENTER_HORIZONTAL);
-        heroCard.setBackground(UiHelper.pillBg(this, UiHelper.COL_SURFACE, UiHelper.COL_OUTLINE, 24));
-        heroCard.setPadding(dp(20), dp(24), dp(20), dp(24));
-
+        // Hero
+        LinearLayout hero = new LinearLayout(this);
+        hero.setOrientation(LinearLayout.VERTICAL);
+        hero.setGravity(Gravity.CENTER_HORIZONTAL);
+        hero.setPadding(dp(16), dp(20), dp(16), dp(8));
         ImageView icon = new ImageView(this);
         icon.setImageResource(R.drawable.ic_launcher);
-        LinearLayout.LayoutParams iconParams = new LinearLayout.LayoutParams(dp(76), dp(76));
-        iconParams.bottomMargin = dp(14);
-        icon.setLayoutParams(iconParams);
-        heroCard.addView(icon);
-
-        TextView appName = new TextView(this);
-        appName.setText("Hyper120");
-        appName.setTextSize(24);
-        appName.setTypeface(Typeface.DEFAULT_BOLD);
-        appName.setTextColor(UiHelper.COL_TEXT);
-        heroCard.addView(appName);
-
-        String currentVer = getInstalledVersion();
-        TextView version = new TextView(this);
-        version.setText("v" + currentVer + "  \u2022  Rootless 120Hz Override");
-        version.setTextSize(13);
-        version.setTextColor(UiHelper.COL_TEAL);
-        version.setPadding(0, dp(4), 0, dp(14));
-        heroCard.addView(version);
-
-        TextView desc = new TextView(this);
-        desc.setText(
-            "Hyper120 unlocks 120fps for selected games and apps on Xiaomi / HyperOS "
-            + "by sending Joyose-compatible override broadcasts directly to PowerKeeper — "
-            + "keeping adaptive refresh rate and normal-use battery life untouched.");
-        desc.setTextSize(14);
-        desc.setTextColor(UiHelper.COL_MUTED);
+        hero.addView(icon, new LinearLayout.LayoutParams(dp(92), dp(92)));
+        TextView name = UiHelper.text(this, "Hyper120", 28, UiHelper.COL_TEXT, UiHelper.TF_BOLD);
+        name.setPadding(0, dp(16), 0, 0);
+        name.setGravity(Gravity.CENTER);
+        hero.addView(name);
+        TextView ver = UiHelper.chip(this, "Version " + currentVer, UiHelper.COL_TEAL);
+        LinearLayout.LayoutParams vp = new LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        vp.topMargin = dp(10);
+        hero.addView(ver, vp);
+        TextView desc = UiHelper.text(this,
+            "Unlocks high refresh rates in games on Xiaomi, Redmi and POCO phones. It asks "
+                + "PowerKeeper for the rate you pick, so adaptive refresh and battery life stay "
+                + "untouched everywhere else. No root, no PC.",
+            14, UiHelper.COL_MUTED, UiHelper.TF_REGULAR);
         desc.setGravity(Gravity.CENTER);
-        heroCard.addView(desc);
+        desc.setLineSpacing(dp(4), 1f);
+        desc.setPadding(dp(8), dp(16), dp(8), 0);
+        hero.addView(desc);
+        root.addView(hero);
 
-        root.addView(heroCard);
+        // Links
+        root.addView(sectionLabel("App"));
+        LinearLayout links = UiHelper.card(this);
+        links.setPadding(dp(14), dp(4), dp(14), dp(4));
+        final LinearLayout[] updateRow = new LinearLayout[1];
+        updateRow[0] = UiHelper.row(this, R.drawable.ui_refresh, UiHelper.COL_PRIMARY,
+            "Check for updates", "You're on v" + currentVer, null,
+            v -> checkForUpdates(updateRow[0], currentVer));
+        links.addView(updateRow[0]);
+        links.addView(UiHelper.divider(this, 58));
+        links.addView(UiHelper.row(this, R.drawable.ui_code, 0xFFA5B4FC,
+            "Source code", "github.com/Rohan-Reyes/Hyper120", null,
+            v -> UiHelper.openUrl(this, UiHelper.GITHUB_REPO_URL)));
+        links.addView(UiHelper.divider(this, 58));
+        links.addView(UiHelper.row(this, R.drawable.ui_flag, UiHelper.COL_ERROR,
+            "Report a bug or device result", "Opens a GitHub issue form", null,
+            v -> UiHelper.openUrl(this, UiHelper.GITHUB_REPO_URL + "/issues/new/choose")));
+        root.addView(links);
 
-        // Support & Links Card
-        LinearLayout linksCard = new LinearLayout(this);
-        linksCard.setOrientation(LinearLayout.VERTICAL);
-        linksCard.setBackground(UiHelper.pillBg(this, UiHelper.COL_SURFACE, UiHelper.COL_OUTLINE, 24));
-        linksCard.setPadding(dp(20), dp(20), dp(20), dp(20));
-        LinearLayout.LayoutParams linksCardParams = new LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        linksCardParams.topMargin = dp(16);
-        linksCard.setLayoutParams(linksCardParams);
+        // Setup
+        root.addView(sectionLabel("Keep it running"));
+        LinearLayout setup = UiHelper.card(this);
+        setup.setPadding(dp(14), dp(4), dp(14), dp(4));
+        setup.addView(UiHelper.row(this, R.drawable.ui_settings, UiHelper.COL_TEAL,
+            "Open App info",
+            "Turn on Autostart and set Battery saver to No restrictions so HyperOS doesn't stop Hyper120.",
+            null, v -> {
+                Intent i = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                    Uri.fromParts("package", getPackageName(), null));
+                startActivity(i);
+            }));
+        root.addView(setup);
 
-        TextView linksTitle = new TextView(this);
-        linksTitle.setText("Support & Source");
-        linksTitle.setTextSize(16);
-        linksTitle.setTypeface(Typeface.DEFAULT_BOLD);
-        linksTitle.setTextColor(UiHelper.COL_TEXT);
-        linksTitle.setPadding(0, 0, 0, dp(14));
-        linksCard.addView(linksTitle);
+        // Support
+        root.addView(sectionLabel("Support"));
+        LinearLayout coffee = UiHelper.card(this);
+        coffee.setPadding(dp(14), dp(4), dp(14), dp(4));
+        coffee.setBackground(UiHelper.pillBg(this, UiHelper.alpha(UiHelper.COL_COFFEE_BG, 0.07f),
+            UiHelper.alpha(UiHelper.COL_COFFEE_BG, 0.3f), 24));
+        coffee.addView(UiHelper.row(this, R.drawable.ui_coffee, UiHelper.COL_COFFEE_BG,
+            "Buy me a coffee", "Hyper120 is free. Tips keep updates coming.", null,
+            v -> UiHelper.openUrl(this, UiHelper.BUY_ME_A_COFFEE_URL)));
+        root.addView(coffee);
 
-        // Check for Updates Pill Button
-        Button updatePill = new Button(this);
-        updatePill.setText("Check for Updates");
-        updatePill.setAllCaps(false);
-        updatePill.setTextSize(15);
-        updatePill.setTypeface(Typeface.DEFAULT_BOLD);
-        updatePill.setTextColor(UiHelper.COL_TEXT);
-        updatePill.setBackground(UiHelper.pillBg(this, UiHelper.COL_BG, UiHelper.COL_OUTLINE, 32));
-        LinearLayout.LayoutParams updateParams = new LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT, dp(50));
-        updateParams.bottomMargin = dp(12);
-        updatePill.setLayoutParams(updateParams);
-        updatePill.setOnClickListener(v -> checkForUpdates(updatePill, currentVer));
-        linksCard.addView(updatePill);
-
-        // Buy Me a Coffee Pill Button
-        Button coffeePill = new Button(this);
-        coffeePill.setText("\u2615  buymeacoffee.com/rohan_reyes");
-        coffeePill.setAllCaps(false);
-        coffeePill.setTextSize(15);
-        coffeePill.setTypeface(Typeface.DEFAULT_BOLD);
-        coffeePill.setTextColor(UiHelper.COL_COFFEE_FG);
-        coffeePill.setBackground(UiHelper.pillBg(this, UiHelper.COL_COFFEE_BG, 0, 32));
-        LinearLayout.LayoutParams coffeeParams = new LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT, dp(50));
-        coffeeParams.bottomMargin = dp(12);
-        coffeePill.setLayoutParams(coffeeParams);
-        coffeePill.setOnClickListener(v -> UiHelper.openUrl(this, UiHelper.BUY_ME_A_COFFEE_URL));
-        linksCard.addView(coffeePill);
-
-        // GitHub Repo Pill Button
-        Button githubPill = new Button(this);
-        githubPill.setText("GitHub: github.com/Rohan-Reyes/Hyper120");
-        githubPill.setAllCaps(false);
-        githubPill.setTextSize(14);
-        githubPill.setTypeface(Typeface.DEFAULT_BOLD);
-        githubPill.setTextColor(UiHelper.COL_ON_PRIMARY);
-        githubPill.setBackground(UiHelper.pillBg(this, UiHelper.COL_PRIMARY, 0, 32));
-        LinearLayout.LayoutParams ghParams = new LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT, dp(50));
-        ghParams.bottomMargin = dp(12);
-        githubPill.setLayoutParams(ghParams);
-        githubPill.setOnClickListener(v -> UiHelper.openUrl(this, UiHelper.GITHUB_REPO_URL));
-        linksCard.addView(githubPill);
-
-        // Report Bug / Compatibility Pill Button
-        Button reportPill = new Button(this);
-        reportPill.setText("Report Bug / Device Compatibility");
-        reportPill.setAllCaps(false);
-        reportPill.setTextSize(14);
-        reportPill.setTypeface(Typeface.DEFAULT_BOLD);
-        reportPill.setTextColor(UiHelper.COL_TEXT);
-        reportPill.setBackground(UiHelper.pillBg(this, UiHelper.COL_BG, UiHelper.COL_OUTLINE, 32));
-        reportPill.setLayoutParams(new LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT, dp(50)));
-        reportPill.setOnClickListener(v -> UiHelper.openUrl(this, UiHelper.GITHUB_REPO_URL + "/issues/new/choose"));
-        linksCard.addView(reportPill);
-
-        root.addView(linksCard);
+        TextView footer = UiHelper.text(this, "Made by Rohan Reyes · Open source",
+            12, UiHelper.COL_DIM, UiHelper.TF_REGULAR);
+        footer.setGravity(Gravity.CENTER);
+        footer.setPadding(0, dp(24), 0, 0);
+        root.addView(footer, UiHelper.matchWrap(this, 0));
 
         ScrollView scroll = new ScrollView(this);
         scroll.setBackgroundColor(UiHelper.COL_BG);
+        scroll.setVerticalScrollBarEnabled(false);
         scroll.addView(root);
+        UiHelper.applyNotchSafePadding(this, scroll, 16, 12, 28);
         setContentView(scroll);
     }
 
-    private String getInstalledVersion() {
-        try {
-            return getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
-        } catch (Exception e) {
-            return "3.7";
-        }
+    private View sectionLabel(String s) {
+        TextView t = UiHelper.overline(this, s, UiHelper.COL_DIM);
+        t.setPadding(dp(6), dp(24), 0, dp(0));
+        return t;
     }
 
-    private void checkForUpdates(Button btn, String currentVer) {
-        btn.setEnabled(false);
-        btn.setText("Checking GitHub releases...");
+    private void checkForUpdates(LinearLayout row, String currentVer) {
+        if (updateUrl != null) {
+            UiHelper.openUrl(this, updateUrl);
+            return;
+        }
+        if (checking) return;
+        checking = true;
+        TextView sub = UiHelper.subtitleOf(row);
+        sub.setText("Checking GitHub releases…");
+        sub.setTextColor(UiHelper.COL_MUTED);
         Handler main = new Handler(Looper.getMainLooper());
         new Thread(() -> {
             HttpURLConnection conn = null;
@@ -204,9 +147,7 @@ public class AboutActivity extends Activity {
                 conn.setReadTimeout(5000);
                 conn.setRequestProperty("Accept", "application/vnd.github+json");
                 conn.setRequestProperty("User-Agent", "Hyper120/" + currentVer);
-                if (conn.getResponseCode() != 200) {
-                    throw new RuntimeException("HTTP " + conn.getResponseCode());
-                }
+                if (conn.getResponseCode() != 200) throw new RuntimeException("HTTP " + conn.getResponseCode());
                 BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                 StringBuilder sb = new StringBuilder();
                 String line;
@@ -227,25 +168,25 @@ public class AboutActivity extends Activity {
                         }
                     }
                 }
-                final String targetUrl = apkUrl;
+                final String target = apkUrl;
                 final boolean newer = compareVersions(tag, currentVer) > 0;
                 main.post(() -> {
-                    btn.setEnabled(true);
+                    checking = false;
                     if (newer) {
-                        btn.setText("Update available: v" + tag + " (Tap to download)");
-                        btn.setTextColor(UiHelper.COL_ON_PRIMARY);
-                        btn.setBackground(UiHelper.pillBg(this, UiHelper.COL_TEAL, 0, 32));
-                        btn.setOnClickListener(v -> UiHelper.openUrl(this, targetUrl));
+                        updateUrl = target;
+                        sub.setText("v" + tag + " is available — tap to download");
+                        sub.setTextColor(UiHelper.COL_TEAL);
                     } else {
-                        btn.setText("\u2713 Up to date (v" + currentVer + ")");
-                        btn.setTextColor(UiHelper.COL_TEAL);
+                        sub.setText("You're up to date (v" + currentVer + ")");
+                        sub.setTextColor(UiHelper.COL_TEAL);
                     }
                 });
             } catch (Exception e) {
                 main.post(() -> {
-                    btn.setEnabled(true);
-                    btn.setText("Check failed \u2014 Tap to open Releases");
-                    btn.setOnClickListener(v -> UiHelper.openUrl(this, UiHelper.GITHUB_REPO_URL + "/releases/latest"));
+                    checking = false;
+                    updateUrl = UiHelper.GITHUB_REPO_URL + "/releases/latest";
+                    sub.setText("Couldn't reach GitHub — tap to open Releases");
+                    sub.setTextColor(UiHelper.COL_WARN);
                 });
             } finally {
                 if (conn != null) conn.disconnect();
@@ -273,7 +214,7 @@ public class AboutActivity extends Activity {
         }
     }
 
-    private int dp(int v) {
+    private int dp(float v) {
         return UiHelper.dp(this, v);
     }
 }

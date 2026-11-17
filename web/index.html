@@ -3,667 +3,500 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hyper120 — Rootless 120Hz Gaming Fix for Xiaomi HyperOS</title>
-  <meta name="description" content="Unlock true 120Hz gaming on Xiaomi HyperOS & MIUI without root, without a PC, and without disabling PowerKeeper." />
+  <title>Hyper120 · 120Hz games on Xiaomi, no root</title>
+  <meta name="description" content="Hyper120 unlocks 90, 120 and 144Hz in games on Xiaomi, Redmi and POCO phones running HyperOS or MIUI. No root, no PC, and PowerKeeper stays on so daily battery life is untouched." />
+  <meta name="theme-color" content="#080B12" />
+  <meta property="og:title" content="Hyper120 · 120Hz games on Xiaomi, no root" />
+  <meta property="og:description" content="Unlock 90/120/144Hz in games on HyperOS & MIUI without root or a PC. Free and open source." />
+  <meta property="og:image" content="https://hyper120.aten-systems.site/assets/banner.png" />
+  <meta property="og:url" content="https://hyper120.aten-systems.site/" />
+  <meta name="twitter:card" content="summary_large_image" />
   <link rel="icon" type="image/svg+xml" href="assets/icon.svg" />
+  <link rel="apple-touch-icon" href="assets/icon-192.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #070a11;
-      --bg-2: #0c111d;
-      --card: rgba(16, 23, 38, 0.72);
-      --card-solid: #101726;
-      --border: rgba(255, 255, 255, 0.08);
-      --border-hi: rgba(56, 189, 248, 0.4);
-      --text: #f8fafc;
+      color-scheme: dark;
+      --bg: #080b12;
+      --bg-2: #0c1019;
+      --surface: #10151f;
+      --surface-2: #161c29;
+      --line: #1f2737;
+      --line-hi: #2c3850;
+      --text: #f1f5f9;
       --muted: #94a3b8;
-      --accent: #38bdf8;
-      --accent-2: #818cf8;
+      --dim: #64748b;
+      --sky: #38bdf8;
+      --indigo: #818cf8;
+      --violet: #6366f1;
       --teal: #2dd4bf;
-      --coffee: #fbbf24;
-      --radius: 18px;
+      --amber: #fbbf24;
+      --red: #f87171;
+      --radius: 22px;
+      --mono: 'JetBrains Mono', ui-monospace, monospace;
+      --sans: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
     }
-
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background:
-        radial-gradient(1000px 600px at 10% -10%, rgba(56, 189, 248, 0.18), transparent 60%),
-        radial-gradient(900px 520px at 90% 10%, rgba(129, 140, 248, 0.16), transparent 60%),
-        radial-gradient(700px 400px at 50% 95%, rgba(45, 212, 191, 0.09), transparent 65%),
-        var(--bg);
+      font-family: var(--sans);
+      background: var(--bg);
       color: var(--text);
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
       overflow-x: hidden;
     }
-
     a { color: inherit; text-decoration: none; }
-    .container { width: 100%; max-width: 1160px; margin: 0 auto; padding: 0 24px; }
-    .mono { font-family: 'JetBrains Mono', monospace; }
+    img { display: block; max-width: 100%; }
+    .wrap { width: 100%; max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+    .mono { font-family: var(--mono); }
+    code, .code {
+      font-family: var(--mono); font-size: 0.86em; color: #bae6fd;
+      background: rgba(56, 189, 248, 0.08); border: 1px solid rgba(56, 189, 248, 0.14);
+      padding: 1px 6px; border-radius: 6px;
+    }
+    .overline {
+      font-family: var(--mono); font-size: 0.74rem; font-weight: 700; letter-spacing: 0.16em;
+      text-transform: uppercase; color: var(--sky);
+    }
 
-    /* Header */
+    /* ---------- nav ---------- */
     header {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      backdrop-filter: blur(16px);
-      background: rgba(7, 10, 17, 0.78);
-      border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(8, 11, 18, 0.72); backdrop-filter: blur(18px) saturate(1.4);
+      border-bottom: 1px solid transparent; transition: border-color .2s;
     }
-
-    .nav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 70px;
-      gap: 16px;
-    }
-
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 11px;
-      font-weight: 800;
-      font-size: 1.15rem;
-      letter-spacing: -0.02em;
-    }
-
-    .brand-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      display: block;
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 26px;
-      color: var(--muted);
-      font-size: 0.92rem;
-      font-weight: 500;
-    }
-
+    header.scrolled { border-bottom-color: var(--line); }
+    .nav { display: flex; align-items: center; justify-content: space-between; height: 68px; gap: 16px; }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.12rem; letter-spacing: -0.02em; }
+    .brand img { width: 34px; height: 34px; }
+    .nav-links { display: flex; align-items: center; gap: 28px; font-size: 0.92rem; font-weight: 600; color: var(--muted); }
     .nav-links a:hover { color: var(--text); }
-
-    .nav-cta {
-      padding: 9px 16px;
-      border-radius: 10px;
-      background: rgba(56, 189, 248, 0.14);
-      border: 1px solid var(--border-hi);
-      color: var(--accent) !important;
-      font-weight: 600;
-      font-size: 0.88rem;
-      transition: background 0.15s ease;
-    }
-    .nav-cta:hover { background: rgba(56, 189, 248, 0.24); }
-
-    /* Hero Split */
-    .hero { padding: 68px 0 56px; }
-
-    .hero-grid {
-      display: grid;
-      grid-template-columns: 1.12fr 0.88fr;
-      gap: 48px;
-      align-items: center;
-    }
-
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 9px;
-      padding: 7px 14px;
-      border-radius: 999px;
-      background: rgba(56, 189, 248, 0.1);
-      border: 1px solid var(--border-hi);
-      color: var(--accent);
-      font-size: 0.83rem;
-      font-weight: 600;
-      margin-bottom: 20px;
-    }
-
-    .pill-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--teal);
-      box-shadow: 0 0 12px var(--teal);
-    }
-
-    h1 {
-      font-size: clamp(2.35rem, 4.6vw, 3.65rem);
-      font-weight: 800;
-      letter-spacing: -0.035em;
-      line-height: 1.07;
-      margin-bottom: 18px;
-    }
-
-    .gradient-text {
-      background: linear-gradient(135deg, #ffffff 15%, var(--accent) 55%, var(--accent-2) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .hero-sub {
-      color: var(--muted);
-      font-size: 1.08rem;
-      max-width: 560px;
-      margin-bottom: 28px;
-    }
-
-    .code-inline {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.86em;
-      padding: 2px 7px;
-      border-radius: 6px;
-      background: rgba(255, 255, 255, 0.08);
-      color: var(--accent);
-    }
-
-    .cta-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-bottom: 30px;
-    }
-
     .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 9px;
-      padding: 13px 22px;
-      border-radius: 12px;
-      font-weight: 600;
-      font-size: 0.95rem;
-      transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
-      cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+      height: 50px; padding: 0 22px; border-radius: 16px; font-weight: 700; font-size: 0.97rem;
+      transition: transform .15s ease, box-shadow .2s ease, background .2s, border-color .2s; white-space: nowrap;
     }
-    .btn:hover { transform: translateY(-2px); }
-
+    .btn svg { width: 18px; height: 18px; flex: none; }
+    .btn:active { transform: scale(0.97); }
     .btn-primary {
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      color: #06101d;
-      box-shadow: 0 12px 32px rgba(56, 189, 248, 0.28);
+      background: linear-gradient(120deg, var(--sky), var(--indigo)); color: #04121c;
+      box-shadow: 0 10px 34px -8px rgba(56, 189, 248, 0.55), inset 0 1px 0 rgba(255,255,255,.35);
+    }
+    .btn-primary:hover { box-shadow: 0 14px 44px -8px rgba(56, 189, 248, 0.75), inset 0 1px 0 rgba(255,255,255,.35); }
+    .btn-ghost { background: var(--surface); border: 1px solid var(--line-hi); color: var(--text); }
+    .btn-ghost:hover { border-color: #3d4b68; background: var(--surface-2); }
+    .btn-sm { height: 40px; padding: 0 16px; border-radius: 12px; font-size: 0.88rem; }
+
+    /* ---------- hero ---------- */
+    .hero { position: relative; padding: 72px 0 40px; }
+    .hero::before {
+      content: ""; position: absolute; inset: -120px 0 auto 0; height: 760px; pointer-events: none; z-index: -1;
+      background:
+        radial-gradient(520px 380px at 72% 38%, rgba(56,189,248,.20), transparent 70%),
+        radial-gradient(460px 360px at 92% 70%, rgba(45,212,191,.10), transparent 70%),
+        radial-gradient(600px 420px at 8% 10%, rgba(99,102,241,.14), transparent 70%);
+    }
+    .hero-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 40px; align-items: center; }
+    .badge {
+      display: inline-flex; align-items: center; gap: 9px; padding: 6px 14px 6px 10px; border-radius: 999px;
+      background: rgba(45, 212, 191, 0.08); border: 1px solid rgba(45, 212, 191, 0.28);
+      color: var(--teal); font-size: 0.82rem; font-weight: 700; margin-bottom: 22px;
+    }
+    .badge i { width: 8px; height: 8px; border-radius: 50%; background: var(--teal); box-shadow: 0 0 0 4px rgba(45,212,191,.18); animation: pulse 2s infinite; }
+    @keyframes pulse { 50% { box-shadow: 0 0 0 7px rgba(45,212,191,0); } }
+    h1 { font-size: clamp(2.5rem, 5.6vw, 4.4rem); font-weight: 800; letter-spacing: -0.045em; line-height: 1.02; margin-bottom: 22px; }
+    h1 .hz {
+      background: linear-gradient(180deg, #fff 10%, #bae6fd 55%, var(--sky)); -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+    .lede { font-size: 1.14rem; color: var(--muted); max-width: 540px; margin-bottom: 30px; }
+    .lede b { color: var(--text); font-weight: 700; }
+    .cta { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 30px; }
+    .facts { display: flex; flex-wrap: wrap; gap: 10px 22px; font-size: 0.9rem; color: var(--muted); font-weight: 600; }
+    .facts span { display: inline-flex; align-items: center; gap: 8px; }
+    .facts svg { width: 17px; height: 17px; color: var(--teal); }
+
+    .stage { position: relative; display: grid; place-items: center; min-height: 600px; }
+    .ring { position: absolute; width: min(560px, 100%); aspect-ratio: 1; animation: spin 16s linear infinite; opacity: .9; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .phone {
+      position: relative; width: 290px; border-radius: 40px; padding: 9px;
+      background: linear-gradient(160deg, #2a3446, #0d121c 40%, #1b2232);
+      box-shadow: 0 40px 90px -20px rgba(0,0,0,.8), 0 0 0 1px rgba(255,255,255,.08), inset 0 1px 0 rgba(255,255,255,.12);
+    }
+    .phone img { border-radius: 32px; width: 100%; }
+    .float {
+      position: absolute; z-index: 2; padding: 10px 14px; border-radius: 14px;
+      background: rgba(16, 21, 31, 0.86); backdrop-filter: blur(14px); border: 1px solid var(--line-hi);
+      font-size: 0.82rem; font-weight: 700; box-shadow: 0 18px 40px -12px rgba(0,0,0,.7);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .float small { display: block; font-family: var(--mono); font-size: 0.68rem; color: var(--dim); font-weight: 500; letter-spacing: .04em; }
+    .float b { font-size: 1.05rem; }
+    .float.a { top: 70px; left: -6px; }
+    .float.a b { color: var(--teal); }
+    .float.b { bottom: 90px; right: -8px; }
+    .float.b b { color: var(--sky); }
+
+    /* ---------- sections ---------- */
+    section { padding: 92px 0; position: relative; }
+    .head { max-width: 680px; margin-bottom: 44px; }
+    .head.center { margin-left: auto; margin-right: auto; text-align: center; }
+    h2 { font-size: clamp(1.9rem, 3.6vw, 2.8rem); font-weight: 800; letter-spacing: -0.035em; line-height: 1.1; margin: 12px 0 14px; }
+    .head p { color: var(--muted); font-size: 1.05rem; }
+    .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
+
+    /* frame pacing demo */
+    .pace { padding: 28px; }
+    .lane { display: grid; grid-template-columns: 200px 1fr; gap: 20px; align-items: center; }
+    .lane + .lane { margin-top: 18px; padding-top: 18px; border-top: 1px dashed var(--line); }
+    .lane-label b { display: block; font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em; }
+    .lane-label span { font-size: 0.82rem; color: var(--muted); font-weight: 600; }
+    .lane canvas { width: 100%; height: 64px; display: block; }
+    .lane.slow b { color: var(--muted); }
+    .lane.fast b { color: var(--sky); }
+    .pace-note { margin-top: 20px; font-size: 0.86rem; color: var(--dim); }
+
+    /* flow */
+    .flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; position: relative; }
+    .step { padding: 24px 22px; position: relative; }
+    .step .k { font-family: var(--mono); font-size: 0.72rem; color: var(--dim); letter-spacing: .1em; }
+    .step h3 { font-size: 1.08rem; margin: 10px 0 8px; letter-spacing: -0.01em; }
+    .step p { font-size: 0.9rem; color: var(--muted); }
+    .step:not(:last-child)::after {
+      content: ""; position: absolute; right: -11px; top: 50%; width: 8px; height: 8px; z-index: 1;
+      border-top: 2px solid var(--line-hi); border-right: 2px solid var(--line-hi); transform: translateY(-50%) rotate(45deg);
+    }
+    .step.hl { border-color: rgba(56,189,248,.35); background: linear-gradient(160deg, rgba(56,189,248,.08), var(--surface) 60%); }
+    .step.hl .k { color: var(--sky); }
+    .snippet { margin-top: 18px; padding: 18px 20px; font-family: var(--mono); font-size: 0.84rem; color: #cbd5e1; overflow-x: auto; white-space: pre; background: #05070c; }
+    .snippet .c { color: var(--dim); }
+    .snippet .s { color: #7dd3fc; }
+    .snippet .n { color: var(--teal); }
+
+    /* screens */
+    .screens { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; }
+    .screen { text-align: center; }
+    .screen img { border-radius: 26px; box-shadow: 0 24px 60px -24px rgba(0,0,0,.9); cursor: zoom-in; transition: transform .25s ease; }
+    .screen img:hover { transform: translateY(-6px); }
+    .screen h3 { font-size: 1rem; margin-top: 18px; }
+    .screen p { font-size: 0.86rem; color: var(--muted); }
+
+    /* features */
+    .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .feature { padding: 26px; transition: border-color .2s, transform .2s; }
+    .feature:hover { border-color: var(--line-hi); transform: translateY(-2px); }
+    .ico { width: 44px; height: 44px; border-radius: 13px; display: grid; place-items: center; margin-bottom: 18px; }
+    .ico svg { width: 21px; height: 21px; }
+    .feature h3 { font-size: 1.06rem; margin-bottom: 8px; letter-spacing: -0.01em; }
+    .feature p { color: var(--muted); font-size: 0.93rem; }
+    .t-sky { background: rgba(56,189,248,.12); color: var(--sky); }
+    .t-teal { background: rgba(45,212,191,.12); color: var(--teal); }
+    .t-ind { background: rgba(129,140,248,.14); color: var(--indigo); }
+    .t-amb { background: rgba(251,191,36,.12); color: var(--amber); }
+    .t-red { background: rgba(248,113,113,.12); color: var(--red); }
+
+    /* games */
+    .games { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 40px; }
+    .game { overflow: hidden; position: relative; aspect-ratio: 16 / 9; border-radius: 18px; border: 1px solid var(--line); cursor: zoom-in; }
+    .game img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s ease; }
+    .game:hover img { transform: scale(1.04); }
+    .game span {
+      position: absolute; left: 10px; bottom: 10px; padding: 4px 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 700;
+      background: rgba(8,11,18,.78); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,.1);
     }
 
-    .btn-secondary {
-      background: var(--card-solid);
-      border: 1px solid var(--border);
-      color: var(--text);
+    /* install */
+    .install { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 16px; }
+    .steps { padding: 30px; counter-reset: s; }
+    .steps li { list-style: none; position: relative; padding-left: 52px; color: var(--muted); }
+    .steps li + li { margin-top: 22px; }
+    .steps li::before {
+      counter-increment: s; content: counter(s); position: absolute; left: 0; top: -2px; width: 34px; height: 34px;
+      border-radius: 11px; display: grid; place-items: center; font-family: var(--mono); font-weight: 700; font-size: 0.9rem;
+      background: var(--surface-2); border: 1px solid var(--line-hi); color: var(--sky);
     }
-    .btn-secondary:hover { border-color: rgba(255, 255, 255, 0.24); }
-
-    .btn-coffee {
-      background: rgba(251, 191, 36, 0.12);
-      border: 1px solid rgba(251, 191, 36, 0.35);
-      color: var(--coffee);
+    .steps li b { color: var(--text); display: block; margin-bottom: 2px; }
+    .side { display: flex; flex-direction: column; gap: 16px; }
+    .side .card { padding: 24px; }
+    .side h3 { font-size: 1.02rem; margin-bottom: 8px; }
+    .side p { color: var(--muted); font-size: 0.9rem; margin-bottom: 14px; }
+    pre.cmd {
+      position: relative; background: #05070c; border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; overflow-x: auto;
+      font-family: var(--mono); font-size: 0.76rem; line-height: 1.7; color: #cbd5e1;
     }
-    .btn-coffee:hover { border-color: rgba(251, 191, 36, 0.65); }
-
-    .trust-strip {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-      max-width: 560px;
+    .copy {
+      position: absolute; top: 8px; right: 8px; padding: 4px 10px; border-radius: 8px; cursor: pointer; font: 600 0.72rem var(--sans);
+      background: var(--surface-2); border: 1px solid var(--line-hi); color: var(--muted);
     }
+    .copy:hover { color: var(--text); }
 
-    .trust-item {
-      padding: 12px 14px;
-      border-radius: 12px;
-      background: var(--card);
-      border: 1px solid var(--border);
+    /* compat */
+    .compat { overflow: hidden; }
+    .row { display: grid; grid-template-columns: 190px 1fr; gap: 20px; padding: 22px 26px; align-items: start; }
+    .row + .row { border-top: 1px solid var(--line); }
+    .pill { display: inline-flex; align-items: center; gap: 8px; padding: 5px 12px; border-radius: 999px; font-size: 0.8rem; font-weight: 700; }
+    .pill i { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+    .p-ok { background: rgba(45,212,191,.1); color: var(--teal); border: 1px solid rgba(45,212,191,.3); }
+    .p-maybe { background: rgba(56,189,248,.1); color: var(--sky); border: 1px solid rgba(56,189,248,.3); }
+    .p-no { background: rgba(248,113,113,.1); color: var(--red); border: 1px solid rgba(248,113,113,.3); }
+    .row p { color: var(--muted); font-size: 0.94rem; }
+    .row p b { color: var(--text); }
+
+    /* proof */
+    .proof { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .term { overflow: hidden; }
+    .term-bar { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border-bottom: 1px solid var(--line); font-size: 0.86rem; font-weight: 700; }
+    .term pre { padding: 18px; font-family: var(--mono); font-size: 0.78rem; line-height: 1.75; color: #cbd5e1; overflow-x: auto; background: #05070c; min-height: 132px; }
+    .term pre .hi { color: var(--teal); font-weight: 700; }
+    .term pre .lo { color: var(--red); font-weight: 700; }
+
+    /* faq */
+    .faq { max-width: 820px; margin: 0 auto; }
+    details { border-bottom: 1px solid var(--line); }
+    summary {
+      list-style: none; cursor: pointer; padding: 22px 4px; font-weight: 700; font-size: 1.04rem;
+      display: flex; justify-content: space-between; gap: 16px; align-items: center;
     }
-    .trust-item strong { display: block; font-size: 0.96rem; font-weight: 700; }
-    .trust-item span { font-size: 0.8rem; color: var(--muted); }
+    summary::-webkit-details-marker { display: none; }
+    summary::after { content: "+"; font-family: var(--mono); color: var(--sky); font-size: 1.3rem; transition: transform .2s; }
+    details[open] summary::after { transform: rotate(45deg); }
+    details p { color: var(--muted); padding: 0 4px 22px; max-width: 700px; }
 
-    /* Phone Mockup */
-    .phone-stage {
-      position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+    /* support */
+    .support {
+      padding: 44px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px;
+      background: radial-gradient(500px 200px at 0% 0%, rgba(56,189,248,.14), transparent), radial-gradient(400px 220px at 100% 100%, rgba(251,191,36,.10), transparent), var(--surface);
     }
+    .support h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); margin: 0 0 8px; }
+    .support p { color: var(--muted); max-width: 520px; }
+    .btn-coffee { background: #ffdd00; color: #101820; box-shadow: 0 10px 30px -10px rgba(255,221,0,.5); }
 
-    .phone-glow {
-      position: absolute;
-      width: 320px;
-      height: 460px;
-      background: radial-gradient(circle, rgba(56, 189, 248, 0.28), rgba(129, 140, 248, 0.16), transparent 72%);
-      filter: blur(36px);
-      z-index: 0;
-    }
+    footer { border-top: 1px solid var(--line); padding: 34px 0 48px; color: var(--dim); font-size: 0.88rem; }
+    .foot { display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: center; }
+    .foot nav { display: flex; flex-wrap: wrap; gap: 22px; }
+    .foot a:hover { color: var(--text); }
 
-    .phone-frame {
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      max-width: 310px;
-      padding: 11px;
-      border-radius: 36px;
-      background: linear-gradient(160deg, #1f293d, #0d1320);
-      border: 1px solid rgba(255, 255, 255, 0.16);
-      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.65);
-    }
-
-    .phone-frame img {
-      width: 100%;
-      height: auto;
-      display: block;
-      border-radius: 26px;
-      cursor: zoom-in;
-    }
-
-    .float-badge {
-      position: absolute;
-      z-index: 2;
-      padding: 8px 13px;
-      border-radius: 12px;
-      background: rgba(12, 18, 32, 0.9);
-      backdrop-filter: blur(12px);
-      border: 1px solid var(--border-hi);
-      font-size: 0.8rem;
-      font-weight: 600;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
-      white-space: nowrap;
-    }
-    .float-badge.top { top: 26px; right: -10px; color: var(--teal); border-color: rgba(45, 212, 191, 0.4); }
-    .float-badge.bot { bottom: 34px; left: -14px; color: var(--accent); }
-
-    /* Sections */
-    section { padding: 64px 0; }
-
-    .section-head {
-      text-align: center;
-      max-width: 660px;
-      margin: 0 auto 40px;
-    }
-
-    .section-head h2 {
-      font-size: clamp(1.75rem, 3.2vw, 2.4rem);
-      font-weight: 800;
-      letter-spacing: -0.025em;
-      margin-bottom: 10px;
-    }
-
-    .section-head p { color: var(--muted); }
-
-    /* Grids & Cards */
-    .grid-3 {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 18px;
-    }
-
-    .two-col {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
-      gap: 20px;
-    }
-
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 24px;
-      backdrop-filter: blur(10px);
-      transition: border-color 0.2s ease, transform 0.2s ease;
-    }
-    .card:hover { border-color: var(--border-hi); transform: translateY(-2px); }
-
-    .card-num {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 38px;
-      height: 38px;
-      border-radius: 10px;
-      background: rgba(56, 189, 248, 0.12);
-      color: var(--accent);
-      font-weight: 700;
-      font-size: 0.9rem;
-      margin-bottom: 14px;
-    }
-
-    .card h3 { font-size: 1.06rem; font-weight: 700; margin-bottom: 8px; }
-    .card p { color: var(--muted); font-size: 0.93rem; }
-
-    /* Screenshots */
-    .shots-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
-      gap: 18px;
-    }
-
-    .shot-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 14px;
-      transition: border-color 0.2s ease, transform 0.2s ease;
-    }
-    .shot-card:hover { border-color: var(--border-hi); transform: translateY(-2px); }
-
-    .shot-card img {
-      width: 100%;
-      height: auto;
-      display: block;
-      border-radius: 11px;
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      cursor: zoom-in;
-    }
-
-    .shot-caption {
-      margin-top: 10px;
-      font-size: 0.88rem;
-      color: var(--muted);
-      text-align: center;
-      font-weight: 500;
-    }
-
-    /* Steps & Code */
-    ol.steps {
-      padding-left: 20px;
-      color: var(--muted);
-      display: grid;
-      gap: 11px;
-      font-size: 0.95rem;
-      margin-top: 14px;
-    }
-    ol.steps strong { color: var(--text); }
-
-    .code-wrap { position: relative; margin-top: 12px; }
-
-    pre {
-      background: #05070c;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 16px;
-      overflow-x: auto;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.81rem;
-      line-height: 1.58;
-      color: #cbd5e1;
-    }
-
-    .copy-btn {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      padding: 5px 10px;
-      border-radius: 8px;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid var(--border);
-      color: var(--muted);
-      font-size: 0.75rem;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    .copy-btn:hover { color: var(--text); border-color: var(--border-hi); }
-
-    .compare-tag {
-      display: inline-block;
-      padding: 3px 9px;
-      border-radius: 999px;
-      font-size: 0.76rem;
-      font-weight: 700;
-      margin-bottom: 10px;
-    }
-    .tag-bad { background: rgba(248, 113, 113, 0.14); color: #fca5a5; }
-    .tag-good { background: rgba(45, 212, 191, 0.14); color: var(--teal); }
-
-    /* Support Banner */
-    .support-banner {
-      background: linear-gradient(135deg, rgba(56, 189, 248, 0.12), rgba(129, 140, 248, 0.12));
-      border: 1px solid var(--border-hi);
-      border-radius: 22px;
-      padding: 36px 32px;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-    }
-    .support-banner h2 { font-size: 1.6rem; font-weight: 800; margin-bottom: 6px; }
-    .support-banner p { color: var(--muted); max-width: 560px; }
-
-    /* Lightbox */
-    .lightbox {
-      display: none;
-      position: fixed;
-      inset: 0;
-      z-index: 100;
-      background: rgba(4, 6, 12, 0.92);
-      backdrop-filter: blur(8px);
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-      cursor: zoom-out;
-    }
+    .lightbox { display: none; position: fixed; inset: 0; z-index: 100; background: rgba(4,6,12,.92); backdrop-filter: blur(8px); align-items: center; justify-content: center; padding: 24px; cursor: zoom-out; }
     .lightbox.open { display: flex; }
-    .lightbox img {
-      max-width: 94vw;
-      max-height: 90vh;
-      border-radius: 14px;
-      border: 1px solid rgba(255, 255, 255, 0.16);
-      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7);
-    }
+    .lightbox img { max-width: 94vw; max-height: 90vh; border-radius: 18px; }
 
-    /* Footer */
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 34px 0 46px;
-      color: var(--muted);
-      font-size: 0.9rem;
-    }
-    .footer-inner {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-    }
-    .footer-links { display: flex; gap: 20px; }
-    .footer-links a:hover { color: var(--text); }
+    .hero-grid > *, .install > *, .proof > *, .flow > *, .features > *, .lane > *, .row > * { min-width: 0; }
+    .reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s ease, transform .6s ease; }
+    .reveal.in { opacity: 1; transform: none; }
 
-    @media (max-width: 900px) {
-      .hero-grid { grid-template-columns: 1fr; text-align: center; }
-      .hero-sub, .trust-strip { margin-left: auto; margin-right: auto; }
-      .cta-row { justify-content: center; }
-      .float-badge.top { right: 6px; }
-      .float-badge.bot { left: 6px; }
+    @media (prefers-reduced-motion: reduce) {
+      .ring, .badge i { animation: none; }
+      .reveal { opacity: 1; transform: none; transition: none; }
     }
-
-    @media (max-width: 640px) {
-      .nav-links { display: none; }
-      .hero { padding: 44px 0 36px; }
-      .trust-strip { grid-template-columns: 1fr; }
+    @media (max-width: 980px) {
+      .hero-grid { grid-template-columns: 1fr; }
+      .stage { min-height: 520px; order: 2; }
+      .flow { grid-template-columns: 1fr 1fr; }
+      .step:nth-child(2)::after { display: none; }
+      .screens { grid-template-columns: repeat(2, 1fr); }
+      .features { grid-template-columns: 1fr 1fr; }
+      .games { grid-template-columns: 1fr 1fr; }
+      .install, .proof { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 720px) {
+      .wrap { padding: 0 16px; }
+      .nav-links a:not(.btn) { display: none; }
+      .hero { padding-top: 40px; }
+      section { padding: 64px 0; }
+      .lane { grid-template-columns: 1fr; gap: 8px; }
+      .flow, .features { grid-template-columns: 1fr; }
+      .step::after { display: none; }
+      .screens { grid-template-columns: repeat(4, 72%); overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 8px; margin: 0 -16px; padding-left: 16px; padding-right: 16px; }
+      .screen { scroll-snap-align: center; }
+      .row { grid-template-columns: 1fr; gap: 10px; padding: 20px; }
+      .pace, .steps { padding: 22px; }
+      .support { padding: 28px; }
+      .float.a { display: none; }
+      .float.b { right: 0; bottom: 50px; }
+      .phone { width: 250px; }
+      .cta .btn { flex: 1 1 auto; }
     }
   </style>
 </head>
 <body>
-  <header>
-    <div class="container nav">
-      <a class="brand" href="#">
-        <img class="brand-icon" src="assets/icon.svg" alt="Hyper120 app icon" />
-        <span>Hyper120</span>
-      </a>
+  <!-- line icons (same set as the app) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="i-zap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></symbol>
+      <symbol id="i-gamepad" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 12h4M8 10v4M15 13h.01M18 11h.01"/><rect x="2" y="6" width="20" height="12" rx="4"/></symbol>
+      <symbol id="i-gauge" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 14 4-4M3.34 19a10 10 0 1 1 17.32 0"/></symbol>
+      <symbol id="i-battery" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="16" height="10" rx="2"/><path d="M22 11v2M6 11v2M10 11v2"/></symbol>
+      <symbol id="i-tile" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></symbol>
+      <symbol id="i-flag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1zM4 22v-7"/></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></symbol>
+      <symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></symbol>
+      <symbol id="i-code" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></symbol>
+      <symbol id="i-coffee" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4ZM6 2v2M10 2v2M14 2v2"/></symbol>
+    </defs>
+  </svg>
+
+  <header id="top">
+    <div class="wrap nav">
+      <a class="brand" href="#"><img src="assets/icon.svg" alt="" />Hyper120</a>
       <nav class="nav-links">
-        <a href="#features">Features</a>
-        <a href="#screenshots">Screenshots</a>
+        <a href="#how">How it works</a>
+        <a href="#screens">Screens</a>
         <a href="#install">Install</a>
         <a href="#devices">Devices</a>
-        <a href="#proof">Proof</a>
-        <a class="nav-cta" href="https://github.com/Rohan-Reyes/Hyper120/releases/latest" target="_blank" rel="noopener">Download v3.9</a>
+        <a href="#faq">FAQ</a>
+        <a class="btn btn-primary btn-sm js-dl" href="https://github.com/Rohan-Reyes/Hyper120/releases/latest" target="_blank" rel="noopener">Download</a>
       </nav>
     </div>
   </header>
 
   <main>
+    <!-- HERO -->
     <section class="hero">
-      <div class="container hero-grid">
+      <div class="wrap hero-grid">
         <div>
-          <div class="pill">
-            <span class="pill-dot"></span>
-            <span>v3.9 Latest · Built-in FPS Tester &amp; Compatibility Reporting</span>
-          </div>
-          <h1>
-            Unlock True <span class="gradient-text">120Hz Gaming</span><br />
-            Without Root or Battery Drain
-          </h1>
-          <p class="hero-sub">
-            The easiest, most consistent 120fps fix for Xiaomi, Redmi, and POCO phones.
-            Hyper120 unlocks 120Hz for your games while keeping
-            <span class="code-inline">com.miui.powerkeeper</span> and adaptive refresh rate
-            (<span class="code-inline">is_smart_fps=1</span>) 100% enabled.
+          <div class="badge"><i></i><span class="js-ver-badge">v4.0</span>&nbsp;· new FPS tester tests every rate</div>
+          <h1>Your games,<br />at <span class="hz">120Hz</span>.<br />Nothing else changes.</h1>
+          <p class="lede">
+            HyperOS caps many games at 60Hz even when your screen is set to 120. Hyper120 lifts the cap
+            <b>only for the games you choose</b>, on Xiaomi, Redmi and POCO, with no root and no PC.
           </p>
-
-          <div class="cta-row">
-            <a class="btn btn-primary" href="https://github.com/Rohan-Reyes/Hyper120/releases/latest" target="_blank" rel="noopener">
-              Download APK (v3.9)
+          <div class="cta">
+            <a class="btn btn-primary js-dl" href="https://github.com/Rohan-Reyes/Hyper120/releases/latest" target="_blank" rel="noopener">
+              <svg><use href="#i-download"/></svg><span class="js-dl-label">Download APK</span>
             </a>
-            <a class="btn btn-secondary" href="https://github.com/Rohan-Reyes/Hyper120" target="_blank" rel="noopener">
-              GitHub Source
-            </a>
-            <a class="btn btn-coffee" href="https://buymeacoffee.com/rohan_reyes" target="_blank" rel="noopener">
-              Buy Me a Coffee
+            <a class="btn btn-ghost" href="https://github.com/Rohan-Reyes/Hyper120" target="_blank" rel="noopener">
+              <svg><use href="#i-code"/></svg>Source on GitHub
             </a>
           </div>
-
-          <div class="trust-strip">
-            <div class="trust-item">
-              <strong>No Root / PC</strong>
-              <span>Standalone APK</span>
-            </div>
-            <div class="trust-item">
-              <strong>Auto-Detect</strong>
-              <span>Finds new games</span>
-            </div>
-            <div class="trust-item">
-              <strong>Smart FPS Safe</strong>
-              <span>60Hz in daily apps</span>
-            </div>
+          <div class="facts">
+            <span><svg><use href="#i-check"/></svg>No root</span>
+            <span><svg><use href="#i-check"/></svg>PowerKeeper stays on</span>
+            <span><svg><use href="#i-check"/></svg>Free &amp; open source</span>
           </div>
         </div>
 
-        <div class="phone-stage">
-          <div class="phone-glow"></div>
-          <div class="float-badge top">120Hz Active · 12 Games</div>
-          <div class="phone-frame">
-            <img src="assets/ui-main.png?v=20261116b" alt="Hyper120 v3.5 Main App Picker on Xiaomi HyperOS" class="zoomable" />
-          </div>
-          <div class="float-badge bot">PowerKeeper: Enabled</div>
+        <div class="stage">
+          <svg class="ring" viewBox="0 0 200 200" aria-hidden="true" id="ring"></svg>
+          <div class="float a"><svg width="20" height="20" style="color:var(--teal)"><use href="#i-check"/></svg><div><small>DISPLAY MODE</small><b>120.0 Hz</b></div></div>
+          <div class="phone"><img src="assets/home.png" alt="Hyper120 home screen set to 120Hz on a Xiaomi 14" class="zoom" /></div>
+          <div class="float b"><svg width="20" height="20" style="color:var(--sky)"><use href="#i-gamepad"/></svg><div><small>UNLOCKED</small><b>12 games</b></div></div>
         </div>
       </div>
     </section>
 
-    <section id="features">
-      <div class="container">
-        <div class="section-head">
-          <h2>Why Hyper120?</h2>
-          <p>Designed to bypass Xiaomi's 60Hz game cap cleanly — without breaking adaptive refresh rate or standby battery life.</p>
+    <!-- FRAME PACING -->
+    <section style="padding-top:40px">
+      <div class="wrap">
+        <div class="head reveal">
+          <div class="overline">Why it matters</div>
+          <h2>Twice the frames. You can feel it.</h2>
+          <p>Each ghost is one frame your screen actually shows. At 60Hz a fast swipe jumps 16.7&nbsp;ms at a time; at 120Hz it moves in 8.3&nbsp;ms steps, with half the input lag.</p>
         </div>
-
-        <div class="grid-3">
-          <div class="card">
-            <div class="card-num">01</div>
-            <h3>Zero Root Required</h3>
-            <p>Installs like any normal Android APK. No unlocked bootloader, Magisk, LSPosed, or Shizuku needed.</p>
+        <div class="card pace reveal">
+          <div class="lane slow">
+            <div class="lane-label"><b>60 Hz</b><span>HyperOS default for games</span></div>
+            <canvas data-hz="60" aria-label="Animation of a dot moving at 60 frames per second"></canvas>
           </div>
-          <div class="card">
-            <div class="card-num">02</div>
-            <h3>No PC After Install</h3>
-            <p>Starts automatically on boot (<span class="code-inline">BOOT_COMPLETED</span>) and runs natively on your phone.</p>
+          <div class="lane fast">
+            <div class="lane-label"><b>120 Hz</b><span>with Hyper120</span></div>
+            <canvas data-hz="120" aria-label="Animation of a dot moving at 120 frames per second"></canvas>
           </div>
-          <div class="card">
-            <div class="card-num">03</div>
-            <h3>Auto-Add Games</h3>
-            <p>Detects installed and newly installed games (<span class="code-inline">PACKAGE_ADDED</span>) while remembering any game you uncheck.</p>
-          </div>
-          <div class="card">
-            <div class="card-num">04</div>
-            <h3>Zero Daily Battery Trade-off</h3>
-            <p>PowerKeeper stays intact and <span class="code-inline">is_smart_fps=1</span> continues dropping to 60Hz/idle outside games.</p>
-          </div>
-          <div class="card">
-            <div class="card-num">05</div>
-            <h3>Persistent Against Resets</h3>
-            <p>Periodically refreshes PowerKeeper's <span class="code-inline">mPrivGames</span> map while your screen is on so 120Hz sticks.</p>
-          </div>
-          <div class="card">
-            <div class="card-num">06</div>
-            <h3>Instant Search &amp; Toggle</h3>
-            <p>Search any installed game or app and toggle 120Hz with one tap — no package-name typing required.</p>
-          </div>
+          <p class="pace-note">Drawn as frame trails, so you can see the difference even on a 60Hz monitor.</p>
         </div>
       </div>
     </section>
 
-    <section id="screenshots">
-      <div class="container">
-        <div class="section-head">
-          <h2>In-Game &amp; App Showcase</h2>
-          <p>Tested on Xiaomi 14 (HyperOS / Android 16) with PowerKeeper enabled. Click any screenshot to zoom.</p>
+    <!-- HOW -->
+    <section id="how">
+      <div class="wrap">
+        <div class="head reveal">
+          <div class="overline">How it works</div>
+          <h2>It uses Xiaomi's own switch.</h2>
+          <p>PowerKeeper, the system service that caps your games, already listens for a "this game may run faster" message from Xiaomi's game service. Hyper120 sends that same message for the games you pick.</p>
+        </div>
+        <div class="flow reveal">
+          <div class="card step"><div class="k">01 · YOU</div><h3>Pick games &amp; a rate</h3><p>Games are ticked automatically. Choose 90, 120 or 144Hz.</p></div>
+          <div class="card step hl"><div class="k">02 · HYPER120</div><h3>Sends the override</h3><p>One broadcast per game, repeated every 15 s while the screen is on.</p></div>
+          <div class="card step"><div class="k">03 · POWERKEEPER</div><h3>Adds it to the allow-list</h3><p>The game moves into <code>mPrivGames</code> and is no longer capped.</p></div>
+          <div class="card step"><div class="k">04 · DISPLAY</div><h3>Switches to 120Hz</h3><p>Only while that game is open. Everything else stays adaptive.</p></div>
+        </div>
+        <div class="card snippet reveal"><span class="c"># the broadcast Hyper120 sends (no root required)</span>
+action   <span class="s">com.xiaomi.joyose.OVERRIDE_GAME_FRESHRATE</span>
+package  <span class="s">com.miui.powerkeeper</span>
+extras   override_pkg_name  = <span class="s">"com.mobile.legends"</span>
+         override_freshrate = <span class="n">120</span></div>
+      </div>
+    </section>
+
+    <!-- SCREENS -->
+    <section id="screens">
+      <div class="wrap">
+        <div class="head center reveal">
+          <div class="overline">The app</div>
+          <h2>Simple on purpose.</h2>
+          <p>Open it once, check the tester, forget about it.</p>
+        </div>
+        <div class="screens reveal">
+          <div class="screen"><img src="assets/home.png" alt="Home screen with the 120Hz target and Apply button" class="zoom" loading="lazy" /><h3>Home</h3><p>Pick the rate, tap Apply</p></div>
+          <div class="screen"><img src="assets/apps.png" alt="App list with games ticked" class="zoom" loading="lazy" /><h3>Apps</h3><p>Games found automatically</p></div>
+          <div class="screen"><img src="assets/tester.png" alt="FPS tester showing 120 FPS and a Works verdict" class="zoom" loading="lazy" /><h3>FPS tester</h3><p>Real frames, real verdict</p></div>
+          <div class="screen"><img src="assets/about.png" alt="About screen with update check and setup help" class="zoom" loading="lazy" /><h3>About</h3><p>Updates and setup help</p></div>
         </div>
 
-        <div class="shots-grid">
-          <div class="shot-card">
-            <img src="assets/game-mlbb.jpg" alt="Mobile Legends running at 120Hz with Hyper120" class="zoomable" loading="lazy" />
-            <div class="shot-caption">Mobile Legends: Bang Bang — 120Hz</div>
-          </div>
-          <div class="shot-card">
-            <img src="assets/game-codm.jpg" alt="Call of Duty Mobile running with Hyper120" class="zoomable" loading="lazy" />
-            <div class="shot-caption">Call of Duty: Mobile — 120Hz</div>
-          </div>
-          <div class="shot-card">
-            <img src="assets/game-minecraft.jpg" alt="Minecraft running with Hyper120" class="zoomable" loading="lazy" />
-            <div class="shot-caption">Minecraft — 120Hz</div>
-          </div>
-          <div class="shot-card">
-            <img src="assets/game-archero2.jpg" alt="Archero 2 running with Hyper120" class="zoomable" loading="lazy" />
-            <div class="shot-caption">Archero 2 — 120Hz</div>
-          </div>
-          <div class="shot-card">
-            <img src="assets/ui-main.png?v=20261116b" alt="Hyper120 Main App Picker UI" class="zoomable" loading="lazy" />
-            <div class="shot-caption">Hyper120 Main App Picker (v3.9)</div>
-          </div>
-          <div class="shot-card">
-            <img src="assets/ui-about.png" alt="Hyper120 About & Support screen" class="zoomable" loading="lazy" />
-            <div class="shot-caption">About &amp; Support Screen</div>
-          </div>
+        <div class="games reveal">
+          <div class="game zoom-wrap"><img src="assets/game-mlbb.jpg" alt="Mobile Legends running with Hyper120" class="zoom" loading="lazy" /><span>Mobile Legends</span></div>
+          <div class="game zoom-wrap"><img src="assets/game-codm.jpg" alt="Call of Duty Mobile running with Hyper120" class="zoom" loading="lazy" /><span>Call of Duty: Mobile</span></div>
+          <div class="game zoom-wrap"><img src="assets/game-minecraft.jpg" alt="Minecraft running with Hyper120" class="zoom" loading="lazy" /><span>Minecraft</span></div>
+          <div class="game zoom-wrap"><img src="assets/game-archero2.jpg" alt="Archero 2 running with Hyper120" class="zoom" loading="lazy" /><span>Archero 2</span></div>
         </div>
       </div>
     </section>
 
+    <!-- FEATURES -->
+    <section>
+      <div class="wrap">
+        <div class="head reveal">
+          <div class="overline">Features</div>
+          <h2>Set it once. It keeps working.</h2>
+        </div>
+        <div class="features reveal">
+          <div class="card feature"><div class="ico t-sky"><svg><use href="#i-zap"/></svg></div><h3>Per-game refresh rate</h3><p>Rates come from your panel: 60, 90, 120 or 144Hz. Only the apps you tick get them.</p></div>
+          <div class="card feature"><div class="ico t-teal"><svg><use href="#i-battery"/></svg></div><h3>No battery trade-off</h3><p>PowerKeeper and adaptive refresh stay on, so your home screen and apps still drop to save power.</p></div>
+          <div class="card feature"><div class="ico t-ind"><svg><use href="#i-gamepad"/></svg></div><h3>Auto-adds new games</h3><p>Install a game and it's unlocked straight away. Untick one and it stays unticked.</p></div>
+          <div class="card feature"><div class="ico t-sky"><svg><use href="#i-gauge"/></svg></div><h3>Built-in FPS tester</h3><p>Tests 60, 90 and 120Hz on your own phone and tells you which ones work.</p></div>
+          <div class="card feature"><div class="ico t-amb"><svg><use href="#i-tile"/></svg></div><h3>Quick Settings tile</h3><p>Turn the background override on or off from Control Center.</p></div>
+          <div class="card feature"><div class="ico t-red"><svg><use href="#i-flag"/></svg></div><h3>One-tap device reports</h3><p>Opens a GitHub issue already filled in with your device and test result.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INSTALL -->
     <section id="install">
-      <div class="container">
-        <div class="section-head">
-          <h2>Quick Setup</h2>
-          <p>Install directly on your phone in under 60 seconds.</p>
+      <div class="wrap">
+        <div class="head reveal">
+          <div class="overline">Install</div>
+          <h2>Under a minute, on the phone.</h2>
         </div>
-
-        <div class="two-col">
-          <div class="card">
-            <h3>Option A: Direct APK Install (Recommended)</h3>
-            <ol class="steps">
-              <li>Download <strong>Hyper120.apk</strong> from <a href="https://github.com/Rohan-Reyes/Hyper120/releases/latest" target="_blank" rel="noopener" style="color: var(--accent);">GitHub Releases</a>.</li>
-              <li>Open the downloaded APK and allow <strong>Install from unknown sources</strong> if prompted.</li>
-              <li>Launch <strong>Hyper120</strong> — your installed games are detected and unlocked automatically.</li>
-              <li>Long-press <strong>Hyper120 → App info</strong> and set <strong>Autostart: ON</strong> + <strong>Battery saver: No restrictions</strong>.</li>
-            </ol>
-          </div>
-
-          <div class="card">
-            <h3>Option B: Optional ADB Setup</h3>
-            <p>Install and whitelist Hyper120 from Doze/background limits in one command block:</p>
-            <div class="code-wrap">
-              <button class="copy-btn" type="button" onclick="copyCode('adb-cmd', this)">Copy</button>
-              <pre id="adb-cmd">adb install -r Hyper120.apk
+        <div class="install reveal">
+          <ol class="card steps">
+            <li><b>Download the APK</b>Get <code>Hyper120.apk</code> from <a href="https://github.com/Rohan-Reyes/Hyper120/releases/latest" target="_blank" rel="noopener" style="color:var(--sky)">GitHub Releases</a> and open it. Allow installs from unknown sources if asked.</li>
+            <li><b>Open Hyper120</b>Your games are found and set to your screen's top rate straight away.</li>
+            <li><b>Let it run in the background</b>In <b style="display:inline">About → Open App info</b>, turn on Autostart and set Battery saver to No restrictions.</li>
+            <li><b>Check it worked</b>Tap the gauge icon to open the FPS tester. You should see "120 Hz works".</li>
+          </ol>
+          <div class="side">
+            <div class="card">
+              <h3>Auto-updates with Obtainium</h3>
+              <p>Track the GitHub repo and get every new version automatically.</p>
+              <a class="btn btn-ghost btn-sm" href="https://apps.obtainium.imranr.dev/redirect.html?r=obtainium://app/%7B%22id%22%3A%22com.custom.game120hz%22%2C%22url%22%3A%22https%3A%2F%2Fgithub.com%2FRohan-Reyes%2FHyper120%22%2C%22author%22%3A%22Rohan-Reyes%22%2C%22name%22%3A%22Hyper120%22%7D" target="_blank" rel="noopener">Add to Obtainium</a>
+            </div>
+            <div class="card">
+              <h3>Optional: ADB whitelist</h3>
+              <p>Extra protection against HyperOS killing the background service.</p>
+              <pre class="cmd" id="adb"><button class="copy" type="button" data-copy="adb">Copy</button>adb install -r Hyper120.apk
 adb shell dumpsys deviceidle whitelist +com.custom.game120hz
 adb shell appops set com.custom.game120hz RUN_ANY_IN_BACKGROUND allow</pre>
             </div>
@@ -672,72 +505,78 @@ adb shell appops set com.custom.game120hz RUN_ANY_IN_BACKGROUND allow</pre>
       </div>
     </section>
 
+    <!-- DEVICES -->
     <section id="devices">
-      <div class="container">
-        <div class="section-head">
-          <h2>Device Compatibility</h2>
-          <p>Works on HyperOS / MIUI devices with 90Hz, 120Hz, or 144Hz displays and <span class="code-inline">com.miui.powerkeeper</span>.</p>
+      <div class="wrap">
+        <div class="head reveal">
+          <div class="overline">Compatibility</div>
+          <h2>Will it work on my phone?</h2>
+          <p>If your phone runs HyperOS or MIUI and has a 90Hz or faster screen, probably. The FPS tester gives you a definite answer in five seconds.</p>
         </div>
-
-        <div class="two-col">
-          <div class="card">
-            <span class="compare-tag tag-good">Verified &amp; Tested</span>
-            <h3>Confirmed Working</h3>
-            <p style="margin-top: 8px;"><strong>Xiaomi 14 (<span class="code-inline">houji</span>)</strong> — HyperOS / Android 16 (China ROM) with PowerKeeper &amp; Smart FPS enabled.</p>
-          </div>
-          <div class="card">
-            <span class="compare-tag" style="background: rgba(56, 189, 248, 0.14); color: var(--accent);">Probable · Untested</span>
-            <h3>Likely Supported Models</h3>
-            <p style="margin-top: 8px;">
-              <strong>Xiaomi:</strong> 15 / 14 / 13 / 12 series &amp; T-series<br />
-              <strong>Redmi:</strong> K80 / K70 / K60 / K50, Note 14 / 13 / 12 Pro &amp; Turbo<br />
-              <strong>POCO:</strong> F6 / F5 / X7 / X6<br />
-              <strong>Tablets:</strong> Xiaomi Pad 6 / Pad 6 Pro / Pad 7 / Pad 7 Pro<br />
-              <span style="color: #fca5a5; font-size: 0.85em;">Note: POCO M6 Pro 5G reported not working (90Hz panel / Global ROM restriction).</span>
-            </p>
-            <div style="margin-top: 12px;">
-              <a href="https://github.com/Rohan-Reyes/Hyper120/issues/new/choose" target="_blank" rel="noopener" style="color: var(--accent); font-weight: 600; font-size: 0.9rem;">Report your device compatibility or bug →</a>
-            </div>
-          </div>
+        <div class="card compat reveal">
+          <div class="row"><span><span class="pill p-ok"><i></i>Verified</span></span><p><b>Xiaomi 14</b> (<code>houji</code>), HyperOS · Android 16, China ROM. 60, 90 and 120Hz confirmed with <code>dumpsys</code>.</p></div>
+          <div class="row"><span><span class="pill p-maybe"><i></i>Likely, untested</span></span><p><b>Xiaomi</b> 15 / 14 / 13 / 12 series incl. T and Ultra · <b>Redmi</b> K80 / K70 / K60 / K50, Note 14 / 13 / 12 Pro &amp; Turbo · <b>POCO</b> F6 / F5 / X7 / X6 · <b>Xiaomi Pad</b> 6 / 7 series</p></div>
+          <div class="row"><span><span class="pill p-no"><i></i>Not working</span></span><p><b>POCO M6 Pro 5G</b>, Global HyperOS: stays at 60Hz. Some Global and POCO builds seem to accept the override only from system apps.</p></div>
         </div>
+        <p style="margin-top:18px;color:var(--muted);font-size:.94rem" class="reveal">Tried it? <a href="https://github.com/Rohan-Reyes/Hyper120/issues/new/choose" target="_blank" rel="noopener" style="color:var(--sky);font-weight:700">Report your device →</a> The tester's Report button fills in the details for you.</p>
       </div>
     </section>
 
-    <section id="proof">
-      <div class="container">
-        <div class="section-head">
-          <h2>How It Works &amp; Verified Proof</h2>
-          <p>Hyper120 broadcasts <span class="code-inline">com.xiaomi.joyose.OVERRIDE_GAME_FRESHRATE</span> directly to PowerKeeper to populate <span class="code-inline">mPrivGames</span> at 120Hz.</p>
-        </div>
-
-        <div class="two-col">
-          <div class="card">
-            <span class="compare-tag tag-bad">Before Hyper120 · Clamped</span>
-            <h3>Stock PowerKeeper Cap</h3>
-            <pre>mDisplayModeSpecs={baseModeId=2 ... render: (0.0 60.0)}
-mActiveRenderFrameRate=60.000004</pre>
-          </div>
-          <div class="card">
-            <span class="compare-tag tag-good">With Hyper120 · Unlocked</span>
-            <h3>PowerKeeper + Smart FPS Enabled</h3>
-            <pre>mDisplayModeSpecs={baseModeId=1 ... render: (0.0 120.0)}
-mActiveRenderFrameRate=120.00001
-fpsconfig mPrivGames={com.mobile.legends=120, com.garena.game.codm=120, ...}</pre>
-          </div>
-        </div>
-      </div>
-    </section>
-
+    <!-- PROOF -->
     <section>
-      <div class="container">
-        <div class="support-banner">
-          <div>
-            <h2>Enjoying smooth 120Hz gaming?</h2>
-            <p>Hyper120 is 100% free and open source. If it helped your Xiaomi device, consider supporting future updates!</p>
+      <div class="wrap">
+        <div class="head reveal">
+          <div class="overline">Proof</div>
+          <h2>Straight from <span class="mono" style="font-size:.8em">dumpsys</span>.</h2>
+          <p>Mobile Legends on a Xiaomi 14, before and after. PowerKeeper and Smart FPS are on in both.</p>
+        </div>
+        <div class="proof reveal">
+          <div class="card term">
+            <div class="term-bar"><span>Before</span><span class="pill p-no"><i></i>Capped</span></div>
+            <pre>mDisplayModeSpecs={baseModeId=2 ...
+  render: (0.0 60.0)}
+mActiveRenderFrameRate=<span class="lo">60.000004</span></pre>
           </div>
-          <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-            <a class="btn btn-coffee" href="https://buymeacoffee.com/rohan_reyes" target="_blank" rel="noopener">Buy Me a Coffee</a>
-            <a class="btn btn-secondary" href="https://github.com/Rohan-Reyes/Hyper120" target="_blank" rel="noopener">Star on GitHub</a>
+          <div class="card term">
+            <div class="term-bar"><span>With Hyper120</span><span class="pill p-ok"><i></i>Unlocked</span></div>
+            <pre>mDisplayModeSpecs={baseModeId=1 ...
+  render: (0.0 120.0)}
+mActiveRenderFrameRate=<span class="hi">120.00001</span>
+mPrivGames={com.mobile.legends=120, ...}</pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq">
+      <div class="wrap">
+        <div class="head center reveal">
+          <div class="overline">FAQ</div>
+          <h2>Questions</h2>
+        </div>
+        <div class="faq reveal">
+          <details><summary>How do I turn 120Hz off for a game?</summary><p>Untick the game in the list. PowerKeeper remembers the last value until it restarts, so to switch back right away, pick 60 and tap Apply, or reboot. To stop everything, turn off Background override or uninstall the app.</p></details>
+          <details><summary>Does it drain my battery?</summary><p>Only games you tick run faster, and only while they're open. PowerKeeper and adaptive refresh stay on, so the rest of the phone behaves exactly as before. The background service wakes for a moment every 15 seconds while the screen is on and sleeps while it's off.</p></details>
+          <details><summary>Is it safe? Does it need root or special permissions?</summary><p>No root, no ADB, no accessibility service. It sends the same broadcast Xiaomi's game service (Joyose) uses. The code is open on GitHub.</p></details>
+          <details><summary>The tester says "Clamped". What now?</summary><p>Tap Re-apply, and make sure Autostart is on and Battery saver is set to No restrictions. If it still clamps, your ROM probably only accepts the override from system apps. Please tap Report so your device can be listed.</p></details>
+          <details><summary>A game still looks like 60 FPS.</summary><p>The screen can only show what the game renders. Set the game's own frame-rate option to High, Ultra or 120 too. Some games only offer high frame rates on phones they've approved.</p></details>
+          <details><summary>Does it collect data?</summary><p>No account, ads or analytics. Every 12 hours it sends a random ID (no device info) so I can count active installs.</p></details>
+        </div>
+      </div>
+    </section>
+
+    <!-- SUPPORT -->
+    <section style="padding-top:20px">
+      <div class="wrap">
+        <div class="card support reveal">
+          <div>
+            <h2>Smoother games? Buy me a coffee.</h2>
+            <p>Hyper120 is free, open source and built in my spare time. Tips pay for testing on more devices.</p>
+          </div>
+          <div style="display:flex;gap:12px;flex-wrap:wrap">
+            <a class="btn btn-coffee" href="https://buymeacoffee.com/rohan_reyes" target="_blank" rel="noopener"><svg><use href="#i-coffee"/></svg>Buy me a coffee</a>
+            <a class="btn btn-ghost" href="https://github.com/Rohan-Reyes/Hyper120" target="_blank" rel="noopener">Star on GitHub</a>
           </div>
         </div>
       </div>
@@ -745,36 +584,105 @@ fpsconfig mPrivGames={com.mobile.legends=120, com.garena.game.codm=120, ...}</pr
   </main>
 
   <footer>
-    <div class="container footer-inner">
-      <div><strong>Hyper120</strong> by Rohan Reyes · Open-source rootless 120Hz utility for HyperOS</div>
-      <div class="footer-links">
+    <div class="wrap foot">
+      <div>Hyper120 by Rohan Reyes · <a href="https://aten-systems.site" target="_blank" rel="noopener">ATEN Systems</a> · Not affiliated with Xiaomi</div>
+      <nav>
         <a href="https://github.com/Rohan-Reyes/Hyper120" target="_blank" rel="noopener">GitHub</a>
         <a href="https://github.com/Rohan-Reyes/Hyper120/releases" target="_blank" rel="noopener">Releases</a>
-        <a href="https://github.com/Rohan-Reyes/Hyper120/issues/new/choose" target="_blank" rel="noopener">Report Issue</a>
-        <a href="https://buymeacoffee.com/rohan_reyes" target="_blank" rel="noopener">Buy Me a Coffee</a>
-      </div>
+        <a href="https://github.com/Rohan-Reyes/Hyper120/issues/new/choose" target="_blank" rel="noopener">Report an issue</a>
+      </nav>
     </div>
   </footer>
 
-  <div class="lightbox" id="lightbox" onclick="this.classList.remove('open')">
-    <img id="lightbox-img" src="" alt="Screenshot preview" />
-  </div>
+  <div class="lightbox" id="lightbox"><img id="lightbox-img" src="" alt="" /></div>
 
   <script>
-    document.querySelectorAll('.zoomable').forEach(img => {
-      img.addEventListener('click', () => {
-        document.getElementById('lightbox-img').src = img.src;
-        document.getElementById('lightbox').classList.add('open');
-      });
-    });
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    function copyCode(id, btn) {
-      navigator.clipboard.writeText(document.getElementById(id).textContent).then(() => {
-        const old = btn.textContent;
-        btn.textContent = 'Copied!';
-        setTimeout(() => btn.textContent = old, 1500);
-      });
-    }
+    // Icon ring: 48 frame ticks lit as a motion trail (matches the app icon)
+    (function ring() {
+      const svg = document.getElementById('ring');
+      const N = 48, cx = 100, cy = 100, r1 = 84, r2 = 94, lit = 30;
+      const ramp = [[99, 102, 241], [56, 189, 248], [45, 212, 191]];
+      const mix = (a, b, t) => a.map((v, i) => Math.round(v + (b[i] - v) * t));
+      const col = t => { const s = Math.min(1, Math.floor(t * 2)); return mix(ramp[s], ramp[s + 1], t * 2 - s); };
+      let html = '';
+      for (let i = 0; i < N; i++) {
+        const a = -Math.PI / 2 + i * 2 * Math.PI / N;
+        const age = (N - 1 - i);
+        let stroke = '#1a2130', op = 1;
+        if (age < lit) { const t = 1 - age / (lit - 1); const c = col(t); stroke = `rgb(${c})`; op = 0.25 + 0.75 * t; }
+        html += `<line x1="${cx + r1 * Math.cos(a)}" y1="${cy + r1 * Math.sin(a)}" x2="${cx + r2 * Math.cos(a)}" y2="${cy + r2 * Math.sin(a)}" stroke="${stroke}" stroke-opacity="${op}" stroke-width="3.2" stroke-linecap="round"/>`;
+      }
+      svg.innerHTML = html;
+    })();
+
+    // Frame pacing lanes: position is sampled at each lane's refresh rate, trail = shown frames
+    (function pacing() {
+      const lanes = [...document.querySelectorAll('.lane canvas')];
+      const PERIOD = 1.6; // seconds per sweep
+      function size(c) {
+        const dpr = Math.min(devicePixelRatio || 1, 2);
+        c.width = c.clientWidth * dpr; c.height = c.clientHeight * dpr;
+        c.getContext('2d').setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      lanes.forEach(size);
+      addEventListener('resize', () => lanes.forEach(size));
+      const ease = p => 0.5 - 0.5 * Math.cos(p * Math.PI * 2); // back and forth
+      function draw(now) {
+        const t = now / 1000;
+        for (const c of lanes) {
+          const hz = +c.dataset.hz, ctx = c.getContext('2d');
+          const w = c.clientWidth, h = c.clientHeight, r = 11, pad = r + 4;
+          ctx.clearRect(0, 0, w, h);
+          ctx.strokeStyle = '#1f2737'; ctx.lineWidth = 2; ctx.setLineDash([2, 6]);
+          ctx.beginPath(); ctx.moveTo(pad, h / 2); ctx.lineTo(w - pad, h / 2); ctx.stroke(); ctx.setLineDash([]);
+          const frame = Math.floor(t * hz);
+          const trail = hz === 120 ? 12 : 6; // same 100 ms window for both
+          const color = hz === 120 ? '56,189,248' : '148,163,184';
+          for (let k = trail; k >= 0; k--) {
+            const ft = (frame - k) / hz;
+            const x = pad + ease((ft / PERIOD) % 1) * (w - pad * 2);
+            ctx.beginPath(); ctx.arc(x, h / 2, k === 0 ? r : r * 0.8, 0, Math.PI * 2);
+            ctx.fillStyle = k === 0 ? `rgb(${color})` : `rgba(${color},${0.32 * (1 - k / (trail + 1))})`;
+            ctx.fill();
+          }
+        }
+        if (!reduce) requestAnimationFrame(draw);
+      }
+      requestAnimationFrame(draw);
+    })();
+
+    // Latest release version on buttons
+    fetch('https://api.github.com/repos/Rohan-Reyes/Hyper120/releases/latest')
+      .then(r => r.ok ? r.json() : null)
+      .then(j => {
+        if (!j || !j.tag_name) return;
+        const v = j.tag_name.startsWith('v') ? j.tag_name : 'v' + j.tag_name;
+        document.querySelectorAll('.js-ver-badge').forEach(e => e.textContent = v);
+        document.querySelectorAll('.js-dl-label').forEach(e => e.textContent = 'Download APK · ' + v);
+        const apk = (j.assets || []).find(a => a.name.endsWith('.apk'));
+        if (apk) document.querySelectorAll('.js-dl').forEach(a => a.href = apk.browser_download_url);
+      }).catch(() => {});
+
+    // Lightbox
+    const lb = document.getElementById('lightbox'), lbi = document.getElementById('lightbox-img');
+    document.querySelectorAll('.zoom').forEach(img => img.addEventListener('click', () => { lbi.src = img.src; lbi.alt = img.alt; lb.classList.add('open'); }));
+    lb.addEventListener('click', () => lb.classList.remove('open'));
+    addEventListener('keydown', e => { if (e.key === 'Escape') lb.classList.remove('open'); });
+
+    // Copy buttons
+    document.querySelectorAll('[data-copy]').forEach(b => b.addEventListener('click', () => {
+      const pre = document.getElementById(b.dataset.copy);
+      const text = [...pre.childNodes].filter(n => n !== b).map(n => n.textContent).join('').trim();
+      navigator.clipboard.writeText(text).then(() => { b.textContent = 'Copied'; setTimeout(() => b.textContent = 'Copy', 1400); });
+    }));
+
+    // Header border + reveal on scroll
+    const hdr = document.getElementById('top');
+    addEventListener('scroll', () => hdr.classList.toggle('scrolled', scrollY > 8), { passive: true });
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -8% 0px' });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
   </script>
 </body>
 </html>

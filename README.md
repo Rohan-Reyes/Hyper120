@@ -1,116 +1,168 @@
+<div align="center">
+
+<img src="docs/images/icon-512.png" width="96" alt="Hyper120 icon">
+
 # Hyper120
 
-**The easiest, most consistent rootless 120Hz fix for Xiaomi / HyperOS.**
+**Play at 90, 120 or 144Hz on Xiaomi, Redmi and POCO. No root, no PC, no battery trade-off.**
 
-Unlike other workarounds that force you to disable `com.miui.powerkeeper` (hurting daily battery life), root your phone, or keep a PC connected, **Hyper120** unlocks **120fps** for your chosen games while keeping PowerKeeper and adaptive refresh rate (`is_smart_fps=1`) **100% enabled** for normal use.
+[![Latest release](https://img.shields.io/github/v/release/Rohan-Reyes/Hyper120?label=download&color=38BDF8)](https://github.com/Rohan-Reyes/Hyper120/releases/latest)
+[![Android 8.0+](https://img.shields.io/badge/Android-8.0%2B-3DDC84?logo=android&logoColor=white)](https://github.com/Rohan-Reyes/Hyper120/releases/latest)
+[![HyperOS / MIUI](https://img.shields.io/badge/HyperOS%20%2F%20MIUI-Xiaomi%20%C2%B7%20Redmi%20%C2%B7%20POCO-FF6900?logo=xiaomi&logoColor=white)](#does-it-work-on-my-phone)
+[![No root](https://img.shields.io/badge/root-not%20needed-2DD4BF)](#how-it-works)
 
----
+[**Download the APK**](https://github.com/Rohan-Reyes/Hyper120/releases/latest) · [Website](https://hyper120.aten-systems.site) · [Add to Obtainium](https://apps.obtainium.imranr.dev/redirect.html?r=obtainium://app/%7B%22id%22%3A%22com.custom.game120hz%22%2C%22url%22%3A%22https%3A%2F%2Fgithub.com%2FRohan-Reyes%2FHyper120%22%2C%22author%22%3A%22Rohan-Reyes%22%2C%22name%22%3A%22Hyper120%22%7D) · [Report your device](https://github.com/Rohan-Reyes/Hyper120/issues/new/choose)
 
-## Why Hyper120 Is the Easiest & Most Consistent Fix
+<img src="docs/images/banner.png" alt="Hyper120 on a Xiaomi 14: home screen, app picker and FPS tester">
 
-- **No Root Required:** Installs like a normal Android app.
-- **No PC Needed After Install:** Runs on-device, auto-starts on boot (`BOOT_COMPLETED`), and keeps your 120Hz overrides active in the background.
-- **Auto-Add Installed Games:** Automatically detects existing and newly installed games (`PACKAGE_ADDED`) and adds them to 120Hz (while remembering any game you manually uncheck).
-- **Zero Normal-Use Battery Trade-off:** PowerKeeper stays enabled and adaptive refresh rate still drops to 60Hz/idle in regular apps.
-- **Consistent Against Resets:** Periodically refreshes PowerKeeper's `mPrivGames` map while your screen is on so games stay locked at 120Hz.
-- **Target FPS & Quick Settings Tile:** Pick `60Hz`, `90Hz`, `120Hz`, or `144Hz`, toggle background override from Control Center, and inspect live broadcast logs via **Show Terminal**.
-- **Simple App Picker:** Search and check any installed game or app — no manual package typing or ADB commands required.
+</div>
 
-🌐 **Website:** https://hyper120.aten-systems.site
+## Why Hyper120
 
----
+HyperOS and MIUI quietly cap many games at **60Hz**, even when your screen is set to 120Hz. The usual fixes cost you something: disabling PowerKeeper drains the battery, root voids your warranty, and ADB tricks reset on reboot.
 
-## How to Install
+- **Only your games go fast.** Hyper120 asks PowerKeeper (the system service that sets the cap) to unlock the rate you pick for the apps you pick. Everything else keeps adaptive refresh and drops to 60Hz or lower as usual.
+- **Set it once.** It starts on boot, adds new games when you install them, and re-sends the override every 15 seconds while the screen is on, so the cap doesn't creep back.
+- **Proof built in.** The FPS tester switches the screen to each rate and measures the frames that actually arrive, then tells you whether your phone supports it.
 
-### Option A: Obtainium (Recommended for Auto-Updates)
-1. Install [Obtainium](https://github.com/ImranR98/Obtainium/releases).
-2. Tap **[Add Hyper120 to Obtainium](https://apps.obtainium.imranr.dev/redirect.html?r=obtainium://app/%7B%22id%22%3A%22com.custom.game120hz%22%2C%22url%22%3A%22https%3A%2F%2Fgithub.com%2FRohan-Reyes%2FHyper120%22%2C%22author%22%3A%22Rohan-Reyes%22%2C%22name%22%3A%22Hyper120%22%7D)** (or import [`obtainium.json`](obtainium.json) / `https://github.com/Rohan-Reyes/Hyper120`).
-3. Allow **Install from unknown sources** and launch **Hyper120**.
+## Screenshots
 
-### Option B: Directly on Your Phone (Manual APK)
-1. Download **`Hyper120.apk`** from the [Releases](https://github.com/Rohan-Reyes/Hyper120/releases) page.
-2. Open the downloaded APK and allow **Install from unknown sources** if prompted.
-3. Launch **Hyper120** — it automatically detects your installed games and applies 120Hz.
-4. *(Recommended on HyperOS / MIUI)* Long-press **Hyper120** → **App info**:
-   * Enable **Autostart**
-   * Set **Battery saver** to **No restrictions**
+<table>
+  <tr>
+    <td align="center"><img src="docs/images/home.png" width="200"><br><sub><b>Home</b><br>Pick 60 / 90 / 120 / 144Hz</sub></td>
+    <td align="center"><img src="docs/images/apps.png" width="200"><br><sub><b>Apps</b><br>Games are found automatically</sub></td>
+    <td align="center"><img src="docs/images/tester.png" width="200"><br><sub><b>FPS tester</b><br>Live check with a verdict</sub></td>
+    <td align="center"><img src="docs/images/about.png" width="200"><br><sub><b>About</b><br>Updates, setup help, support</sub></td>
+  </tr>
+</table>
 
-### Option C: Via ADB (Optional)
+<details>
+<summary><b>In-game screenshots</b> (Xiaomi 14, HyperOS, PowerKeeper on)</summary>
+<br>
+
+| Mobile Legends: Bang Bang | Call of Duty: Mobile |
+| :---: | :---: |
+| <img src="assets/game-mlbb.jpg" width="420" alt="Mobile Legends"> | <img src="assets/game-codm.jpg" width="420" alt="Call of Duty Mobile"> |
+| **Minecraft** | **Archero 2** |
+| <img src="assets/game-minecraft.jpg" width="420" alt="Minecraft"> | <img src="assets/game-archero2.jpg" width="420" alt="Archero 2"> |
+
+</details>
+
+## Features
+
+| | |
+|---|---|
+| **Per-app refresh rate** | Choose any rate your panel supports (detected from the display: 60, 90, 120, 144Hz). Only the apps you tick get it. |
+| **Auto-add games** | Installed games are ticked on first launch, and new ones are added the moment you install them. Untick a game and it stays unticked. |
+| **Background override** | A small foreground service re-sends the override every 15 s while the screen is on and again after every reboot. |
+| **FPS tester** | Points the override at Hyper120 itself, asks for the matching display mode and counts real frames. Test 60, 90 and 120Hz one after another to see exactly where your ROM stops. |
+| **Quick Settings tile** | Turn the background override on or off from Control Center. The tile shows the current rate and app count. |
+| **Activity log** | See each broadcast sent to PowerKeeper, with timestamps. |
+| **Bug & device reports** | One tap opens a GitHub issue pre-filled with your device, Android version, panel max and tester result. |
+| **Updates** | **About → Check for updates** looks at GitHub Releases. Obtainium works too. |
+
+## Install
+
+1. Download **Hyper120.apk** from the [latest release](https://github.com/Rohan-Reyes/Hyper120/releases/latest) on your phone, or add it to [Obtainium](https://apps.obtainium.imranr.dev/redirect.html?r=obtainium://app/%7B%22id%22%3A%22com.custom.game120hz%22%2C%22url%22%3A%22https%3A%2F%2Fgithub.com%2FRohan-Reyes%2FHyper120%22%2C%22author%22%3A%22Rohan-Reyes%22%2C%22name%22%3A%22Hyper120%22%7D) for automatic updates.
+2. Open it and allow installs from unknown sources if asked.
+3. Launch **Hyper120**. Your games are detected and unlocked straight away.
+4. **Important on HyperOS:** open **About → Open App info**, turn on **Autostart** and set **Battery saver** to **No restrictions**. Otherwise HyperOS may stop the background service.
+
+To go back to normal for a game, untick it (or pick 60Hz and tap Apply). PowerKeeper keeps the last value in memory until it restarts.
+
+<details>
+<summary>Optional: install and whitelist with ADB</summary>
+
 ```bash
 adb install -r Hyper120.apk
 adb shell dumpsys deviceidle whitelist +com.custom.game120hz
 adb shell appops set com.custom.game120hz RUN_ANY_IN_BACKGROUND allow
 ```
+</details>
 
----
+## Does it work on my phone?
 
-## Screenshots
+Open the **FPS tester** (gauge icon, top right). It runs the override against itself, so the result is what your games will get.
 
-| Main App Picker | About & Support |
-| :---: | :---: |
-| <img src="assets/ui-main.png?v=35" width="320" alt="Hyper120 Main UI" /> | <img src="assets/ui-about.png" width="320" alt="Hyper120 About Page" /> |
+| Status | Devices |
+|---|---|
+| ✅ **Verified** | Xiaomi 14 (`houji`), HyperOS / Android 16, China ROM: 60, 90 and 120Hz all confirmed |
+| 🟡 **Likely** (untested) | Xiaomi 15 / 14 / 13 / 12 series incl. T and Ultra · Redmi K80 / K70 / K60 / K50, Note 14 / 13 / 12 Pro & Turbo · POCO F6 / F5 / X7 / X6 · Xiaomi Pad 6 / 7 series |
+| ❌ **Reported not working** | POCO M6 Pro 5G (Global HyperOS stays at 60Hz) |
 
-### Recent In-Game Screenshots
+Some Global and POCO builds appear to accept this override only from system apps. If the tester says **Clamped**, tap **Report** so your ROM can be added to this table.
 
-| Mobile Legends: Bang Bang | Call of Duty: Mobile |
-| :---: | :---: |
-| <img src="assets/game-mlbb.jpg" width="420" alt="Mobile Legends running with Hyper120" /> | <img src="assets/game-codm.jpg" width="420" alt="Call of Duty Mobile running with Hyper120" /> |
+## How it works
 
-| Minecraft | Archero 2 |
-| :---: | :---: |
-| <img src="assets/game-minecraft.jpg" width="420" alt="Minecraft running with Hyper120" /> | <img src="assets/game-archero2.jpg" width="420" alt="Archero 2 running with Hyper120" /> |
+On HyperOS and MIUI, `com.miui.powerkeeper` (`DisplayFrameSetting`) decides each app's refresh rate when it comes to the foreground. Games it doesn't know are put in `mDefaultGameApp(60)` and capped at 60Hz.
 
----
+Xiaomi's own game service (Joyose) lifts that cap with a broadcast. Hyper120 sends the same broadcast for the apps you choose:
 
-## Proof of 120Hz Working (Xiaomi 14 / `houji`, Android 16)
+```text
+action   com.xiaomi.joyose.OVERRIDE_GAME_FRESHRATE
+package  com.miui.powerkeeper
+extras   override_pkg_name = com.mobile.legends
+         override_freshrate = 120
+```
 
-Before **Hyper120**, `com.miui.powerkeeper` (`DisplayFrameSetting`) placed `com.mobile.legends` into `mDefaultGameApp(60)` and clamped the display to `modeId 2` (`60.000004` Hz):
+PowerKeeper adds the app to `mPrivGames` and stops capping it. PowerKeeper itself and adaptive refresh (`is_smart_fps=1`) stay on.
+
+<details>
+<summary>Proof from <code>dumpsys</code> (Mobile Legends, Xiaomi 14)</summary>
+
+Before: PowerKeeper clamps the game to the 60Hz mode.
 
 ```text
 mDisplayModeSpecs={baseModeId=2 ... render: (0.0 60.0)}
 mActiveRenderFrameRate=60.000004
 ```
 
-With **Hyper120** active (and `PowerKeeper` + `is_smart_fps=1` **still enabled**), `dumpsys` confirms PowerKeeper's `mPrivGames` is populated and the display switches to **`120.00001` Hz** (`baseModeId=1`) while Mobile Legends is in the foreground:
+With Hyper120, PowerKeeper and Smart FPS still enabled:
 
 ```text
-mDisplayModeSpecs={baseModeId=1 allowGroupSwitching=false primary=physical: (0.0 Infinity) render: (0.0 120.0) appRequest=physical: (0.0 Infinity) render: (0.0 120.0) idleScreenRefreshRateConfig=null}
+mDisplayModeSpecs={baseModeId=1 allowGroupSwitching=false primary=physical: (0.0 Infinity) render: (0.0 120.0) ...}
 mActiveRenderFrameRate=120.00001
-fpsconfig mPrivGames={com.roblox.client=120, com.tungsten.fcl=120, com.block.juggle=120, org.ppsspp.ppssppgold=120, com.fancyforce.happywheels=120, com.mobile.legends=120, com.gabama.monopostolite=120, com.xq.archeroii=120, com.mojang.minecraftpe=120, com.plarium.mechlegion=120, com.garena.game.codm=120, com.StefMorojna.SpaceflightSimulator=120}
+fpsconfig mPrivGames={com.mobile.legends=120, com.garena.game.codm=120, com.mojang.minecraftpe=120, com.xq.archeroii=120, ...}
+```
+</details>
+
+**Privacy:** no account, no ads, no analytics SDKs. Once every 12 hours the app sends a random ID (no device info) to `hyper120.aten-systems.site/api/ping` so I can count active installs.
+
+## Build from source
+
+No Gradle: the APK is built straight from the Android SDK tools (build-tools 36.0.0, `platforms;android-36.1`, JDK 11+).
+
+```bash
+git clone https://github.com/Rohan-Reyes/Hyper120.git
+cd Hyper120
+export ANDROID_SDK=/path/to/Android/Sdk   # defaults to %LOCALAPPDATA%\Android\Sdk on Windows
+mkdir -p build && keytool -genkeypair -keystore build/debug.jks -storepass android -alias androiddebugkey \
+  -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
+tools/build.sh             # build/Hyper120.apk
+tools/build.sh --install   # build and adb install
 ```
 
----
+<details>
+<summary>Regenerating the icon and README images</summary>
 
-## How It Works
+- `python tools/make_icon.py` writes the adaptive launcher icon, Quick Settings tile and SVG logo from one geometry. `python tools/render_icon_png.py` exports the PNGs with headless Chrome.
+- `python tools/make_ui_icons.py` writes the in-app line icons.
+- `python tools/make_readme_images.py <dir>` builds `docs/images/` and the banner from `adb exec-out screencap -p` captures named `01_home.png`, `02_list.png`, `03_tester.png`, `04_about.png`.
+</details>
 
-On HyperOS / MIUI, `com.miui.powerkeeper` (`DisplayFrameSetting`) checks `mPrivGames` and `mDefaultGameApp(60)` whenever an app enters the foreground. Games in `mDefaultGameApp(60)` get clamped to 60Hz via `DisplayFeatureManager.setScreenEffect(...)`.
+## Project layout
 
-**Hyper120** sends `com.xiaomi.joyose.OVERRIDE_GAME_FRESHRATE` (`override_pkg_name`, `override_freshrate=<target_fps>`) directly to `com.miui.powerkeeper`, registering your selected apps in `mPrivGames` without disabling PowerKeeper.
-
-*(Privacy note: v3.6+ sends one anonymous random-UUID ping every 12h to count active app users; no device IDs or personal data are collected.)*
-
----
-
-## Device Compatibility
-
-### Verified & Tested
-- **Xiaomi 14 (`houji`)** — HyperOS / Android 16 (China ROM)
-
-### Probable Supported Devices (Untested)
-Any Xiaomi, Redmi, or POCO device with a **90Hz / 120Hz / 144Hz display** running **HyperOS or MIUI** with `com.miui.powerkeeper` should likely work, including:
-- **Xiaomi Flagships:** Xiaomi 15 / 15 Pro / 15 Ultra, Xiaomi 14 / 14 Pro / 14 Ultra / 14T / 14T Pro, Xiaomi 13 / 13 Pro / 13 Ultra / 13T / 13T Pro, Xiaomi 12 / 12 Pro / 12T / 12T Pro
-- **Redmi K & Note Series:** Redmi K80 / K70 / K60 / K50 series, Redmi Note 14 Pro / Pro+, Redmi Note 13 Pro / Pro+, Redmi Note 12 Pro / Turbo
-- **POCO Series:** POCO F6 / F6 Pro, POCO F5 / F5 Pro, POCO X7 / X7 Pro, POCO X6 / X6 Pro
-- **Tablets:** Xiaomi Pad 6 / Pad 6 Pro / Pad 7 / Pad 7 Pro
-
-### Reported Not Working / Unconfirmed
-- **POCO M6 Pro 5G** *(90Hz panel; user reported 60Hz lock on Global HyperOS)*
-
-*(Compatibility can vary by regional ROM or security patch — feel free to open an issue or PR with your device result!)*
-
----
+```
+src/        App source (plain Java, no AndroidX)
+res/        Icons and drawables
+web/        Landing page (hyper120.aten-systems.site)
+tools/      Build script, icon and README image generators
+docs/       README images
+assets/     In-game screenshots
+```
 
 ## Support
 
-- **Buy Me a Coffee:** https://buymeacoffee.com/rohan_reyes
-- **GitHub:** https://github.com/Rohan-Reyes/Hyper120
+Hyper120 is free and open source. If it made your games smoother, you can [buy me a coffee](https://buymeacoffee.com/rohan_reyes) ☕. Bug reports and device results are just as welcome: [open an issue](https://github.com/Rohan-Reyes/Hyper120/issues/new/choose).
+
+<sub>Made by Rohan Reyes · [ATEN Systems](https://aten-systems.site). Not affiliated with Xiaomi.</sub>

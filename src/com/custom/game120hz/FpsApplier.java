@@ -136,11 +136,20 @@ public final class FpsApplier {
         return supported[supported.length - 1];
     }
 
-    public static String getDeviceSummary(Context ctx) {
+    /** Marketing name ("Xiaomi 14") when the ROM exposes it, else brand + model code. */
+    public static String getDeviceName(Context ctx) {
+        try {
+            String n = android.provider.Settings.Global.getString(ctx.getContentResolver(), "device_name");
+            if (n != null && !n.trim().isEmpty()) return n.trim();
+        } catch (Exception ignored) {
+        }
         String brand = Build.MANUFACTURER == null ? "" : Build.MANUFACTURER.trim();
         String model = Build.MODEL == null ? "" : Build.MODEL.trim();
-        String name = model.toLowerCase().startsWith(brand.toLowerCase())
-            ? model : (brand + " " + model).trim();
+        return model.toLowerCase().startsWith(brand.toLowerCase()) ? model : (brand + " " + model).trim();
+    }
+
+    public static String getDeviceSummary(Context ctx) {
+        String name = getDeviceName(ctx);
         return name + " (" + Build.DEVICE + ") \u2022 Android " + Build.VERSION.RELEASE
             + " \u2022 Max " + getMaxSupportedFps(ctx) + "Hz";
     }
