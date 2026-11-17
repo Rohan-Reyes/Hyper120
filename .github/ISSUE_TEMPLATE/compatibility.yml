@@ -1,0 +1,39 @@
+name: Device Compatibility Report
+description: Report whether Hyper120 works or is locked at 60Hz on your Xiaomi / Redmi / POCO device
+title: "[Compatibility] <Device Model> - Working / Not Working"
+labels: ["compatibility"]
+body:
+  - type: dropdown
+    id: status
+    attributes:
+      label: Does Hyper120 unlock high FPS on your device?
+      options:
+        - "Works (90Hz / 120Hz / 144Hz unlocked)"
+        - "Not working (stays locked at 60Hz)"
+        - "Partial (works in some games only)"
+    validations:
+      required: true
+  - type: input
+    id: device
+    attributes:
+      label: Device Model & Codename
+      placeholder: "e.g. Xiaomi 14 (houji) / POCO M6 Pro 5G"
+    validations:
+      required: true
+  - type: input
+    id: rom
+    attributes:
+      label: HyperOS / MIUI & Android Version
+      placeholder: "e.g. HyperOS 2.0 Global / Android 15"
+    validations:
+      required: true
+  - type: textarea
+    id: tester
+    attributes:
+      label: Built-in FPS Tester Report (from Hyper120 -> Test FPS -> Copy Report)
+      placeholder: "Paste the output from Hyper120's Live FPS Tester here..."
+  - type: textarea
+    id: notes
+    attributes:
+      label: Games Tested & Notes
+      placeholder: "e.g. MLBB, CODM — Autostart & No restrictions enabled?"

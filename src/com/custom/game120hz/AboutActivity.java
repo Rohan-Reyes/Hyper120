@@ -155,10 +155,25 @@ public class AboutActivity extends Activity {
         githubPill.setTypeface(Typeface.DEFAULT_BOLD);
         githubPill.setTextColor(UiHelper.COL_ON_PRIMARY);
         githubPill.setBackground(UiHelper.pillBg(this, UiHelper.COL_PRIMARY, 0, 32));
-        githubPill.setLayoutParams(new LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT, dp(50)));
+        LinearLayout.LayoutParams ghParams = new LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT, dp(50));
+        ghParams.bottomMargin = dp(12);
+        githubPill.setLayoutParams(ghParams);
         githubPill.setOnClickListener(v -> UiHelper.openUrl(this, UiHelper.GITHUB_REPO_URL));
         linksCard.addView(githubPill);
+
+        // Report Bug / Compatibility Pill Button
+        Button reportPill = new Button(this);
+        reportPill.setText("Report Bug / Device Compatibility");
+        reportPill.setAllCaps(false);
+        reportPill.setTextSize(14);
+        reportPill.setTypeface(Typeface.DEFAULT_BOLD);
+        reportPill.setTextColor(UiHelper.COL_TEXT);
+        reportPill.setBackground(UiHelper.pillBg(this, UiHelper.COL_BG, UiHelper.COL_OUTLINE, 32));
+        reportPill.setLayoutParams(new LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT, dp(50)));
+        reportPill.setOnClickListener(v -> UiHelper.openUrl(this, UiHelper.GITHUB_REPO_URL + "/issues/new/choose"));
+        linksCard.addView(reportPill);
 
         root.addView(linksCard);
 

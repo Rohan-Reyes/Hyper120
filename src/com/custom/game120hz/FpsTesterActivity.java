@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import java.net.URLEncoder;
 
 /** Built-in live FPS & display refresh-rate tester using Choreographer frame callbacks. */
 public class FpsTesterActivity extends Activity implements Choreographer.FrameCallback {
@@ -194,6 +195,20 @@ public class FpsTesterActivity extends Activity implements Choreographer.FrameCa
         copyBtn.setOnClickListener(v -> copyReport());
         root.addView(copyBtn);
 
+        Button reportBtn = new Button(this);
+        reportBtn.setText("Report Compatibility / Bug on GitHub");
+        reportBtn.setAllCaps(false);
+        reportBtn.setTextSize(14);
+        reportBtn.setTypeface(Typeface.DEFAULT_BOLD);
+        reportBtn.setTextColor(UiHelper.COL_PRIMARY);
+        reportBtn.setBackground(UiHelper.pillBg(this, UiHelper.COL_BG, UiHelper.COL_OUTLINE, 26));
+        LinearLayout.LayoutParams repParams = new LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT, dp(46));
+        repParams.topMargin = dp(10);
+        reportBtn.setLayoutParams(repParams);
+        reportBtn.setOnClickListener(v -> openReportIssue());
+        root.addView(reportBtn);
+
         setContentView(root);
     }
 
@@ -271,19 +286,46 @@ public class FpsTesterActivity extends Activity implements Choreographer.FrameCa
         return FpsApplier.getDeviceSummary(this) + "\nPowerKeeper: " + pk;
     }
 
-    private void copyReport() {
+    private String buildReportText() {
         String pk = FpsApplier.isPowerKeeperInstalled(this) ? "OK" : "Missing";
-        String report = "Hyper120 Diagnostic Report\n"
+        String ver = "?";
+        try {
+            ver = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+        } catch (Exception ignored) {
+        }
+        return "Hyper120 v" + ver + " Diagnostic Report\n"
             + "Device: " + Build.MANUFACTURER + " " + Build.MODEL + " (" + Build.DEVICE + ")\n"
             + "Android: " + Build.VERSION.RELEASE + " (SDK " + Build.VERSION.SDK_INT + ")\n"
             + "Max Hardware Hz: " + maxHz + "Hz\n"
             + "Target FPS: " + FpsApplier.getTargetFps(this) + "Hz\n"
             + String.format("Display Mode: %.1f Hz | Measured: %.1f FPS\n", displayHz, measuredFps)
             + "PowerKeeper: " + pk;
+    }
+
+    private void copyReport() {
         ClipboardManager cm = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
         if (cm != null) {
-            cm.setPrimaryClip(ClipData.newPlainText("Hyper120 Report", report));
+            cm.setPrimaryClip(ClipData.newPlainText("Hyper120 Report", buildReportText()));
             Toast.makeText(this, "Copied diagnostic report", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void openReportIssue() {
+        try {
+            int expected = Math.min(FpsApplier.getTargetFps(this), maxHz);
+            String verdict = !FpsApplier.isPowerKeeperInstalled(this)
+                ? "PowerKeeper missing"
+                : (measuredFps >= expected - 6f ? "Works (" + Math.round(measuredFps) + " FPS)" : "Clamped at " + Math.round(measuredFps) + " FPS");
+            String title = "[Compatibility] " + Build.MANUFACTURER + " " + Build.MODEL + " (" + Build.DEVICE + ") - " + verdict;
+            String body = "### Device & Tester Output\n```\n" + buildReportText()
+                + "\n```\n\n### HyperOS / MIUI Version & Region\n(e.g. HyperOS 2.0 Global / CN)\n\n"
+                + "### Games Tested & Notes\n- Autostart ON & Battery Saver = No restrictions?\n- Games tested:\n";
+            String url = UiHelper.GITHUB_REPO_URL + "/issues/new?title="
+                + URLEncoder.encode(title, "UTF-8")
+                + "&body=" + URLEncoder.encode(body, "UTF-8");
+            UiHelper.openUrl(this, url);
+        } catch (Exception e) {
+            UiHelper.openUrl(this, UiHelper.GITHUB_REPO_URL + "/issues/new/choose");
         }
     }
 
