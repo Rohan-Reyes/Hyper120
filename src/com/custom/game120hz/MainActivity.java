@@ -429,6 +429,24 @@ public class MainActivity extends Activity {
         }
         sec.addView(chips);
 
+        // Explains why some games stay at 60 even when the override works
+        LinearLayout note = new LinearLayout(this);
+        note.setGravity(Gravity.TOP);
+        note.setBackground(UiHelper.pillBg(this, UiHelper.alpha(UiHelper.COL_WARN, 0.06f),
+            UiHelper.alpha(UiHelper.COL_WARN, 0.22f), 18));
+        note.setPadding(dp(14), dp(12), dp(14), dp(12));
+        note.setLayoutParams(UiHelper.matchWrap(this, 12));
+        ImageView ni = UiHelper.icon(this, R.drawable.ui_info, UiHelper.COL_WARN, 18);
+        ((LinearLayout.LayoutParams) ni.getLayoutParams()).rightMargin = dp(10);
+        note.addView(ni);
+        TextView nt = UiHelper.text(this,
+            "Hyper120 unlocks the screen, but each game has its own limit. Games tagged 60 MAX stop at 60 FPS "
+                + "whatever you do. Turn on the high frame-rate option inside the game too. Long-press a game for tips.",
+            12.5f, UiHelper.COL_MUTED, UiHelper.TF_REGULAR);
+        nt.setLineSpacing(dp(3), 1f);
+        note.addView(nt, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+        sec.addView(note);
+
         listCard = UiHelper.card(this);
         listCard.setPadding(dp(14), dp(4), dp(14), dp(4));
         emptyText = UiHelper.text(this, "Loading installed apps…", 14, UiHelper.COL_MUTED, UiHelper.TF_REGULAR);
@@ -532,10 +550,26 @@ public class MainActivity extends Activity {
         col.addView(name);
 
         SpannableStringBuilder sb = new SpannableStringBuilder();
-        if (e.isGame) {
-            sb.append("GAME");
-            sb.setSpan(new ForegroundColorSpan(UiHelper.COL_TEAL), 0, 4, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            sb.setSpan(new StyleSpan(Typeface.BOLD), 0, 4, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        GameCaps.Info caps = GameCaps.get(e.packageName);
+        String tag = null;
+        int tagColor = UiHelper.COL_TEAL;
+        if (caps != null) {
+            if (caps.cap == GameCaps.MAX_60) {
+                tag = "60 MAX";
+                tagColor = UiHelper.COL_WARN;
+            } else if (caps.cap == GameCaps.MAX_90) {
+                tag = "90 MAX";
+                tagColor = UiHelper.COL_PRIMARY;
+            } else {
+                tag = "UP TO 120";
+            }
+        } else if (e.isGame) {
+            tag = "GAME";
+        }
+        if (tag != null) {
+            sb.append(tag);
+            sb.setSpan(new ForegroundColorSpan(tagColor), 0, tag.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            sb.setSpan(new StyleSpan(Typeface.BOLD), 0, tag.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             sb.append("  ·  ");
         }
         sb.append(e.packageName);
@@ -556,6 +590,14 @@ public class MainActivity extends Activity {
         e.row = row;
         e.check = check;
         styleCheck(e, false);
+        row.setOnLongClickListener(v -> {
+            v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+            String msg = caps != null ? e.label + ": " + caps.note
+                : e.label + ": no data for this game yet. If it has a frame-rate setting, pick the highest; "
+                    + "if it still feels like 60, the game itself is probably capped.";
+            android.widget.Toast.makeText(this, msg, android.widget.Toast.LENGTH_LONG).show();
+            return true;
+        });
         row.setOnClickListener(v -> {
             v.performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK);
             boolean nowOn = !selectedPackages.contains(e.packageName);

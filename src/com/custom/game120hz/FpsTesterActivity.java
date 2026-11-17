@@ -402,7 +402,8 @@ public class FpsTesterActivity extends Activity implements Choreographer.FrameCa
         } else if (high) {
             UiHelper.setChip(this, verdictChip, expected + " Hz works", UiHelper.COL_TEAL);
             verdictText.setText("Frames are arriving at " + Math.round(measuredFps)
-                + " FPS, so PowerKeeper accepted the override. Your games can use " + expected + "Hz.");
+                + " FPS, so PowerKeeper accepted the override. Games can now reach " + expected
+                + " FPS if the game itself supports it.");
         } else if (sampleCount >= 3) {
             UiHelper.setChip(this, verdictChip, "Clamped at " + Math.round(measuredFps), UiHelper.COL_ERROR);
             verdictText.setText("The display stayed near " + Math.round(displayHz)

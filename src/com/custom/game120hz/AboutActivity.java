@@ -73,6 +73,10 @@ public class AboutActivity extends Activity {
             v -> checkForUpdates(updateRow[0], currentVer));
         links.addView(updateRow[0]);
         links.addView(UiHelper.divider(this, 58));
+        links.addView(UiHelper.row(this, R.drawable.ui_info, UiHelper.COL_WARN,
+            "FAQ & game list", "Why some games stay at 60, and which ones go higher", null,
+            v -> UiHelper.openUrl(this, "https://hyper120.aten-systems.site/#games")));
+        links.addView(UiHelper.divider(this, 58));
         links.addView(UiHelper.row(this, R.drawable.ui_code, 0xFFA5B4FC,
             "Source code", "github.com/Rohan-Reyes/Hyper120", null,
             v -> UiHelper.openUrl(this, UiHelper.GITHUB_REPO_URL)));

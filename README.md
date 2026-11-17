@@ -56,6 +56,7 @@ HyperOS and MIUI quietly cap many games at **60Hz**, even when your screen is se
 | **Auto-add games** | Installed games are ticked on first launch, and new ones are added the moment you install them. Untick a game and it stays unticked. |
 | **Background override** | A small foreground service re-sends the override every 15 s while the screen is on and again after every reboot. |
 | **FPS tester** | Points the override at Hyper120 itself, asks for the matching display mode and counts real frames. Test 60, 90 and 120Hz one after another to see exactly where your ROM stops. |
+| **Game limit tags** | Known games are tagged `UP TO 120`, `90 MAX` or `60 MAX`, so you can tell when the game itself is the limit. Long-press for how to turn on its high frame rate. |
 | **Quick Settings tile** | Turn the background override on or off from Control Center. The tile shows the current rate and app count. |
 | **Activity log** | See each broadcast sent to PowerKeeper, with timestamps. |
 | **Bug & device reports** | One tap opens a GitHub issue pre-filled with your device, Android version, panel max and tester result. |
@@ -91,6 +92,46 @@ Open the **FPS tester** (gauge icon, top right). It runs the override against it
 | ❌ **Reported not working** | POCO M6 Pro 5G (Global HyperOS stays at 60Hz) |
 
 Some Global and POCO builds appear to accept this override only from system apps. If the tester says **Clamped**, tap **Report** so your ROM can be added to this table.
+
+## Game list: which games can actually go above 60?
+
+Hyper120 removes the **phone's** 60Hz cap. Every game also has **its own** limit, and no app can push a game past it. If a game stops at 60, the screen runs at 120 but the game only draws 60 new frames. Many games also show their 90/120 option **only on phones the developer has approved**.
+
+Since v4.1 the app tags these games in its list (`UP TO 120`, `90 MAX`, `60 MAX`). Long-press a game for tips.
+
+| ✅ Up to 120 (turn it on in the game) | 🔵 90 max | 🟠 60 max (game's own limit) |
+|---|---|---|
+| **Mobile Legends**: Graphics → Ultra (120) / Super (90) | **Free Fire / Free Fire MAX**: High FPS gives 90 on some phones | **Roblox**: mobile app capped at 60 on every phone |
+| **Call of Duty: Mobile**: Frame Rate → Max / Ultra | **Fortnite**: 60 on most Android phones, 90 on a few | **Genshin Impact**: 120 is iPhone / iPad only |
+| **PUBG Mobile / BGMI**: Graphics Smooth → Ultra Extreme | | **Honkai: Star Rail**: 120 is iPhone / iPad only |
+| **Honor of Kings**: Graphics → 120 FPS | | **Zenless Zone Zero**: locked to 60 on phones |
+| **Delta Force**: up to 90 / 120 on supported phones | | **Wuthering Waves**: 120 option was removed |
+| **Brawl Stars**: 120 in matches, 60 in menus | | **Pokémon UNITE**: high frame rate mode = 60 |
+| **Pokémon GO**: Advanced → Native refresh rate | | **PPSSPP**: PSP games run at their original 60 / 30 |
+| **EA SPORTS FC Mobile**: 90 / 120 only on some phones | | |
+| **CSR 2**: up to 120 | | |
+
+<sub>Compiled from developer pages, patch coverage and player reports as of November 2026. Games change their limits in updates. Know a game that belongs here? <a href="https://github.com/Rohan-Reyes/Hyper120/issues/new/choose">Open an issue</a>.</sub>
+
+## FAQ
+
+**It works in the tester, but my game still runs at 60. Why?**
+The game has its own limit. The tester proves the phone's cap is gone; games like Roblox and Genshin Impact are built to stop at 60 on Android. Check the [game list](#game-list-which-games-can-actually-go-above-60).
+
+**My game has no 120 FPS option. Can Hyper120 add it?**
+No. Games such as Mobile Legends, PUBG Mobile and Call of Duty: Mobile decide which phones see their 90/120 option. Hyper120 makes sure the screen isn't the bottleneck once the game asks for more.
+
+**How do I see a game's real FPS?**
+Use the FPS counter in Game Turbo's performance overlay. Developer options → *Show refresh rate* shows the **screen** rate, not the game's: in a 60-capped game it can say 120 while the game still draws 60.
+
+**Which rate should I pick?**
+The highest your game supports. Choosing 120 for a game that tops out at 90 does no harm. Picking 60 sends games back to normal.
+
+**How do I turn it off for a game?**
+Untick it. PowerKeeper keeps the last value until it restarts, so to switch back right away pick 60 and tap Apply, or reboot.
+
+**Does it drain my battery?**
+Only ticked games run faster, and only while they're open. PowerKeeper and adaptive refresh stay on for everything else.
 
 ## How it works
 

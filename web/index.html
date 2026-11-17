@@ -255,6 +255,24 @@
 
     /* faq */
     .faq { max-width: 820px; margin: 0 auto; }
+
+    /* game list */
+    .explain { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 16px; }
+    .explain .card { padding: 22px; }
+    .explain .k { font-family: var(--mono); font-size: 0.72rem; color: var(--dim); letter-spacing: .1em; }
+    .explain h3 { font-size: 1.02rem; margin: 8px 0 6px; }
+    .explain p { color: var(--muted); font-size: 0.9rem; }
+    .caps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; align-items: start; }
+    .cap { overflow: hidden; }
+    .cap-head { padding: 20px 22px 14px; border-bottom: 1px solid var(--line); }
+    .cap-head p { color: var(--muted); font-size: 0.86rem; margin-top: 10px; }
+    .cap ul { list-style: none; }
+    .cap li { padding: 13px 22px; display: grid; gap: 2px; }
+    .cap li + li { border-top: 1px solid var(--line); }
+    .cap li b { font-size: 0.95rem; }
+    .cap li span { color: var(--dim); font-size: 0.84rem; }
+    .p-amb { background: rgba(251,191,36,.1); color: var(--amber); border: 1px solid rgba(251,191,36,.3); }
+    .games-foot { margin-top: 18px; color: var(--dim); font-size: 0.86rem; max-width: 820px; }
     details { border-bottom: 1px solid var(--line); }
     summary {
       list-style: none; cursor: pointer; padding: 22px 4px; font-weight: 700; font-size: 1.04rem;
@@ -283,7 +301,7 @@
     .lightbox.open { display: flex; }
     .lightbox img { max-width: 94vw; max-height: 90vh; border-radius: 18px; }
 
-    .hero-grid > *, .install > *, .proof > *, .flow > *, .features > *, .lane > *, .row > * { min-width: 0; }
+    .hero-grid > *, .install > *, .proof > *, .caps > *, .explain > *, .flow > *, .features > *, .lane > *, .row > * { min-width: 0; }
     .reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s ease, transform .6s ease; }
     .reveal.in { opacity: 1; transform: none; }
 
@@ -299,7 +317,7 @@
       .screens { grid-template-columns: repeat(2, 1fr); }
       .features { grid-template-columns: 1fr 1fr; }
       .games { grid-template-columns: 1fr 1fr; }
-      .install, .proof { grid-template-columns: 1fr; }
+      .install, .proof, .explain, .caps { grid-template-columns: 1fr; }
     }
     @media (max-width: 720px) {
       .wrap { padding: 0 16px; }
@@ -346,6 +364,7 @@
         <a href="#screens">Screens</a>
         <a href="#install">Install</a>
         <a href="#devices">Devices</a>
+        <a href="#games">Games</a>
         <a href="#faq">FAQ</a>
         <a class="btn btn-primary btn-sm js-dl" href="https://github.com/Rohan-Reyes/Hyper120/releases/latest" target="_blank" rel="noopener">Download</a>
       </nav>
@@ -357,7 +376,7 @@
     <section class="hero">
       <div class="wrap hero-grid">
         <div>
-          <div class="badge"><i></i><span class="js-ver-badge">v4.0</span>&nbsp;· new FPS tester tests every rate</div>
+          <div class="badge"><i></i><span class="js-ver-badge">v4.1</span>&nbsp;· now flags games capped at 60</div>
           <h1>Your games,<br />at <span class="hz">120Hz</span>.<br />Nothing else changes.</h1>
           <p class="lede">
             HyperOS caps many games at 60Hz even when your screen is set to 120. Hyper120 lifts the cap
@@ -548,6 +567,60 @@ mPrivGames={com.mobile.legends=120, ...}</pre>
       </div>
     </section>
 
+    <!-- GAMES -->
+    <section id="games">
+      <div class="wrap">
+        <div class="head reveal">
+          <div class="overline">Game list</div>
+          <h2>Still 60? Check the game.</h2>
+          <p>Hyper120 removes the <b style="color:var(--text)">phone's</b> 60Hz cap. Every game also has <b style="color:var(--text)">its own</b> limit, and Hyper120 can't go past it. If a game stops at 60, the screen will happily run at 120, but the game only draws 60 new frames.</p>
+        </div>
+
+        <div class="explain reveal">
+          <div class="card"><div class="k">LIMIT 1 · THE PHONE</div><h3>HyperOS caps games at 60Hz</h3><p>This is what Hyper120 fixes. The FPS tester proves it on your phone.</p></div>
+          <div class="card"><div class="k">LIMIT 2 · THE GAME ENGINE</div><h3>Some games never go past 60</h3><p>Roblox, Genshin Impact and others are built to stop at 60 on Android. Nothing on the phone side can change that.</p></div>
+          <div class="card"><div class="k">LIMIT 3 · THE GAME'S WHITELIST</div><h3>120 only on approved phones</h3><p>MLBB, PUBG and CODM show their 90/120 option only on phones the developer has approved. If you don't see it, the game is still the limit.</p></div>
+        </div>
+
+        <div class="caps reveal">
+          <div class="card cap">
+            <div class="cap-head"><span class="pill p-ok"><i></i>Up to 120</span><p>Has a high frame-rate option. Turn it on in the game's own settings; on many games it only appears on approved phones.</p></div>
+            <ul>
+              <li><b>Mobile Legends: Bang Bang</b><span>Graphics → Ultra (120) or Super (90)</span></li>
+              <li><b>Call of Duty: Mobile</b><span>Graphics → Frame Rate → Max / Ultra</span></li>
+              <li><b>PUBG Mobile / BGMI</b><span>Graphics: Smooth → Frame Rate: Ultra Extreme</span></li>
+              <li><b>Honor of Kings</b><span>Settings → Graphics → 120 FPS</span></li>
+              <li><b>Delta Force</b><span>Up to 90 / 120 on supported phones</span></li>
+              <li><b>Brawl Stars</b><span>120 in matches, 60 in menus</span></li>
+              <li><b>Pokémon GO</b><span>Settings → Advanced → Native refresh rate</span></li>
+              <li><b>EA SPORTS FC Mobile</b><span>90 / 120 only on some phones</span></li>
+              <li><b>CSR 2</b><span>Up to 120</span></li>
+            </ul>
+          </div>
+          <div class="card cap">
+            <div class="cap-head"><span class="pill p-maybe"><i></i>90 max</span><p>Can go above 60, but not to 120.</p></div>
+            <ul>
+              <li><b>Free Fire / Free Fire MAX</b><span>High FPS mode gives 90 on some phones</span></li>
+              <li><b>Fortnite</b><span>60 on most Android phones, 90 on a few</span></li>
+            </ul>
+          </div>
+          <div class="card cap">
+            <div class="cap-head"><span class="pill p-amb"><i></i>60 max</span><p>The game itself stops at 60 on Android. Hyper120 can't make these faster.</p></div>
+            <ul>
+              <li><b>Roblox</b><span>Mobile app is capped at 60 on every phone</span></li>
+              <li><b>Genshin Impact</b><span>120 is iPhone / iPad only</span></li>
+              <li><b>Honkai: Star Rail</b><span>120 is iPhone / iPad only</span></li>
+              <li><b>Zenless Zone Zero</b><span>Locked to 60 on phones</span></li>
+              <li><b>Wuthering Waves</b><span>The 120 option was removed</span></li>
+              <li><b>Pokémon UNITE</b><span>High frame rate mode = 60</span></li>
+              <li><b>PPSSPP (PSP games)</b><span>PSP games run at their original 60 / 30</span></li>
+            </ul>
+          </div>
+        </div>
+        <p class="games-foot reveal">Compiled from developer pages, patch coverage and player reports as of November 2026. Games change their limits in updates, so treat this as a guide. Since v4.1 the app tags these games in its list (long-press a game for tips). Know a game that belongs here? <a href="https://github.com/Rohan-Reyes/Hyper120/issues/new/choose" target="_blank" rel="noopener" style="color:var(--sky);font-weight:700">Tell us on GitHub →</a></p>
+      </div>
+    </section>
+
     <!-- FAQ -->
     <section id="faq">
       <div class="wrap">
@@ -556,11 +629,14 @@ mPrivGames={com.mobile.legends=120, ...}</pre>
           <h2>Questions</h2>
         </div>
         <div class="faq reveal">
+          <details open><summary>It works in the tester, but my game still runs at 60. Why?</summary><p>Because the game has its own limit. Hyper120 lifts the phone's cap, which the FPS tester proves, but some games are built to stop at 60 on Android (Roblox, Genshin Impact, Honkai: Star Rail and others). Check the <a href="#games" style="color:var(--sky)">game list</a>. If your game is in the 60 max column, no app can push it higher without modding the game.</p></details>
+          <details><summary>My game has no 120 FPS option. Can Hyper120 add it?</summary><p>No. Games like Mobile Legends, PUBG Mobile and Call of Duty: Mobile decide which phones see their 90/120 option. If your phone isn't on the developer's list, the option stays hidden. Hyper120 makes sure the screen isn't the bottleneck once the game asks for more.</p></details>
+          <details><summary>How do I see a game's real FPS?</summary><p>Use the FPS counter in Game Turbo (swipe in from the edge while in a game and turn on the performance overlay). Developer options → "Show refresh rate" shows the <b style="color:var(--text)">screen</b> rate, not the game's. In a 60-capped game it can say 120 while the game still draws 60.</p></details>
+          <details><summary>Which rate should I pick, 90 or 120?</summary><p>Pick the highest your game supports. If a game tops out at 90, choosing 120 does no harm; the game just draws 90. Picking 60 sends games back to normal.</p></details>
           <details><summary>How do I turn 120Hz off for a game?</summary><p>Untick the game in the list. PowerKeeper remembers the last value until it restarts, so to switch back right away, pick 60 and tap Apply, or reboot. To stop everything, turn off Background override or uninstall the app.</p></details>
           <details><summary>Does it drain my battery?</summary><p>Only games you tick run faster, and only while they're open. PowerKeeper and adaptive refresh stay on, so the rest of the phone behaves exactly as before. The background service wakes for a moment every 15 seconds while the screen is on and sleeps while it's off.</p></details>
-          <details><summary>Is it safe? Does it need root or special permissions?</summary><p>No root, no ADB, no accessibility service. It sends the same broadcast Xiaomi's game service (Joyose) uses. The code is open on GitHub.</p></details>
           <details><summary>The tester says "Clamped". What now?</summary><p>Tap Re-apply, and make sure Autostart is on and Battery saver is set to No restrictions. If it still clamps, your ROM probably only accepts the override from system apps. Please tap Report so your device can be listed.</p></details>
-          <details><summary>A game still looks like 60 FPS.</summary><p>The screen can only show what the game renders. Set the game's own frame-rate option to High, Ultra or 120 too. Some games only offer high frame rates on phones they've approved.</p></details>
+          <details><summary>Is it safe? Does it need root or special permissions?</summary><p>No root, no ADB, no accessibility service. It sends the same broadcast Xiaomi's game service (Joyose) uses. The code is open on GitHub.</p></details>
           <details><summary>Does it collect data?</summary><p>No account, ads or analytics. Every 12 hours it sends a random ID (no device info) so I can count active installs.</p></details>
         </div>
       </div>
