@@ -225,4 +225,12 @@
     <string name="check_caption">Game mencapai %d FPS jika game mendukungnya</string>
     <string name="limit_note_short">*Game berjalan di rate yang didukungnya. Tanda menunjukkan batas tiap game (60 MAX tetap 60).</string>
     <string name="check_caption_limit">*Setiap aplikasi dan game punya batasnya sendiri. Game 60 MAX tetap di 60. Cek tanda tiap game di bawah.</string>
+    <string name="upd_title">Pembaruan tersedia</string>
+    <string name="upd_versions">Hyper120 v%1$s sudah siap. Kamu memakai v%2$s.</string>
+    <string name="upd_banner_title">Hyper120 v%s tersedia</string>
+    <string name="upd_kept">Game dan pengaturanmu tetap tersimpan.</string>
+    <string name="upd_now">Perbarui sekarang</string>
+    <string name="upd_later">Nanti</string>
+    <string name="upd_whats_new">Yang baru</string>
+    <string name="upd_install_hint">Setelah unduhan selesai, buka dan ketuk Pasang (atau Perbarui).</string>
 </resources>

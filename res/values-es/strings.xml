@@ -226,4 +226,12 @@
     <string name="check_caption">Los juegos llegan a %d FPS si el juego lo soporta</string>
     <string name="limit_note_short">*Los juegos van a la tasa que soportan. La etiqueta muestra el máximo de cada juego (60 MÁX se queda en 60).</string>
     <string name="check_caption_limit">*Cada app y juego tiene su propio límite. Un juego 60 MÁX se queda en 60. Mira la etiqueta de cada juego abajo.</string>
+    <string name="upd_title">Actualización disponible</string>
+    <string name="upd_versions">Hyper120 v%1$s está lista. Tienes la v%2$s.</string>
+    <string name="upd_banner_title">Hyper120 v%s está disponible</string>
+    <string name="upd_kept">Tus juegos y ajustes se mantienen.</string>
+    <string name="upd_now">Actualizar ahora</string>
+    <string name="upd_later">Más tarde</string>
+    <string name="upd_whats_new">Novedades</string>
+    <string name="upd_install_hint">Cuando termine la descarga, ábrela y toca Instalar (o Actualizar).</string>
 </resources>

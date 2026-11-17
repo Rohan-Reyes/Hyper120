@@ -28,6 +28,7 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.Toast;
 import android.widget.LinearLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ScrollView;
@@ -170,6 +171,7 @@ public class MainActivity extends Activity {
         updateHealth();
         if (hzNumber != null) updateSegments();
         ensureOnboarded();
+        checkForUpdate();
     }
 
     /** Re-tags rows after a newer game list was downloaded. */
@@ -191,6 +193,8 @@ public class MainActivity extends Activity {
             TextView title = (TextView) ((LinearLayout) card.getChildAt(0)).getChildAt(1);
             title.setText(getString(R.string.health_refresh_title, FpsApplier.getSystemRefreshSetting(this)));
             healthSlot.addView(card);
+        } else if (UpdateChecker.available(this) != null && !UpdateChecker.isSnoozed(this)) {
+            healthSlot.addView(updateBanner(UpdateChecker.available(this)));
         } else if (serviceWasKilled) {
             healthSlot.addView(healthCard(R.string.health_killed_title, R.string.health_killed_body, () -> {
                 serviceWasKilled = false;
@@ -202,6 +206,113 @@ public class MainActivity extends Activity {
                 updateHealth();
             }));
         }
+    }
+
+    // ---------------------------------------------------------------- updates
+
+    private void checkForUpdate() {
+        UpdateChecker.checkAsync(this, () -> {
+            if (isFinishing() || isDestroyed()) return;
+            updateHealth();
+            String v = UpdateChecker.available(this);
+            // one-time sheet per version; never on top of the setup guide
+            if (v != null && FpsApplier.isOnboarded(this) && UpdateChecker.shouldPrompt(this, v)) {
+                UpdateChecker.markPrompted(this, v);
+                // runs once the window is attached (the result can arrive before that on launch)
+                getWindow().getDecorView().post(() -> {
+                    if (!isFinishing() && !isDestroyed()) showUpdateSheet(v);
+                });
+            }
+        });
+    }
+
+    private void openUpdate() {
+        UiHelper.openUrl(this, UpdateChecker.downloadUrl(this));
+        Toast.makeText(this, getString(R.string.upd_install_hint), Toast.LENGTH_LONG).show();
+    }
+
+    private View updateBanner(String v) {
+        LinearLayout card = UiHelper.card(this);
+        card.setBackground(UiHelper.pillBg(this, UiHelper.alpha(UiHelper.COL_PRIMARY, 0.1f),
+            UiHelper.alpha(UiHelper.COL_PRIMARY, 0.45f), 22));
+        card.setPadding(dp(16), dp(14), dp(16), dp(14));
+        LinearLayout head = new LinearLayout(this);
+        head.setGravity(Gravity.CENTER_VERTICAL);
+        ImageView ic = UiHelper.icon(this, R.drawable.ui_refresh, UiHelper.COL_PRIMARY, 20);
+        ((LinearLayout.LayoutParams) ic.getLayoutParams()).rightMargin = dp(10);
+        head.addView(ic);
+        LinearLayout col = new LinearLayout(this);
+        col.setOrientation(LinearLayout.VERTICAL);
+        col.addView(UiHelper.text(this, getString(R.string.upd_banner_title, v), 15, UiHelper.COL_TEXT, UiHelper.TF_BOLD));
+        TextView sub = UiHelper.text(this, getString(R.string.upd_kept), 12.5f, UiHelper.COL_MUTED, UiHelper.TF_REGULAR);
+        sub.setPadding(0, dp(4), 0, 0);
+        col.addView(sub);
+        head.addView(col, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+        card.addView(head);
+        LinearLayout actions = new LinearLayout(this);
+        actions.setPadding(0, dp(12), 0, 0);
+        TextView now = actionChip(getString(R.string.upd_now), UiHelper.COL_PRIMARY, v2 -> openUpdate());
+        now.setTextColor(UiHelper.COL_ON_PRIMARY);
+        now.setBackground(UiHelper.ripple(this, UiHelper.gradientBg(this, 99, UiHelper.COL_PRIMARY, 0xFF818CF8), 99));
+        actions.addView(now);
+        actions.addView(actionChip(getString(R.string.upd_whats_new), UiHelper.COL_PRIMARY, v2 -> showUpdateSheet(v)));
+        actions.addView(actionChip(getString(R.string.upd_later), UiHelper.COL_MUTED, v2 -> {
+            UpdateChecker.snooze(this);
+            updateHealth();
+        }));
+        card.addView(actions);
+        return card;
+    }
+
+    private void showUpdateSheet(String v) {
+        final android.app.Dialog[] holder = new android.app.Dialog[1];
+        LinearLayout c = new LinearLayout(this);
+        c.setOrientation(LinearLayout.VERTICAL);
+
+        FrameLayout badge = new FrameLayout(this);
+        badge.setBackground(UiHelper.gradientBg(this, 18, UiHelper.COL_PRIMARY, 0xFF818CF8));
+        badge.addView(UiHelper.icon(this, R.drawable.ui_refresh, UiHelper.COL_ON_PRIMARY, 26),
+            new FrameLayout.LayoutParams(dp(26), dp(26), Gravity.CENTER));
+        c.addView(badge, new LinearLayout.LayoutParams(dp(54), dp(54)));
+
+        TextView t = UiHelper.text(this, getString(R.string.upd_title), 22, UiHelper.COL_TEXT, UiHelper.TF_BOLD);
+        t.setPadding(0, dp(16), 0, dp(4));
+        c.addView(t);
+        c.addView(UiHelper.text(this, getString(R.string.upd_versions, v, FpsApplier.appVersion(this)),
+            14, UiHelper.COL_MUTED, UiHelper.TF_REGULAR));
+
+        String[] notes = UpdateChecker.notes(this);
+        if (notes.length > 0) {
+            TextView wn = UiHelper.overline(this, getString(R.string.upd_whats_new), UiHelper.COL_DIM);
+            wn.setPadding(0, dp(18), 0, dp(4));
+            c.addView(wn);
+            for (String n : notes) {
+                LinearLayout row = new LinearLayout(this);
+                row.setPadding(0, dp(6), 0, 0);
+                TextView dot = UiHelper.text(this, "\u2022", 15, UiHelper.COL_PRIMARY, UiHelper.TF_BOLD);
+                row.addView(dot, new LinearLayout.LayoutParams(dp(18), ViewGroup.LayoutParams.WRAP_CONTENT));
+                TextView nt = UiHelper.text(this, n, 14, UiHelper.COL_TEXT, UiHelper.TF_REGULAR);
+                nt.setLineSpacing(dp(2), 1f);
+                row.addView(nt, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+                c.addView(row);
+            }
+        }
+
+        TextView kept = UiHelper.text(this, getString(R.string.upd_kept), 13, UiHelper.COL_TEAL, UiHelper.TF_MEDIUM);
+        kept.setPadding(0, dp(18), 0, 0);
+        c.addView(kept);
+
+        TextView now = UiHelper.button(this, getString(R.string.upd_now), R.drawable.ui_refresh, true, x -> {
+            holder[0].dismiss();
+            openUpdate();
+        });
+        ((LinearLayout.LayoutParams) now.getLayoutParams()).topMargin = dp(20);
+        c.addView(now);
+        TextView later = UiHelper.button(this, getString(R.string.upd_later), 0, false, x -> holder[0].dismiss());
+        ((LinearLayout.LayoutParams) later.getLayoutParams()).topMargin = dp(6);
+        c.addView(later);
+        holder[0] = UiHelper.sheet(this, c);
+        holder[0].show();
     }
 
     private View healthCard(int titleRes, int bodyRes, Runnable onDismiss) {

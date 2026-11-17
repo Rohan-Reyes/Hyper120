@@ -233,4 +233,12 @@
     <string name="check_caption">Games reach %d FPS if the game supports it</string>
     <string name="limit_note_short">*Games run at their supported rate. The tag shows each game’s max (60 MAX stays at 60).</string>
     <string name="check_caption_limit">*Apps and games have their own limits. A 60 MAX game stays at 60. Check each game’s tag below.</string>
+    <string name="upd_title">Update available</string>
+    <string name="upd_versions">Hyper120 v%1$s is ready. You have v%2$s.</string>
+    <string name="upd_banner_title">Hyper120 v%s is available</string>
+    <string name="upd_kept">Your games and settings are kept.</string>
+    <string name="upd_now">Update now</string>
+    <string name="upd_later">Later</string>
+    <string name="upd_whats_new">What’s new</string>
+    <string name="upd_install_hint">When the download finishes, open it and tap Install (or Update).</string>
 </resources>
