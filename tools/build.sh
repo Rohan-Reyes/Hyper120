@@ -10,6 +10,7 @@ EXE=""; [[ -f "$BT/aapt2.exe" ]] && EXE=".exe"
 D8="$BT/d8"; [[ -f "$BT/d8.bat" ]] && D8="$BT/d8.bat"
 SIGN="$BT/apksigner"; [[ -f "$BT/apksigner.bat" ]] && SIGN="$BT/apksigner.bat"
 
+python tools/sync_games.py   # data/games.json -> res/raw, web, README
 rm -rf build/res build/gen build/classes build/dex
 mkdir -p build/res build/gen build/classes build/dex
 "$BT/aapt2$EXE" compile --dir res -o build/res/res.zip

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Hyper120</string>
+
+    <!-- Home -->
+    <string name="main_device_line">%1$s · Android %2$s · up to %3$dHz</string>
+    <string name="main_caption">Target refresh rate for your selected games</string>
+    <string name="chip_active">Active</string>
+    <string name="chip_manual">Manual mode</string>
+    <string name="chip_pk_missing">PowerKeeper missing</string>
+    <plurals name="apps_count">
+        <item quantity="one">%d app</item>
+        <item quantity="other">%d apps</item>
+    </plurals>
+    <string name="set_bg_title">Background override</string>
+    <string name="set_bg_sub">Re-sends every 15 s while the screen is on</string>
+    <string name="set_add_title">Auto-add games</string>
+    <string name="set_add_sub">Newly installed games are added for you</string>
+    <string name="tool_tester">FPS tester</string>
+    <string name="tool_tester_sub">Check it works</string>
+    <string name="tool_log">Activity log</string>
+    <string name="tool_log_show">Show broadcasts</string>
+    <string name="tool_log_hide">Hide broadcasts</string>
+    <string name="log_title">PowerKeeper broadcasts</string>
+    <string name="apps_title">Apps</string>
+    <string name="apps_selected">%d selected</string>
+    <string name="search_hint">Search apps or package names</string>
+    <string name="filter_all">All</string>
+    <string name="filter_selected">Selected</string>
+    <string name="filter_games">Games</string>
+    <string name="limit_note">Hyper120 unlocks the screen, but each game has its own limit. Games tagged 60 MAX stop at 60 FPS whatever you do. Turn on the high frame-rate option inside the game too. Long-press a game for tips, its own rate, or to report how it runs.</string>
+    <string name="loading_apps">Loading installed apps…</string>
+    <string name="no_match">No apps match</string>
+    <string name="tip_keep_running">Tip: in App info, turn on Autostart and set Battery saver to No restrictions so HyperOS keeps Hyper120 running.</string>
+    <string name="tag_120">UP TO 120</string>
+    <string name="tag_90">90 MAX</string>
+    <string name="tag_60">60 MAX</string>
+    <string name="tag_game">GAME</string>
+    <string name="last_sent">Last sent %1$dHz to %2$d apps at %3$s</string>
+    <string name="pk_not_found_long">PowerKeeper not found. This ROM may not support the override.</string>
+    <string name="btn_sent">Sent %1$dHz to %2$d apps</string>
+    <string name="btn_pk_not_found">PowerKeeper not found</string>
+    <string name="btn_apply">Apply %dHz now</string>
+
+    <!-- Health warnings -->
+    <string name="health_battery_title">Battery saver may stop Hyper120</string>
+    <string name="health_battery_body">HyperOS can close Hyper120 in the background, and your games drop back to 60. Remove the battery limits to keep it running.</string>
+    <string name="health_killed_title">Hyper120 was stopped in the background</string>
+    <string name="health_killed_body">HyperOS closed it while you were away. Allow Autostart and remove battery limits so it keeps running. It\'s running again now.</string>
+    <string name="health_fix_battery">Remove limits</string>
+    <string name="health_autostart">Autostart</string>
+    <string name="health_dismiss">Dismiss</string>
+
+    <!-- Game dialog -->
+    <string name="dlg_tip_unknown">No data for this game yet. If it has a frame-rate setting, pick the highest. If it still feels like 60, the game itself is probably capped.</string>
+    <string name="dlg_rate_title">Refresh rate for this game</string>
+    <string name="dlg_rate_default">Default (%dHz)</string>
+    <string name="dlg_report">Report how it runs</string>
+    <string name="dlg_close">Close</string>
+    <string name="report_q">Did %s run above 60 FPS?</string>
+    <string name="report_yes">Yes, 90/120 works</string>
+    <string name="report_no">No, stuck at 60</string>
+    <string name="report_unsure">Not sure</string>
+    <string name="game_rate_saved">%1$s will use %2$dHz</string>
+    <string name="game_rate_default">%s follows the main rate</string>
+
+    <!-- About -->
+    <string name="about_title">About</string>
+    <string name="about_version">Version %s</string>
+    <string name="about_desc">Unlocks high refresh rates in games on Xiaomi, Redmi and POCO phones. It asks PowerKeeper for the rate you pick, so adaptive refresh and battery life stay untouched everywhere else. No root, no PC.</string>
+    <string name="about_section_app">App</string>
+    <string name="about_update">Check for updates</string>
+    <string name="about_update_sub">You\'re on v%s</string>
+    <string name="about_faq">FAQ &amp; game list</string>
+    <string name="about_faq_sub">Why some games stay at 60, and which ones go higher</string>
+    <string name="about_source">Source code</string>
+    <string name="about_report">Report a bug or device result</string>
+    <string name="about_report_sub">Opens a GitHub issue form</string>
+    <string name="about_section_running">Keep it running</string>
+    <string name="about_appinfo">Open App info</string>
+    <string name="about_appinfo_sub">Turn on Autostart and set Battery saver to No restrictions so HyperOS doesn\'t stop Hyper120.</string>
+    <string name="about_guide">Setup guide</string>
+    <string name="about_guide_sub">Show the first-launch guide again</string>
+    <string name="about_section_support">Support</string>
+    <string name="about_coffee">Buy me a coffee</string>
+    <string name="about_coffee_sub">Hyper120 is free. Tips keep updates coming.</string>
+    <string name="about_footer">Made by Rohan Reyes · Open source</string>
+    <string name="upd_checking">Checking GitHub releases…</string>
+    <string name="upd_available">v%s is available. Tap to download.</string>
+    <string name="upd_current">You\'re up to date (v%s)</string>
+    <string name="upd_failed">Couldn\'t reach GitHub. Tap to open Releases.</string>
+
+    <!-- FPS tester -->
+    <string name="tester_title">FPS tester</string>
+    <string name="tester_measuring">Measuring…</string>
+    <string name="tester_keep_open">Keep this screen open for a few seconds.</string>
+    <string name="tester_test_at">Test at</string>
+    <string name="tester_motion">Motion preview</string>
+    <string name="stat_display">Display mode</string>
+    <string name="stat_testing">Testing at</string>
+    <string name="stat_panel">Panel max</string>
+    <string name="stat_pk">PowerKeeper</string>
+    <string name="found">Found</string>
+    <string name="missing">Missing</string>
+    <string name="hz_value">%d Hz</string>
+    <string name="tester_reapply">Re-apply %dHz</string>
+    <string name="tester_copy">Copy report</string>
+    <string name="tester_report">Report</string>
+    <string name="tester_note">This screen measures frames the system actually delivers to Hyper120. Games are limited by their own FPS setting too, so set the in-game frame rate to High/Ultra or 120.</string>
+    <string name="tester_measuring_at">Measuring at %d Hz…</string>
+    <string name="tester_sent_self">Sent the %dHz override to Hyper120 itself. Keep this screen open for a few seconds.</string>
+    <string name="v_not_supported">Not supported</string>
+    <string name="v_not_supported_body">PowerKeeper isn\'t installed, so this ROM can\'t receive the override.</string>
+    <string name="v_testing60">Testing 60 Hz</string>
+    <string name="v_testing60_body">Pick a higher rate below to test whether the cap is lifted.</string>
+    <string name="v_works">%d Hz works</string>
+    <string name="v_works_body">Frames are arriving at %1$d FPS, so PowerKeeper accepted the override. Games can now reach %2$d FPS if the game itself supports it.</string>
+    <string name="v_clamped">Clamped at %d</string>
+    <string name="v_clamped_body">The display stayed near %1$dHz even with the %2$dHz override. Tap Re-apply, or report your device.</string>
+    <string name="copied">Copied diagnostic report</string>
+
+    <!-- Background service + tile -->
+    <string name="notif_channel">Hyper120 background</string>
+    <string name="notif_title">Hyper120 active (%dHz)</string>
+    <string name="notif_text">Keeping your games at %dHz</string>
+    <string name="tile_sub">%1$dHz · %2$d apps</string>
+    <string name="tile_off">Off</string>
+
+    <!-- Onboarding -->
+    <string name="ob_skip">Skip</string>
+    <string name="ob_next">Next</string>
+    <string name="ob_done">Get started</string>
+    <string name="ob1_title">Smooth games, normal battery</string>
+    <string name="ob1_body">HyperOS caps many games at 60Hz. Hyper120 removes that cap only for the games you choose. Everything else keeps adaptive refresh, so battery life stays the same. No root, no PC.</string>
+    <string name="ob2_title">Every game has its own limit</string>
+    <string name="ob2_body">Hyper120 unlocks the screen, but a game still decides how many frames it draws. Some never go above 60. Others only offer 120 in their own settings, often only on phones the developer has approved. Look for these tags in the app list:</string>
+    <string name="ob2_tag120">Can go above 60. Turn it on in the game\'s graphics settings.</string>
+    <string name="ob2_tag90">Can go up to 90.</string>
+    <string name="ob2_tag60">The game stops at 60. Nothing can make it faster.</string>
+    <string name="ob3_title">Keep it running</string>
+    <string name="ob3_body">HyperOS closes background apps aggressively. Do both steps so Hyper120 keeps working after you leave the app.</string>
+    <string name="ob3_battery">1. Remove battery limits</string>
+    <string name="ob3_battery_done">✓ Battery limits removed</string>
+    <string name="ob3_autostart">2. Allow Autostart</string>
+    <string name="ob3_autostart_hint">Find Hyper120 in the list and switch it on.</string>
+
+    <!-- Widget -->
+    <string name="widget_desc">Target rate, on/off and a one-tap rate switch</string>
+    <string name="widget_status_on">Active</string>
+    <string name="widget_status_off">Off</string>
+    <string name="widget_turn_on">Turn on</string>
+    <string name="widget_turn_off">Turn off</string>
+    <string name="about_widget">Add home-screen widget</string>
+    <string name="about_widget_sub">Or long-press your home screen, tap Widgets and find Hyper120. It shows a preview before you add it.</string>
+    <string name="widget_pin_manual">Long-press your home screen, tap Widgets and find Hyper120.</string>
+    <string name="widget_perm_title">Allow “Home screen shortcuts”</string>
+    <string name="widget_perm_body">HyperOS blocks adding widgets until Hyper120 has this permission. Tap Open permissions, find Home screen shortcuts and set it to Allow, then come back and tap Add widget again.</string>
+    <string name="widget_perm_open">Open permissions</string>
+    <string name="widget_perm_manual">Add it from the home screen instead</string>
+</resources>

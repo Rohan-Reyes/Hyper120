@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Beranda -->
+    <string name="main_device_line">%1$s · Android %2$s · hingga %3$dHz</string>
+    <string name="main_caption">Refresh rate target untuk game pilihanmu</string>
+    <string name="chip_active">Aktif</string>
+    <string name="chip_manual">Mode manual</string>
+    <string name="chip_pk_missing">PowerKeeper tidak ada</string>
+    <plurals name="apps_count">
+        <item quantity="other">%d aplikasi</item>
+    </plurals>
+    <string name="set_bg_title">Override di latar belakang</string>
+    <string name="set_bg_sub">Dikirim ulang tiap 15 detik selama layar menyala</string>
+    <string name="set_add_title">Tambah game otomatis</string>
+    <string name="set_add_sub">Game yang baru dipasang langsung ditambahkan</string>
+    <string name="tool_tester">Tes FPS</string>
+    <string name="tool_tester_sub">Cek apakah berfungsi</string>
+    <string name="tool_log">Log aktivitas</string>
+    <string name="tool_log_show">Tampilkan kiriman</string>
+    <string name="tool_log_hide">Sembunyikan kiriman</string>
+    <string name="log_title">Kiriman ke PowerKeeper</string>
+    <string name="apps_title">Aplikasi</string>
+    <string name="apps_selected">%d dipilih</string>
+    <string name="search_hint">Cari aplikasi atau nama paket</string>
+    <string name="filter_all">Semua</string>
+    <string name="filter_selected">Dipilih</string>
+    <string name="filter_games">Game</string>
+    <string name="limit_note">Hyper120 membuka batas layar, tapi tiap game punya batasnya sendiri. Game bertanda 60 MAX tetap di 60 FPS apa pun yang kamu lakukan. Nyalakan juga opsi frame rate tinggi di dalam game. Tekan lama sebuah game untuk tips, refresh rate khusus, atau melaporkan hasilnya.</string>
+    <string name="loading_apps">Memuat aplikasi terpasang…</string>
+    <string name="no_match">Tidak ada aplikasi yang cocok</string>
+    <string name="tip_keep_running">Tips: di Info aplikasi, nyalakan Mulai otomatis dan atur Penghemat baterai ke Tanpa batasan agar HyperOS tidak menutup Hyper120.</string>
+    <string name="last_sent">Terakhir dikirim %1$dHz ke %2$d aplikasi pukul %3$s</string>
+    <string name="pk_not_found_long">PowerKeeper tidak ditemukan. ROM ini mungkin tidak mendukung override.</string>
+    <string name="btn_sent">%1$dHz dikirim ke %2$d aplikasi</string>
+    <string name="btn_pk_not_found">PowerKeeper tidak ditemukan</string>
+    <string name="btn_apply">Terapkan %dHz sekarang</string>
+
+    <!-- Peringatan -->
+    <string name="health_battery_title">Penghemat baterai bisa menghentikan Hyper120</string>
+    <string name="health_battery_body">HyperOS bisa menutup Hyper120 di latar belakang, lalu game kembali ke 60. Hapus batasan baterai agar tetap berjalan.</string>
+    <string name="health_killed_title">Hyper120 dihentikan di latar belakang</string>
+    <string name="health_killed_body">HyperOS menutupnya saat kamu tidak membuka aplikasi. Izinkan Mulai otomatis dan hapus batasan baterai agar tetap berjalan. Sekarang sudah berjalan lagi.</string>
+    <string name="health_fix_battery">Hapus batasan</string>
+    <string name="health_autostart">Mulai otomatis</string>
+    <string name="health_dismiss">Tutup</string>
+
+    <!-- Dialog game -->
+    <string name="dlg_tip_unknown">Belum ada data untuk game ini. Jika ada pengaturan frame rate, pilih yang tertinggi. Jika masih terasa 60, kemungkinan game-nya sendiri yang membatasi.</string>
+    <string name="dlg_rate_title">Refresh rate untuk game ini</string>
+    <string name="dlg_rate_default">Bawaan (%dHz)</string>
+    <string name="dlg_report">Laporkan hasilnya</string>
+    <string name="dlg_close">Tutup</string>
+    <string name="report_q">Apakah %s berjalan di atas 60 FPS?</string>
+    <string name="report_yes">Ya, 90/120 berfungsi</string>
+    <string name="report_no">Tidak, tetap 60</string>
+    <string name="report_unsure">Tidak yakin</string>
+    <string name="game_rate_saved">%1$s akan memakai %2$dHz</string>
+    <string name="game_rate_default">%s mengikuti refresh rate utama</string>
+
+    <!-- Tentang -->
+    <string name="about_title">Tentang</string>
+    <string name="about_version">Versi %s</string>
+    <string name="about_desc">Membuka refresh rate tinggi di game pada HP Xiaomi, Redmi, dan POCO. Hyper120 meminta PowerKeeper memakai refresh rate pilihanmu, sehingga refresh adaptif dan daya tahan baterai tidak berubah di tempat lain. Tanpa root, tanpa PC.</string>
+    <string name="about_section_app">Aplikasi</string>
+    <string name="about_update">Cek pembaruan</string>
+    <string name="about_update_sub">Versi kamu v%s</string>
+    <string name="about_faq">FAQ &amp; daftar game</string>
+    <string name="about_faq_sub">Kenapa beberapa game tetap 60, dan mana yang bisa lebih tinggi</string>
+    <string name="about_source">Kode sumber</string>
+    <string name="about_report">Laporkan bug atau hasil perangkat</string>
+    <string name="about_report_sub">Membuka formulir di GitHub</string>
+    <string name="about_section_running">Agar tetap berjalan</string>
+    <string name="about_appinfo">Buka Info aplikasi</string>
+    <string name="about_appinfo_sub">Nyalakan Mulai otomatis dan atur Penghemat baterai ke Tanpa batasan agar HyperOS tidak menghentikan Hyper120.</string>
+    <string name="about_guide">Panduan pengaturan</string>
+    <string name="about_guide_sub">Tampilkan lagi panduan awal</string>
+    <string name="about_section_support">Dukungan</string>
+    <string name="about_coffee">Traktir saya kopi</string>
+    <string name="about_coffee_sub">Hyper120 gratis. Donasi membantu pembaruan terus berjalan.</string>
+    <string name="about_footer">Dibuat oleh Rohan Reyes · Open source</string>
+    <string name="upd_checking">Memeriksa rilis GitHub…</string>
+    <string name="upd_available">v%s tersedia. Ketuk untuk mengunduh.</string>
+    <string name="upd_current">Sudah versi terbaru (v%s)</string>
+    <string name="upd_failed">Tidak bisa terhubung ke GitHub. Ketuk untuk membuka Releases.</string>
+
+    <!-- Tes FPS -->
+    <string name="tester_title">Tes FPS</string>
+    <string name="tester_measuring">Mengukur…</string>
+    <string name="tester_keep_open">Biarkan layar ini terbuka beberapa detik.</string>
+    <string name="tester_test_at">Tes di</string>
+    <string name="tester_motion">Pratinjau gerakan</string>
+    <string name="stat_display">Mode layar</string>
+    <string name="stat_testing">Tes di</string>
+    <string name="stat_panel">Maks. panel</string>
+    <string name="stat_pk">PowerKeeper</string>
+    <string name="found">Ada</string>
+    <string name="missing">Tidak ada</string>
+    <string name="tester_reapply">Terapkan ulang %dHz</string>
+    <string name="tester_copy">Salin laporan</string>
+    <string name="tester_report">Laporkan</string>
+    <string name="tester_note">Layar ini mengukur frame yang benar-benar dikirim sistem ke Hyper120. Game juga dibatasi pengaturan FPS-nya sendiri, jadi atur frame rate di dalam game ke High/Ultra atau 120.</string>
+    <string name="tester_measuring_at">Mengukur di %d Hz…</string>
+    <string name="tester_sent_self">Override %dHz dikirim ke Hyper120 sendiri. Biarkan layar ini terbuka beberapa detik.</string>
+    <string name="v_not_supported">Tidak didukung</string>
+    <string name="v_not_supported_body">PowerKeeper tidak terpasang, jadi ROM ini tidak bisa menerima override.</string>
+    <string name="v_testing60">Tes 60 Hz</string>
+    <string name="v_testing60_body">Pilih refresh rate lebih tinggi di bawah untuk mengecek apakah batasnya terbuka.</string>
+    <string name="v_works">%d Hz berfungsi</string>
+    <string name="v_works_body">Frame masuk di %1$d FPS, jadi PowerKeeper menerima override. Game bisa mencapai %2$d FPS jika game-nya sendiri mendukung.</string>
+    <string name="v_clamped">Tertahan di %d</string>
+    <string name="v_clamped_body">Layar tetap sekitar %1$dHz meski dengan override %2$dHz. Ketuk Terapkan ulang, atau laporkan perangkatmu.</string>
+    <string name="copied">Laporan disalin</string>
+
+    <!-- Layanan + tile -->
+    <string name="notif_channel">Hyper120 latar belakang</string>
+    <string name="notif_title">Hyper120 aktif (%dHz)</string>
+    <string name="notif_text">Menjaga game kamu di %dHz</string>
+    <string name="tile_sub">%1$dHz · %2$d aplikasi</string>
+    <string name="tile_off">Mati</string>
+
+    <!-- Panduan awal -->
+    <string name="ob_skip">Lewati</string>
+    <string name="ob_next">Lanjut</string>
+    <string name="ob_done">Mulai</string>
+    <string name="ob1_title">Game mulus, baterai tetap awet</string>
+    <string name="ob1_body">HyperOS membatasi banyak game di 60Hz. Hyper120 membuka batas itu hanya untuk game yang kamu pilih. Selain itu tetap memakai refresh adaptif, jadi daya tahan baterai tidak berubah. Tanpa root, tanpa PC.</string>
+    <string name="ob2_title">Tiap game punya batasnya sendiri</string>
+    <string name="ob2_body">Hyper120 membuka batas layar, tapi game tetap menentukan berapa frame yang digambar. Ada yang tidak pernah lebih dari 60. Ada juga yang hanya menawarkan 120 di pengaturannya sendiri, sering hanya di HP yang disetujui developer. Perhatikan label ini di daftar aplikasi:</string>
+    <string name="ob2_tag120">Bisa di atas 60. Nyalakan di pengaturan grafis game.</string>
+    <string name="ob2_tag90">Bisa sampai 90.</string>
+    <string name="ob2_tag60">Game tetap di 60. Tidak ada yang bisa membuatnya lebih cepat.</string>
+    <string name="ob3_title">Agar tetap berjalan</string>
+    <string name="ob3_body">HyperOS sering menutup aplikasi di latar belakang. Lakukan kedua langkah ini agar Hyper120 tetap bekerja setelah kamu keluar dari aplikasi.</string>
+    <string name="ob3_battery">1. Hapus batasan baterai</string>
+    <string name="ob3_battery_done">✓ Batasan baterai dihapus</string>
+    <string name="ob3_autostart">2. Izinkan Mulai otomatis</string>
+    <string name="ob3_autostart_hint">Cari Hyper120 di daftar lalu nyalakan.</string>
+
+    <!-- Widget -->
+    <string name="widget_desc">Refresh rate target, nyala/mati, dan ganti refresh rate sekali ketuk</string>
+    <string name="widget_status_on">Aktif</string>
+    <string name="widget_status_off">Mati</string>
+    <string name="widget_turn_on">Nyalakan</string>
+    <string name="widget_turn_off">Matikan</string>
+    <string name="about_widget">Tambah widget layar utama</string>
+    <string name="about_widget_sub">Atau tekan lama layar utama, ketuk Widget, lalu cari Hyper120. Ada pratinjau sebelum ditambahkan.</string>
+    <string name="widget_pin_manual">Tekan lama layar utama, ketuk Widget, lalu cari Hyper120.</string>
+    <string name="widget_perm_title">Izinkan “Pintasan layar utama”</string>
+    <string name="widget_perm_body">HyperOS memblokir penambahan widget sampai Hyper120 punya izin ini. Ketuk Buka izin, cari Pintasan layar utama lalu pilih Izinkan, kemudian kembali dan ketuk Tambah widget lagi.</string>
+    <string name="widget_perm_open">Buka izin</string>
+    <string name="widget_perm_manual">Tambahkan dari layar utama saja</string>
+</resources>

@@ -27,6 +27,7 @@ public class Auto120Service extends Service {
     private final Runnable periodicApply = new Runnable() {
         @Override
         public void run() {
+            FpsApplier.markServiceAlive(Auto120Service.this);
             if (powerManager == null || powerManager.isInteractive()) {
                 FpsApplier.apply120Hz(Auto120Service.this, FpsApplier.loadPackages(Auto120Service.this));
             }
@@ -46,6 +47,7 @@ public class Auto120Service extends Service {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (Intent.ACTION_SCREEN_ON.equals(intent.getAction())) {
+                    FpsApplier.markServiceAlive(context);
                     FpsApplier.apply120Hz(context, FpsApplier.loadPackages(context));
                 }
             }
@@ -82,7 +84,7 @@ public class Auto120Service extends Service {
 
     private void createChannel() {
         NotificationChannel ch = new NotificationChannel(
-            CHANNEL_ID, "Hyper120 Background", NotificationManager.IMPORTANCE_MIN);
+            CHANNEL_ID, getString(R.string.notif_channel), NotificationManager.IMPORTANCE_MIN);
         ch.setShowBadge(false);
         NotificationManager nm = getSystemService(NotificationManager.class);
         if (nm != null) {
@@ -96,9 +98,9 @@ public class Auto120Service extends Service {
             this, 0, openIntent, PendingIntent.FLAG_IMMUTABLE);
         int fps = FpsApplier.getTargetFps(this);
         return new Notification.Builder(this, CHANNEL_ID)
-            .setContentTitle("Hyper120 Active (" + fps + "Hz)")
-            .setContentText("Auto-overriding selected apps to " + fps + "fps")
-            .setSmallIcon(R.drawable.ic_launcher)
+            .setContentTitle(getString(R.string.notif_title, fps))
+            .setContentText(getString(R.string.notif_text, fps))
+            .setSmallIcon(R.drawable.ic_tile)
             .setContentIntent(pi)
             .setOngoing(true)
             .build();

@@ -56,7 +56,12 @@ HyperOS and MIUI quietly cap many games at **60Hz**, even when your screen is se
 | **Auto-add games** | Installed games are ticked on first launch, and new ones are added the moment you install them. Untick a game and it stays unticked. |
 | **Background override** | A small foreground service re-sends the override every 15 s while the screen is on and again after every reboot. |
 | **FPS tester** | Points the override at Hyper120 itself, asks for the matching display mode and counts real frames. Test 60, 90 and 120Hz one after another to see exactly where your ROM stops. |
-| **Game limit tags** | Known games are tagged `UP TO 120`, `90 MAX` or `60 MAX`, so you can tell when the game itself is the limit. Long-press for how to turn on its high frame rate. |
+| **Game limit tags** | Known games are tagged `UP TO 120`, `90 MAX` or `60 MAX`, so you can tell when the game itself is the limit. The list updates itself daily from the website, no app update needed. |
+| **Rate per game** | Long-press a game to give it its own rate, e.g. 120 for MLBB and 90 for Free Fire. |
+| **Report a game** | Long-press → *Report how it runs* opens a GitHub issue with the game version, your phone, ROM version and region filled in. |
+| **Setup guide & health check** | A first-launch guide explains game limits and walks you through Autostart and battery settings. The home screen warns you if HyperOS stopped Hyper120 in the background. |
+| **Home-screen widget** | Shows the current rate and lets you switch it or turn Hyper120 on/off. Add it from **About → Add home-screen widget**, or long-press your home screen → **Widgets** → **Hyper120** (with preview). On HyperOS, first allow **App info → Other permissions → Home screen shortcuts**; the app walks you through it. |
+| **Languages** | English, Español, Bahasa Indonesia. |
 | **Quick Settings tile** | Turn the background override on or off from Control Center. The tile shows the current rate and app count. |
 | **Activity log** | See each broadcast sent to PowerKeeper, with timestamps. |
 | **Bug & device reports** | One tap opens a GitHub issue pre-filled with your device, Android version, panel max and tester result. |
@@ -97,19 +102,27 @@ Some Global and POCO builds appear to accept this override only from system apps
 
 Hyper120 removes the **phone's** 60Hz cap. Every game also has **its own** limit, and no app can push a game past it. If a game stops at 60, the screen runs at 120 but the game only draws 60 new frames. Many games also show their 90/120 option **only on phones the developer has approved**.
 
-Since v4.1 the app tags these games in its list (`UP TO 120`, `90 MAX`, `60 MAX`). Long-press a game for tips.
+The app tags these games in its list (`UP TO 120`, `90 MAX`, `60 MAX`) and downloads this list once a day, so new entries reach you without an update. Long-press a game for tips, its own rate, or to report how it runs.
 
+<!-- games:table -->
 | ✅ Up to 120 (turn it on in the game) | 🔵 90 max | 🟠 60 max (game's own limit) |
 |---|---|---|
-| **Mobile Legends**: Graphics → Ultra (120) / Super (90) | **Free Fire / Free Fire MAX**: High FPS gives 90 on some phones | **Roblox**: capped at 60 (measured 60 FPS with the screen at 120Hz) |
-| **Call of Duty: Mobile**: Frame Rate → Max / Ultra | **Fortnite**: 60 on most Android phones, 90 on a few | **Genshin Impact**: 120 is iPhone / iPad only |
-| **PUBG Mobile / BGMI**: Graphics Smooth → Ultra Extreme | | **Honkai: Star Rail**: 120 is iPhone / iPad only |
-| **Honor of Kings**: Graphics → 120 FPS | | **Zenless Zone Zero**: locked to 60 on phones |
-| **Delta Force**: up to 90 / 120 on supported phones | | **Wuthering Waves**: 120 option was removed |
-| **Brawl Stars**: 120 in matches, 60 in menus | | **Pokémon UNITE**: high frame rate mode = 60 |
-| **Pokémon GO**: Advanced → Native refresh rate | | **PPSSPP**: PSP games run at their original 60 / 30 |
-| **EA SPORTS FC Mobile**: 90 / 120 only on some phones | | **Bus Simulator Indonesia**: in-game setting tops out at 60 |
-| **CSR 2**: up to 120 | | **Truckers of Europe 3**: in-game setting tops out at 60 |
+| **Mobile Legends: Bang Bang**: Graphics → Ultra (120) or Super (90) | **Free Fire / Free Fire MAX**: High FPS mode gives 90 on some phones | **Roblox**: Capped at 60. Measured: 60 FPS while the screen ran at 120Hz |
+| **Call of Duty: Mobile**: Graphics → Frame Rate → Max / Ultra | **Fortnite**: 60 on most Android phones, 90 on a few | **Genshin Impact**: 120 is iPhone / iPad only |
+| **PUBG Mobile / BGMI**: Graphics: Smooth → Frame Rate: Ultra Extreme |  | **Honkai: Star Rail**: 120 is iPhone / iPad only |
+| **Honor of Kings**: Settings → Graphics → 120 FPS |  | **Zenless Zone Zero**: Locked to 60 on phones |
+| **League of Legends: Wild Rift**: Graphics → 90 / 120 on supported phones |  | **Wuthering Waves**: The 120 option was removed |
+| **Delta Force**: Up to 90 / 120 on supported phones |  | **Pokémon UNITE**: High frame rate mode = 60 |
+| **Standoff 2**: Settings → Video → Target frame rate 120 |  | **PPSSPP (PSP games)**: PSP games run at their original 60 / 30 |
+| **Brawl Stars**: 120 in matches, 60 in menus |  | **Bus Simulator Indonesia**: In-game frame-rate setting tops out at 60 |
+| **Clash of Clans**: 120 FPS, reported by a Hyper120 tester |  | **Truckers of Europe 3**: In-game frame-rate setting tops out at 60 |
+| **Minecraft**: Measured: 120 FPS on a Xiaomi 14 with Hyper120 |  | **eFootball**: Graphics → Frame Rate tops out at 60 |
+| **Asphalt Legends**: Graphics → Frame Rate, 120 on high-end phones |  | **Monster Hunter Now**: 30 on the map, 60 in hunts |
+| **CSR 2**: Up to 120 |  |  |
+| **Top Drives**: Settings → High FPS (120 if supported) |  |  |
+| **Pokémon GO**: Settings → Advanced → Native refresh rate |  |  |
+| **EA SPORTS FC Mobile**: 90 / 120 only on some phones |  |  |
+<!-- /games:table -->
 
 <sub>Compiled from developer pages, patch coverage and player reports as of November 2026. Games change their limits in updates. Know a game that belongs here? <a href="https://github.com/Rohan-Reyes/Hyper120/issues/new/choose">Open an issue</a>.</sub>
 
@@ -117,6 +130,15 @@ Since v4.1 the app tags these games in its list (`UP TO 120`, `90 MAX`, `60 MAX`
 
 **It works in the tester, but my game still runs at 60. Why?**
 The game has its own limit. The tester proves the phone's cap is gone; games like Roblox and Genshin Impact are built to stop at 60 on Android. Check the [game list](#game-list-which-games-can-actually-go-above-60).
+
+**Which popular games are stuck at 60?**
+<!-- games:names60 -->Roblox, Genshin Impact, Honkai: Star Rail, Zenless Zone Zero, Wuthering Waves, Pokémon UNITE, PPSSPP (PSP games), Bus Simulator Indonesia, Truckers of Europe 3, eFootball and Monster Hunter Now<!-- /games:names60 -->. They limit themselves, so they stay at 60 even with Hyper120 on. The app tags them `60 MAX`.
+
+**Which games can go above 60?**
+<!-- games:names120 -->Mobile Legends: Bang Bang, Call of Duty: Mobile, PUBG Mobile / BGMI, Honor of Kings, League of Legends: Wild Rift, Delta Force, Standoff 2, Brawl Stars, Clash of Clans, Minecraft, Asphalt Legends, CSR 2, Top Drives, Pokémon GO and EA SPORTS FC Mobile<!-- /games:names120 -->, once you turn on the high frame rate in the game's settings. Many only show that option on phones the developer has approved. <!-- games:names90 -->Free Fire / Free Fire MAX and Fortnite<!-- /games:names90 --> top out at 90.
+
+**My game isn't on the list. How do I know?**
+Look in the game's graphics settings for a frame-rate option. If the highest choice is 60 (or there's none), the game is most likely capped at 60. Confirm with Game Turbo's FPS counter, then long-press the game in Hyper120 and tap **Report how it runs** so it can be added.
 
 **My game has no 120 FPS option. Can Hyper120 add it?**
 No. Games such as Mobile Legends, PUBG Mobile and Call of Duty: Mobile decide which phones see their 90/120 option. Hyper120 makes sure the screen isn't the bottleneck once the game asks for more.
@@ -188,6 +210,7 @@ tools/build.sh --install   # build and adb install
 
 - `python tools/make_icon.py` writes the adaptive launcher icon, Quick Settings tile and SVG logo from one geometry. `python tools/render_icon_png.py` exports the PNGs with headless Chrome.
 - `python tools/make_ui_icons.py` writes the in-app line icons.
+- **Game list:** edit `data/games.json` (bump `"version"`), then run `python tools/sync_games.py`. It updates the bundled copy, `web/games.json` (which installed apps download daily) and the tables in this README and on the website.
 - `python tools/make_readme_images.py <dir>` builds `docs/images/` and the banner from `adb exec-out screencap -p` captures named `01_home.png`, `02_list.png`, `03_tester.png`, `04_about.png`.
 </details>
 

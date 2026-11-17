@@ -31,6 +31,9 @@ public final class FpsApplier {
     private static final String KEY_TARGET_FPS = "target_fps";
     private static final String KEY_ANON_ID = "anon_id";
     private static final String KEY_LAST_PING = "last_ping_ms";
+    private static final String KEY_GAME_FPS_PREFIX = "game_fps_";
+    private static final String KEY_SERVICE_BEAT = "service_heartbeat_ms";
+    private static final String KEY_ONBOARDED = "onboarded_v42";
     private static final String PING_URL = "https://hyper120.aten-systems.site/api/ping";
     private static final long PING_INTERVAL_MS = 12L * 60L * 60L * 1000L;
     private static final String ACTION_OVERRIDE = "com.xiaomi.joyose.OVERRIDE_GAME_FRESHRATE";
@@ -234,15 +237,100 @@ public final class FpsApplier {
         for (String pkg : pkgs) {
             String trimmed = pkg.trim();
             if (trimmed.isEmpty()) continue;
+            int own = getGameFps(ctx, trimmed);
             Intent intent = new Intent(ACTION_OVERRIDE);
             intent.putExtra("override_pkg_name", trimmed);
-            intent.putExtra("override_freshrate", fps);
+            intent.putExtra("override_freshrate", own > 0 ? own : fps);
             intent.setPackage(POWERKEEPER_PKG);
             ctx.sendBroadcast(intent);
             sent.add(trimmed);
         }
         Log.i(TAG, "applyTargetFps: fps=" + fps + " sent=" + sent.size() + " powerKeeperFound=" + pkFound + " pkgs=" + sent);
         return new ApplyResult(sent.size(), fps, pkFound, sent);
+    }
+
+    // ---------------------------------------------------------------- per-game rate
+
+    /** Rate chosen for one game, or 0 to follow the global target. */
+    public static int getGameFps(Context ctx, String pkg) {
+        return ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE).getInt(KEY_GAME_FPS_PREFIX + pkg, 0);
+    }
+
+    public static void setGameFps(Context ctx, String pkg, int fps) {
+        SharedPreferences.Editor e = ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit();
+        if (fps > 0) e.putInt(KEY_GAME_FPS_PREFIX + pkg, fps);
+        else e.remove(KEY_GAME_FPS_PREFIX + pkg);
+        e.apply();
+    }
+
+    // ---------------------------------------------------------------- health
+
+    /** Written by Auto120Service on every loop so the UI can tell if HyperOS killed it. */
+    public static void markServiceAlive(Context ctx) {
+        ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit()
+            .putLong(KEY_SERVICE_BEAT, System.currentTimeMillis()).apply();
+    }
+
+    public static long lastServiceBeat(Context ctx) {
+        return ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE).getLong(KEY_SERVICE_BEAT, 0L);
+    }
+
+    public static boolean isOnboarded(Context ctx) {
+        return ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE).getBoolean(KEY_ONBOARDED, false);
+    }
+
+    public static void setOnboarded(Context ctx) {
+        ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().putBoolean(KEY_ONBOARDED, true).apply();
+    }
+
+    // ---------------------------------------------------------------- device / ROM info
+
+    private static String prop(String key) {
+        try {
+            Class<?> sp = Class.forName("android.os.SystemProperties");
+            Object v = sp.getMethod("get", String.class).invoke(null, key);
+            return v == null ? "" : v.toString().trim();
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    /** "CN", "Global", "EEA", "India"... from the ROM's build properties. */
+    public static String romRegion() {
+        String mod = prop("ro.product.mod_device").toLowerCase(java.util.Locale.ROOT);
+        if (mod.contains("_eea")) return "EEA";
+        if (mod.contains("_in_")) return "India";
+        if (mod.contains("_ru")) return "Russia";
+        if (mod.contains("_id_")) return "Indonesia";
+        if (mod.contains("_tw")) return "Taiwan";
+        if (mod.contains("_tr")) return "Turkey";
+        if (mod.contains("_global")) return "Global";
+        String r = prop("ro.miui.build.region");
+        if (r.isEmpty()) r = prop("ro.miui.region");
+        if (r.equalsIgnoreCase("cn")) return "CN";
+        if (r.equalsIgnoreCase("global")) return "Global";
+        return r.isEmpty() ? "Unknown" : r.toUpperCase(java.util.Locale.ROOT);
+    }
+
+    /** e.g. "HyperOS OS3.0 (OS3.0.307.0.WNCCNXM)" or "MIUI V14 (...)". */
+    public static String romVersion() {
+        String os = prop("ro.mi.os.version.name");
+        String inc = prop("ro.mi.os.version.incremental");
+        if (inc.isEmpty()) inc = prop("ro.build.version.incremental");
+        if (!os.isEmpty()) return "HyperOS " + os + " (" + inc + ")";
+        String miui = prop("ro.miui.ui.version.name");
+        if (!miui.isEmpty()) return "MIUI " + miui + " (" + inc + ")";
+        return Build.DISPLAY;
+    }
+
+    /** Multi-line device block used in GitHub reports. */
+    public static String deviceReport(Context ctx) {
+        return "Device: " + getDeviceName(ctx) + " (" + Build.MODEL + ", " + Build.DEVICE + ")\n"
+            + "ROM: " + romVersion() + " | Region: " + romRegion() + "\n"
+            + "Android: " + Build.VERSION.RELEASE + " (SDK " + Build.VERSION.SDK_INT + ")\n"
+            + "Panel max: " + getMaxSupportedFps(ctx) + "Hz | Target: " + getTargetFps(ctx) + "Hz\n"
+            + "PowerKeeper: " + (isPowerKeeperInstalled(ctx) ? "found" : "missing")
+            + " | Hyper120 v" + appVersion(ctx);
     }
 
     /** Sends an anonymous random-UUID ping at most once per 12h for the active user counter. */
@@ -258,7 +346,7 @@ public final class FpsApplier {
             sp.edit().putString(KEY_ANON_ID, id).apply();
         }
         final String finalId = id;
-        final String ver = getAppVersion(ctx);
+        final String ver = appVersion(ctx);
         new Thread(() -> {
             HttpURLConnection conn = null;
             try {
@@ -277,11 +365,11 @@ public final class FpsApplier {
         }).start();
     }
 
-    private static String getAppVersion(Context ctx) {
+    public static String appVersion(Context ctx) {
         try {
             return ctx.getPackageManager().getPackageInfo(ctx.getPackageName(), 0).versionName;
         } catch (Exception e) {
-            return "3.6";
+            return "?";
         }
     }
 }

@@ -333,6 +333,66 @@ public final class UiHelper {
         act.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
     }
 
+    // ---------- Keep-alive helpers ----------
+
+    public static boolean isBatteryUnrestricted(android.content.Context ctx) {
+        android.os.PowerManager pm = (android.os.PowerManager) ctx.getSystemService(android.content.Context.POWER_SERVICE);
+        return pm != null && pm.isIgnoringBatteryOptimizations(ctx.getPackageName());
+    }
+
+    /** System prompt to exempt Hyper120 from battery optimisation; falls back to App info. */
+    public static void requestBatteryExemption(Activity act) {
+        try {
+            Intent i = new Intent(android.provider.Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS,
+                Uri.parse("package:" + act.getPackageName()));
+            act.startActivity(i);
+        } catch (Exception e) {
+            openAppInfo(act);
+        }
+    }
+
+    /** HyperOS / MIUI Autostart manager; falls back to App info on other ROMs. */
+    public static void openAutostart(Activity act) {
+        try {
+            Intent i = new Intent();
+            i.setComponent(new android.content.ComponentName("com.miui.securitycenter",
+                "com.miui.permcenter.autostart.AutoStartManagementActivity"));
+            act.startActivity(i);
+        } catch (Exception e) {
+            openAppInfo(act);
+        }
+    }
+
+    public static void openAppInfo(Activity act) {
+        act.startActivity(new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+            Uri.fromParts("package", act.getPackageName(), null)));
+    }
+
+    // ---------- Bottom sheet ----------
+
+    /** Dark rounded sheet anchored to the bottom of the screen. */
+    public static android.app.Dialog sheet(Activity act, View content) {
+        android.app.Dialog d = new android.app.Dialog(act);
+        d.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        android.widget.ScrollView sv = new android.widget.ScrollView(act);
+        sv.setBackground(pillBg(act, COL_SURFACE, COL_OUTLINE, 28));
+        sv.setPadding(dp(act, 20), dp(act, 22), dp(act, 20), dp(act, 20));
+        sv.addView(content);
+        d.setContentView(sv);
+        Window w = d.getWindow();
+        if (w != null) {
+            w.setBackgroundDrawable(new android.graphics.drawable.ColorDrawable(Color.TRANSPARENT));
+            w.setGravity(android.view.Gravity.BOTTOM);
+            w.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            android.view.WindowManager.LayoutParams lp = w.getAttributes();
+            lp.y = dp(act, 12);
+            w.setAttributes(lp);
+            w.getDecorView().setPadding(dp(act, 10), 0, dp(act, 10), 0);
+            w.setDimAmount(0.6f);
+        }
+        return d;
+    }
+
     public static String appVersion(Activity act) {
         try {
             return act.getPackageManager().getPackageInfo(act.getPackageName(), 0).versionName;

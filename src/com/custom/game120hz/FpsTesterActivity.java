@@ -56,6 +56,7 @@ public class FpsTesterActivity extends Activity implements Choreographer.FrameCa
         private final float density;
         private float value = 0f;
         private float shown = 0f;
+        String fpsLabel = "FPS";
 
         GaugeView(Context ctx, int[] marks, int maxHz) {
             super(ctx);
@@ -132,7 +133,7 @@ public class FpsTesterActivity extends Activity implements Choreographer.FrameCa
                 c.drawText(String.valueOf(hz), cx + rl * cos, cy + rl * sin + 4 * density, label);
             }
             c.drawText(shown < 1 ? "--" : String.valueOf(Math.round(shown)), cx, cy + 14 * density, big);
-            c.drawText("FPS", cx, cy + 40 * density, small);
+            c.drawText(fpsLabel, cx, cy + 40 * density, small);
             if (Math.abs(value - shown) > 0.2f) postInvalidateOnAnimation();
         }
     }
@@ -191,27 +192,27 @@ public class FpsTesterActivity extends Activity implements Choreographer.FrameCa
 
         LinearLayout root = new LinearLayout(this);
         root.setOrientation(LinearLayout.VERTICAL);
-        root.addView(UiHelper.topBar(this, "FPS tester"));
+        root.addView(UiHelper.topBar(this, getString(R.string.tester_title)));
 
         // Gauge card
         LinearLayout card = UiHelper.card(this);
         card.setGravity(Gravity.CENTER_HORIZONTAL);
         card.setPadding(dp(16), dp(18), dp(16), dp(20));
         testFps = Math.min(FpsApplier.getTargetFps(this), maxHz);
-        verdictChip = UiHelper.chip(this, "Measuring…", UiHelper.COL_PRIMARY);
+        verdictChip = UiHelper.chip(this, getString(R.string.tester_measuring), UiHelper.COL_PRIMARY);
         card.addView(verdictChip, new LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         gauge = new GaugeView(this, FpsApplier.detectSupportedFps(this), maxHz);
         LinearLayout.LayoutParams gp = UiHelper.matchWrap(this, 4);
         card.addView(gauge, gp);
-        verdictText = UiHelper.text(this, "Keep this screen open for a few seconds.",
+        verdictText = UiHelper.text(this, getString(R.string.tester_keep_open),
             13.5f, UiHelper.COL_MUTED, UiHelper.TF_REGULAR);
         verdictText.setGravity(Gravity.CENTER);
         verdictText.setLineSpacing(dp(3), 1f);
         verdictText.setPadding(dp(8), 0, dp(8), 0);
         card.addView(verdictText);
 
-        TextView testLabel = UiHelper.overline(this, "Test at", UiHelper.COL_DIM);
+        TextView testLabel = UiHelper.overline(this, getString(R.string.tester_test_at), UiHelper.COL_DIM);
         testLabel.setPadding(dp(4), dp(20), 0, dp(10));
         card.addView(testLabel, UiHelper.matchWrap(this, 0));
         LinearLayout seg = new LinearLayout(this);
@@ -233,7 +234,7 @@ public class FpsTesterActivity extends Activity implements Choreographer.FrameCa
 
         // Motion preview
         LinearLayout motion = UiHelper.card(this);
-        motion.addView(UiHelper.overline(this, "Motion preview", UiHelper.COL_DIM));
+        motion.addView(UiHelper.overline(this, getString(R.string.tester_motion), UiHelper.COL_DIM));
         motionBar = new MotionBarView(this);
         LinearLayout.LayoutParams mp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(30));
         mp.topMargin = dp(12);
@@ -243,42 +244,41 @@ public class FpsTesterActivity extends Activity implements Choreographer.FrameCa
         // Stats grid
         LinearLayout grid1 = new LinearLayout(this);
         grid1.setLayoutParams(UiHelper.matchWrap(this, 12));
-        statDisplay = stat(grid1, "Display mode", "--", true);
-        statTarget = stat(grid1, "Testing at", testFps + " Hz", false);
+        statDisplay = stat(grid1, getString(R.string.stat_display), "--", true);
+        statTarget = stat(grid1, getString(R.string.stat_testing), getString(R.string.hz_value, testFps), false);
         root.addView(grid1);
         LinearLayout grid2 = new LinearLayout(this);
         grid2.setLayoutParams(UiHelper.matchWrap(this, 12));
-        stat(grid2, "Panel max", maxHz + " Hz", true);
+        stat(grid2, getString(R.string.stat_panel), getString(R.string.hz_value, maxHz), true);
         boolean pk = FpsApplier.isPowerKeeperInstalled(this);
-        TextView pkv = stat(grid2, "PowerKeeper", pk ? "Found" : "Missing", false);
+        TextView pkv = stat(grid2, getString(R.string.stat_pk), getString(pk ? R.string.found : R.string.missing), false);
         pkv.setTextColor(pk ? UiHelper.COL_TEAL : UiHelper.COL_WARN);
         root.addView(grid2);
 
         // Actions
-        applyBtn = UiHelper.button(this, "Re-apply " + FpsApplier.getTargetFps(this) + "Hz",
+        applyBtn = UiHelper.button(this, getString(R.string.tester_reapply, FpsApplier.getTargetFps(this)),
             R.drawable.ui_refresh, true, v -> {
                 FpsApplier.ApplyResult res = FpsApplier.apply120Hz(this, FpsApplier.loadPackages(this));
                 startTest(testFps);
-                Toast.makeText(this, "Sent " + res.fps + "Hz to " + res.count + " apps", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.btn_sent, res.fps, res.count), Toast.LENGTH_SHORT).show();
             });
         ((LinearLayout.LayoutParams) applyBtn.getLayoutParams()).topMargin = dp(18);
         root.addView(applyBtn);
 
         LinearLayout actions = new LinearLayout(this);
         actions.setLayoutParams(UiHelper.matchWrap(this, 10));
-        TextView copy = UiHelper.button(this, "Copy report", R.drawable.ui_copy, false, v -> copyReport());
+        TextView copy = UiHelper.button(this, getString(R.string.tester_copy), R.drawable.ui_copy, false, v -> copyReport());
         LinearLayout.LayoutParams a = new LinearLayout.LayoutParams(0, dp(52), 1f);
         a.rightMargin = dp(5);
         actions.addView(copy, a);
-        TextView report = UiHelper.button(this, "Report", R.drawable.ui_flag, false, v -> openReportIssue());
+        TextView report = UiHelper.button(this, getString(R.string.tester_report), R.drawable.ui_flag, false, v -> openReportIssue());
         LinearLayout.LayoutParams b = new LinearLayout.LayoutParams(0, dp(52), 1f);
         b.leftMargin = dp(5);
         actions.addView(report, b);
         root.addView(actions);
 
         TextView note = UiHelper.text(this,
-            "This screen measures frames the system actually delivers to Hyper120. Games are limited by "
-                + "their own FPS setting too, so set the in-game frame rate to High/Ultra or 120.",
+            getString(R.string.tester_note),
             12, UiHelper.COL_DIM, UiHelper.TF_REGULAR);
         note.setLineSpacing(dp(3), 1f);
         note.setPadding(dp(6), dp(16), dp(6), 0);
@@ -347,12 +347,12 @@ public class FpsTesterActivity extends Activity implements Choreographer.FrameCa
             s.setBackground(on ? UiHelper.gradientBg(this, 12, UiHelper.COL_PRIMARY, 0xFF818CF8)
                 : UiHelper.ripple(this, null, 12));
         }
-        if (statTarget != null) statTarget.setText(fps + " Hz");
+        if (statTarget != null) statTarget.setText(getString(R.string.hz_value, fps));
         windowStartNs = 0L;
         frameCount = 0;
         sampleCount = -1; // drop the first window while the display mode switches
-        UiHelper.setChip(this, verdictChip, "Measuring at " + fps + " Hz…", UiHelper.COL_PRIMARY);
-        verdictText.setText("Sent the " + fps + "Hz override to Hyper120 itself. Keep this screen open for a few seconds.");
+        UiHelper.setChip(this, verdictChip, getString(R.string.tester_measuring_at, fps), UiHelper.COL_PRIMARY);
+        verdictText.setText(getString(R.string.tester_sent_self, fps));
     }
 
     @Override
@@ -391,42 +391,35 @@ public class FpsTesterActivity extends Activity implements Choreographer.FrameCa
         boolean high = measuredFps >= expected - 6f;
 
         gauge.setValue(measuredFps);
-        statDisplay.setText(String.format("%.0f Hz", displayHz));
+        statDisplay.setText(getString(R.string.hz_value, Math.round(displayHz)));
 
         if (!pkOk) {
-            UiHelper.setChip(this, verdictChip, "Not supported", UiHelper.COL_WARN);
-            verdictText.setText("PowerKeeper isn't installed, so this ROM can't receive the override.");
+            UiHelper.setChip(this, verdictChip, getString(R.string.v_not_supported), UiHelper.COL_WARN);
+            verdictText.setText(getString(R.string.v_not_supported_body));
         } else if (expected <= 60) {
-            UiHelper.setChip(this, verdictChip, "Testing 60 Hz", UiHelper.COL_PRIMARY);
-            verdictText.setText("Pick a higher rate below to test whether the cap is lifted.");
+            UiHelper.setChip(this, verdictChip, getString(R.string.v_testing60), UiHelper.COL_PRIMARY);
+            verdictText.setText(getString(R.string.v_testing60_body));
         } else if (high) {
-            UiHelper.setChip(this, verdictChip, expected + " Hz works", UiHelper.COL_TEAL);
-            verdictText.setText("Frames are arriving at " + Math.round(measuredFps)
-                + " FPS, so PowerKeeper accepted the override. Games can now reach " + expected
-                + " FPS if the game itself supports it.");
+            UiHelper.setChip(this, verdictChip, getString(R.string.v_works, expected), UiHelper.COL_TEAL);
+            verdictText.setText(getString(R.string.v_works_body, Math.round(measuredFps), expected));
         } else if (sampleCount >= 3) {
-            UiHelper.setChip(this, verdictChip, "Clamped at " + Math.round(measuredFps), UiHelper.COL_ERROR);
-            verdictText.setText("The display stayed near " + Math.round(displayHz)
-                + "Hz even with the " + expected + "Hz override. Tap Re-apply, or report your device.");
+            UiHelper.setChip(this, verdictChip, getString(R.string.v_clamped, Math.round(measuredFps)), UiHelper.COL_ERROR);
+            verdictText.setText(getString(R.string.v_clamped_body, Math.round(displayHz), expected));
         }
     }
 
     private String buildReportText() {
         String pk = FpsApplier.isPowerKeeperInstalled(this) ? "OK" : "Missing";
-        return "Hyper120 v" + UiHelper.appVersion(this) + " Diagnostic Report\n"
-            + "Device: " + Build.MANUFACTURER + " " + Build.MODEL + " (" + Build.DEVICE + ")\n"
-            + "Android: " + Build.VERSION.RELEASE + " (SDK " + Build.VERSION.SDK_INT + ")\n"
-            + "Max Hardware Hz: " + maxHz + "Hz\n"
-            + "Target FPS: " + FpsApplier.getTargetFps(this) + "Hz | Tested at: " + testFps + "Hz\n"
-            + String.format("Display Mode: %.1f Hz | Measured: %.1f FPS\n", displayHz, measuredFps)
-            + "PowerKeeper: " + pk;
+        return "Hyper120 Diagnostic Report\n" + FpsApplier.deviceReport(this) + "\n"
+            + "Tested at: " + testFps + "Hz | "
+            + String.format(java.util.Locale.US, "Display Mode: %.1f Hz | Measured: %.1f FPS", displayHz, measuredFps);
     }
 
     private void copyReport() {
         ClipboardManager cm = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
         if (cm != null) {
             cm.setPrimaryClip(ClipData.newPlainText("Hyper120 Report", buildReportText()));
-            Toast.makeText(this, "Copied diagnostic report", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.copied), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -439,7 +432,7 @@ public class FpsTesterActivity extends Activity implements Choreographer.FrameCa
                     : "Clamped at " + Math.round(measuredFps) + " FPS");
             String title = "[Compatibility] " + Build.MANUFACTURER + " " + Build.MODEL + " (" + Build.DEVICE + ") - " + verdict;
             String body = "### Device & Tester Output\n```\n" + buildReportText()
-                + "\n```\n\n### HyperOS / MIUI Version & Region\n(e.g. HyperOS 2.0 Global / CN)\n\n"
+                + "\n```\n\n"
                 + "### Games Tested & Notes\n- Autostart ON & Battery Saver = No restrictions?\n- Games tested:\n";
             UiHelper.openUrl(this, UiHelper.GITHUB_REPO_URL + "/issues/new?title="
                 + URLEncoder.encode(title, "UTF-8") + "&body=" + URLEncoder.encode(body, "UTF-8"));

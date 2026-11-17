@@ -376,7 +376,7 @@
     <section class="hero">
       <div class="wrap hero-grid">
         <div>
-          <div class="badge"><i></i><span class="js-ver-badge">v4.1</span>&nbsp;· now flags games capped at 60</div>
+          <div class="badge"><i></i><span class="js-ver-badge">v4.2</span>&nbsp;· rate per game, Español &amp; Indonesia</div>
           <h1>Your games,<br />at <span class="hz">120Hz</span>.<br />Nothing else changes.</h1>
           <p class="lede">
             HyperOS caps many games at 60Hz even when your screen is set to 120. Hyper120 lifts the cap
@@ -486,8 +486,8 @@ extras   override_pkg_name  = <span class="s">"com.mobile.legends"</span>
           <div class="card feature"><div class="ico t-teal"><svg><use href="#i-battery"/></svg></div><h3>No battery trade-off</h3><p>PowerKeeper and adaptive refresh stay on, so your home screen and apps still drop to save power.</p></div>
           <div class="card feature"><div class="ico t-ind"><svg><use href="#i-gamepad"/></svg></div><h3>Auto-adds new games</h3><p>Install a game and it's unlocked straight away. Untick one and it stays unticked.</p></div>
           <div class="card feature"><div class="ico t-sky"><svg><use href="#i-gauge"/></svg></div><h3>Built-in FPS tester</h3><p>Tests 60, 90 and 120Hz on your own phone and tells you which ones work.</p></div>
-          <div class="card feature"><div class="ico t-amb"><svg><use href="#i-tile"/></svg></div><h3>Quick Settings tile</h3><p>Turn the background override on or off from Control Center.</p></div>
-          <div class="card feature"><div class="ico t-red"><svg><use href="#i-flag"/></svg></div><h3>One-tap device reports</h3><p>Opens a GitHub issue already filled in with your device and test result.</p></div>
+          <div class="card feature"><div class="ico t-amb"><svg><use href="#i-tile"/></svg></div><h3>Rate per game + widget</h3><p>Long-press a game to give it its own rate, like 120 for MLBB and 90 for Free Fire. Long-press your home screen → Widgets → Hyper120 to add a widget that switches rates in one tap (on HyperOS, allow the Home screen shortcuts permission first).</p></div>
+          <div class="card feature"><div class="ico t-red"><svg><use href="#i-flag"/></svg></div><h3>One-tap game reports</h3><p>Tell us if a game hit 120. The report fills in the game, your phone, ROM and region. The game list updates in the app daily.</p></div>
         </div>
       </div>
     </section>
@@ -582,19 +582,26 @@ mPrivGames={com.mobile.legends=120, ...}</pre>
           <div class="card"><div class="k">LIMIT 3 · THE GAME'S WHITELIST</div><h3>120 only on approved phones</h3><p>MLBB, PUBG and CODM show their 90/120 option only on phones the developer has approved. If you don't see it, the game is still the limit.</p></div>
         </div>
 
+<!-- games:cards -->
         <div class="caps reveal">
           <div class="card cap">
-            <div class="cap-head"><span class="pill p-ok"><i></i>Up to 120</span><p>Has a high frame-rate option. Turn it on in the game's own settings; on many games it only appears on approved phones.</p></div>
+            <div class="cap-head"><span class="pill p-ok"><i></i>Up to 120</span><p>Has a high frame-rate option. Turn it on in the game&#x27;s own settings; on many games it only appears on approved phones.</p></div>
             <ul>
               <li><b>Mobile Legends: Bang Bang</b><span>Graphics → Ultra (120) or Super (90)</span></li>
               <li><b>Call of Duty: Mobile</b><span>Graphics → Frame Rate → Max / Ultra</span></li>
               <li><b>PUBG Mobile / BGMI</b><span>Graphics: Smooth → Frame Rate: Ultra Extreme</span></li>
               <li><b>Honor of Kings</b><span>Settings → Graphics → 120 FPS</span></li>
+              <li><b>League of Legends: Wild Rift</b><span>Graphics → 90 / 120 on supported phones</span></li>
               <li><b>Delta Force</b><span>Up to 90 / 120 on supported phones</span></li>
+              <li><b>Standoff 2</b><span>Settings → Video → Target frame rate 120</span></li>
               <li><b>Brawl Stars</b><span>120 in matches, 60 in menus</span></li>
+              <li><b>Clash of Clans</b><span>120 FPS, reported by a Hyper120 tester</span></li>
+              <li><b>Minecraft</b><span>Measured: 120 FPS on a Xiaomi 14 with Hyper120</span></li>
+              <li><b>Asphalt Legends</b><span>Graphics → Frame Rate, 120 on high-end phones</span></li>
+              <li><b>CSR 2</b><span>Up to 120</span></li>
+              <li><b>Top Drives</b><span>Settings → High FPS (120 if supported)</span></li>
               <li><b>Pokémon GO</b><span>Settings → Advanced → Native refresh rate</span></li>
               <li><b>EA SPORTS FC Mobile</b><span>90 / 120 only on some phones</span></li>
-              <li><b>CSR 2</b><span>Up to 120</span></li>
             </ul>
           </div>
           <div class="card cap">
@@ -605,7 +612,7 @@ mPrivGames={com.mobile.legends=120, ...}</pre>
             </ul>
           </div>
           <div class="card cap">
-            <div class="cap-head"><span class="pill p-amb"><i></i>60 max</span><p>The game itself stops at 60 on Android. Hyper120 can't make these faster.</p></div>
+            <div class="cap-head"><span class="pill p-amb"><i></i>60 max</span><p>The game itself stops at 60 on Android. Hyper120 can&#x27;t make these faster.</p></div>
             <ul>
               <li><b>Roblox</b><span>Capped at 60. Measured: 60 FPS while the screen ran at 120Hz</span></li>
               <li><b>Genshin Impact</b><span>120 is iPhone / iPad only</span></li>
@@ -616,10 +623,13 @@ mPrivGames={com.mobile.legends=120, ...}</pre>
               <li><b>PPSSPP (PSP games)</b><span>PSP games run at their original 60 / 30</span></li>
               <li><b>Bus Simulator Indonesia</b><span>In-game frame-rate setting tops out at 60</span></li>
               <li><b>Truckers of Europe 3</b><span>In-game frame-rate setting tops out at 60</span></li>
+              <li><b>eFootball</b><span>Graphics → Frame Rate tops out at 60</span></li>
+              <li><b>Monster Hunter Now</b><span>30 on the map, 60 in hunts</span></li>
             </ul>
           </div>
         </div>
-        <p class="games-foot reveal">Compiled from developer pages, patch coverage and player reports as of November 2026. Games change their limits in updates, so treat this as a guide. Since v4.1 the app tags these games in its list (long-press a game for tips). Know a game that belongs here? <a href="https://github.com/Rohan-Reyes/Hyper120/issues/new/choose" target="_blank" rel="noopener" style="color:var(--sky);font-weight:700">Tell us on GitHub →</a></p>
+        <!-- /games:cards -->
+        <p class="games-foot reveal">Compiled from developer pages, patch coverage and player reports as of November 2026. Games change their limits in updates, so treat this as a guide. The app tags these games in its list and downloads this list daily. Long-press a game for tips, its own rate, or to report how it runs. Know a game that belongs here? <a href="https://github.com/Rohan-Reyes/Hyper120/issues/new/choose" target="_blank" rel="noopener" style="color:var(--sky);font-weight:700">Tell us on GitHub →</a></p>
       </div>
     </section>
 
@@ -632,6 +642,9 @@ mPrivGames={com.mobile.legends=120, ...}</pre>
         </div>
         <div class="faq reveal">
           <details open><summary>It works in the tester, but my game still runs at 60. Why?</summary><p>Because the game has its own limit. Hyper120 lifts the phone's cap, which the FPS tester proves, but some games are built to stop at 60 on Android (Roblox, Genshin Impact, Honkai: Star Rail and others). Check the <a href="#games" style="color:var(--sky)">game list</a>. If your game is in the 60 max column, no app can push it higher without modding the game.</p></details>
+          <details><summary>Which popular games are stuck at 60?</summary><p><!-- games:names60 -->Roblox, Genshin Impact, Honkai: Star Rail, Zenless Zone Zero, Wuthering Waves, Pokémon UNITE, PPSSPP (PSP games), Bus Simulator Indonesia, Truckers of Europe 3, eFootball and Monster Hunter Now<!-- /games:names60 -->. These games limit themselves, so they stay at 60 even with Hyper120 on. The app tags them <b style="color:var(--amber)">60 MAX</b>. See the <a href="#games" style="color:var(--sky)">full game list</a>.</p></details>
+          <details><summary>Which games can go above 60?</summary><p><!-- games:names120 -->Mobile Legends: Bang Bang, Call of Duty: Mobile, PUBG Mobile / BGMI, Honor of Kings, League of Legends: Wild Rift, Delta Force, Standoff 2, Brawl Stars, Clash of Clans, Minecraft, Asphalt Legends, CSR 2, Top Drives, Pokémon GO and EA SPORTS FC Mobile<!-- /games:names120 --> can, but you must turn on the high frame rate in each game's settings, and many only show it on phones the developer has approved. <!-- games:names90 -->Free Fire / Free Fire MAX and Fortnite<!-- /games:names90 --> top out at 90.</p></details>
+          <details><summary>My game isn't on the list. How do I know?</summary><p>Look in the game's graphics settings for a frame-rate option. If the highest choice is 60 (or there's no option at all), the game is most likely capped at 60. Then check with Game Turbo's FPS counter while playing, long-press the game in Hyper120 and tap <b style="color:var(--text)">Report how it runs</b>. We'll add it to the list.</p></details>
           <details><summary>My game has no 120 FPS option. Can Hyper120 add it?</summary><p>No. Games like Mobile Legends, PUBG Mobile and Call of Duty: Mobile decide which phones see their 90/120 option. If your phone isn't on the developer's list, the option stays hidden. Hyper120 makes sure the screen isn't the bottleneck once the game asks for more.</p></details>
           <details><summary>How do I see a game's real FPS?</summary><p>Use the FPS counter in Game Turbo (swipe in from the edge while in a game and turn on the performance overlay). Developer options → "Show refresh rate" shows the <b style="color:var(--text)">screen</b> rate, not the game's. In a 60-capped game it can say 120 while the game still draws 60.</p></details>
           <details><summary>Which rate should I pick, 90 or 120?</summary><p>Pick the highest your game supports. If a game tops out at 90, choosing 120 does no harm; the game just draws 90. Picking 60 sends games back to normal.</p></details>

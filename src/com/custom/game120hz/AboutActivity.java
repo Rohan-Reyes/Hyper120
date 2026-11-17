@@ -33,7 +33,7 @@ public class AboutActivity extends Activity {
 
         LinearLayout root = new LinearLayout(this);
         root.setOrientation(LinearLayout.VERTICAL);
-        root.addView(UiHelper.topBar(this, "About"));
+        root.addView(UiHelper.topBar(this, getString(R.string.about_title)));
 
         // Hero
         LinearLayout hero = new LinearLayout(this);
@@ -43,19 +43,17 @@ public class AboutActivity extends Activity {
         ImageView icon = new ImageView(this);
         icon.setImageResource(R.drawable.ic_launcher);
         hero.addView(icon, new LinearLayout.LayoutParams(dp(92), dp(92)));
-        TextView name = UiHelper.text(this, "Hyper120", 28, UiHelper.COL_TEXT, UiHelper.TF_BOLD);
+        TextView name = UiHelper.text(this, getString(R.string.app_name), 28, UiHelper.COL_TEXT, UiHelper.TF_BOLD);
         name.setPadding(0, dp(16), 0, 0);
         name.setGravity(Gravity.CENTER);
         hero.addView(name);
-        TextView ver = UiHelper.chip(this, "Version " + currentVer, UiHelper.COL_TEAL);
+        TextView ver = UiHelper.chip(this, getString(R.string.about_version, currentVer), UiHelper.COL_TEAL);
         LinearLayout.LayoutParams vp = new LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         vp.topMargin = dp(10);
         hero.addView(ver, vp);
         TextView desc = UiHelper.text(this,
-            "Unlocks high refresh rates in games on Xiaomi, Redmi and POCO phones. It asks "
-                + "PowerKeeper for the rate you pick, so adaptive refresh and battery life stay "
-                + "untouched everywhere else. No root, no PC.",
+            getString(R.string.about_desc),
             14, UiHelper.COL_MUTED, UiHelper.TF_REGULAR);
         desc.setGravity(Gravity.CENTER);
         desc.setLineSpacing(dp(4), 1f);
@@ -64,54 +62,61 @@ public class AboutActivity extends Activity {
         root.addView(hero);
 
         // Links
-        root.addView(sectionLabel("App"));
+        root.addView(sectionLabel(getString(R.string.about_section_app)));
         LinearLayout links = UiHelper.card(this);
         links.setPadding(dp(14), dp(4), dp(14), dp(4));
         final LinearLayout[] updateRow = new LinearLayout[1];
         updateRow[0] = UiHelper.row(this, R.drawable.ui_refresh, UiHelper.COL_PRIMARY,
-            "Check for updates", "You're on v" + currentVer, null,
+            getString(R.string.about_update), getString(R.string.about_update_sub, currentVer), null,
             v -> checkForUpdates(updateRow[0], currentVer));
         links.addView(updateRow[0]);
         links.addView(UiHelper.divider(this, 58));
         links.addView(UiHelper.row(this, R.drawable.ui_info, UiHelper.COL_WARN,
-            "FAQ & game list", "Why some games stay at 60, and which ones go higher", null,
+            getString(R.string.about_faq), getString(R.string.about_faq_sub), null,
             v -> UiHelper.openUrl(this, "https://hyper120.aten-systems.site/#games")));
         links.addView(UiHelper.divider(this, 58));
         links.addView(UiHelper.row(this, R.drawable.ui_code, 0xFFA5B4FC,
-            "Source code", "github.com/Rohan-Reyes/Hyper120", null,
+            getString(R.string.about_source), "github.com/Rohan-Reyes/Hyper120", null,
             v -> UiHelper.openUrl(this, UiHelper.GITHUB_REPO_URL)));
         links.addView(UiHelper.divider(this, 58));
         links.addView(UiHelper.row(this, R.drawable.ui_flag, UiHelper.COL_ERROR,
-            "Report a bug or device result", "Opens a GitHub issue form", null,
+            getString(R.string.about_report), getString(R.string.about_report_sub), null,
             v -> UiHelper.openUrl(this, UiHelper.GITHUB_REPO_URL + "/issues/new/choose")));
         root.addView(links);
 
         // Setup
-        root.addView(sectionLabel("Keep it running"));
+        root.addView(sectionLabel(getString(R.string.about_section_running)));
         LinearLayout setup = UiHelper.card(this);
         setup.setPadding(dp(14), dp(4), dp(14), dp(4));
         setup.addView(UiHelper.row(this, R.drawable.ui_settings, UiHelper.COL_TEAL,
-            "Open App info",
-            "Turn on Autostart and set Battery saver to No restrictions so HyperOS doesn't stop Hyper120.",
+            getString(R.string.about_appinfo),
+            getString(R.string.about_appinfo_sub),
             null, v -> {
                 Intent i = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
                     Uri.fromParts("package", getPackageName(), null));
                 startActivity(i);
             }));
+        setup.addView(UiHelper.divider(this, 58));
+        setup.addView(UiHelper.row(this, R.drawable.ui_gauge, 0xFF818CF8,
+            getString(R.string.about_widget), getString(R.string.about_widget_sub), null, v -> addWidget()));
+        setup.addView(UiHelper.divider(this, 58));
+        setup.addView(UiHelper.row(this, R.drawable.ui_info, UiHelper.COL_PRIMARY,
+            getString(R.string.about_guide), getString(R.string.about_guide_sub), null,
+            v -> startActivity(new Intent(this, OnboardingActivity.class))));
         root.addView(setup);
 
         // Support
-        root.addView(sectionLabel("Support"));
+        root.addView(sectionLabel(getString(R.string.about_section_support)));
         LinearLayout coffee = UiHelper.card(this);
         coffee.setPadding(dp(14), dp(4), dp(14), dp(4));
         coffee.setBackground(UiHelper.pillBg(this, UiHelper.alpha(UiHelper.COL_COFFEE_BG, 0.07f),
             UiHelper.alpha(UiHelper.COL_COFFEE_BG, 0.3f), 24));
         coffee.addView(UiHelper.row(this, R.drawable.ui_coffee, UiHelper.COL_COFFEE_BG,
-            "Buy me a coffee", "Hyper120 is free. Tips keep updates coming.", null,
+            getString(R.string.about_coffee), getString(R.string.about_coffee_sub), null,
             v -> UiHelper.openUrl(this, UiHelper.BUY_ME_A_COFFEE_URL)));
         root.addView(coffee);
 
-        TextView footer = UiHelper.text(this, "Made by Rohan Reyes · Open source",
+        TextView footer = UiHelper.text(this, getString(R.string.about_footer),
             12, UiHelper.COL_DIM, UiHelper.TF_REGULAR);
         footer.setGravity(Gravity.CENTER);
         footer.setPadding(0, dp(24), 0, 0);
@@ -123,6 +128,39 @@ public class AboutActivity extends Activity {
         scroll.addView(root);
         UiHelper.applyNotchSafePadding(this, scroll, 16, 12, 28);
         setContentView(scroll);
+    }
+
+    /** Pins the widget, or explains HyperOS's "Home screen shortcuts" permission first. */
+    private void addWidget() {
+        if (!Hyper120Widget.isMiuiShortcutAllowed(this)) {
+            android.widget.LinearLayout c = new android.widget.LinearLayout(this);
+            c.setOrientation(android.widget.LinearLayout.VERTICAL);
+            final android.app.Dialog[] holder = new android.app.Dialog[1];
+            TextView t = UiHelper.text(this, getString(R.string.widget_perm_title), 18, UiHelper.COL_TEXT, UiHelper.TF_BOLD);
+            c.addView(t);
+            TextView b = UiHelper.text(this, getString(R.string.widget_perm_body), 14, UiHelper.COL_MUTED, UiHelper.TF_REGULAR);
+            b.setLineSpacing(dp(4), 1f);
+            b.setPadding(0, dp(12), 0, dp(18));
+            c.addView(b);
+            c.addView(UiHelper.button(this, getString(R.string.widget_perm_open), R.drawable.ui_settings, true, v -> {
+                holder[0].dismiss();
+                Hyper120Widget.openMiuiPermissions(this);
+            }));
+            TextView manual = UiHelper.button(this, getString(R.string.widget_perm_manual), 0, false, v -> {
+                holder[0].dismiss();
+                android.widget.Toast.makeText(this, getString(R.string.widget_pin_manual),
+                    android.widget.Toast.LENGTH_LONG).show();
+            });
+            ((android.widget.LinearLayout.LayoutParams) manual.getLayoutParams()).topMargin = dp(10);
+            c.addView(manual);
+            holder[0] = UiHelper.sheet(this, c);
+            holder[0].show();
+            return;
+        }
+        if (!Hyper120Widget.requestPin(this)) {
+            android.widget.Toast.makeText(this, getString(R.string.widget_pin_manual),
+                android.widget.Toast.LENGTH_LONG).show();
+        }
     }
 
     private View sectionLabel(String s) {
@@ -139,7 +177,7 @@ public class AboutActivity extends Activity {
         if (checking) return;
         checking = true;
         TextView sub = UiHelper.subtitleOf(row);
-        sub.setText("Checking GitHub releases…");
+        sub.setText(getString(R.string.upd_checking));
         sub.setTextColor(UiHelper.COL_MUTED);
         Handler main = new Handler(Looper.getMainLooper());
         new Thread(() -> {
@@ -178,10 +216,10 @@ public class AboutActivity extends Activity {
                     checking = false;
                     if (newer) {
                         updateUrl = target;
-                        sub.setText("v" + tag + " is available — tap to download");
+                        sub.setText(getString(R.string.upd_available, tag));
                         sub.setTextColor(UiHelper.COL_TEAL);
                     } else {
-                        sub.setText("You're up to date (v" + currentVer + ")");
+                        sub.setText(getString(R.string.upd_current, currentVer));
                         sub.setTextColor(UiHelper.COL_TEAL);
                     }
                 });
@@ -189,7 +227,7 @@ public class AboutActivity extends Activity {
                 main.post(() -> {
                     checking = false;
                     updateUrl = UiHelper.GITHUB_REPO_URL + "/releases/latest";
-                    sub.setText("Couldn't reach GitHub — tap to open Releases");
+                    sub.setText(getString(R.string.upd_failed));
                     sub.setTextColor(UiHelper.COL_WARN);
                 });
             } finally {

@@ -37,6 +37,7 @@ public class Hyper120TileService extends TileService {
         } else {
             stopService(svc);
         }
+        Hyper120Widget.updateAll(this);
         updateTile();
     }
 
@@ -47,9 +48,9 @@ public class Hyper120TileService extends TileService {
         int fps = FpsApplier.getTargetFps(this);
         Set<String> pkgs = FpsApplier.loadPackages(this);
         tile.setState(active ? Tile.STATE_ACTIVE : Tile.STATE_INACTIVE);
-        tile.setLabel("Hyper120");
+        tile.setLabel(getString(R.string.app_name));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            tile.setSubtitle(active ? (fps + "Hz \u00B7 " + pkgs.size() + " apps") : "Off");
+            tile.setSubtitle(active ? getString(R.string.tile_sub, fps, pkgs.size()) : getString(R.string.tile_off));
         }
         tile.updateTile();
     }
