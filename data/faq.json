@@ -1,0 +1,110 @@
+{
+  "version": 1,
+  "_format": "Answers: one line per paragraph. Lines starting with '1. ' are numbered steps, '- ' are bullets, **text** is bold. q/a keys: en (required), es, in. Edit, run tools/sync_games.py, deploy web/faq.json — apps pick it up within a day.",
+  "items": [
+    {
+      "id": "stuck60",
+      "q": {
+        "en": "Why is my game still at 60?",
+        "es": "¿Por qué mi juego sigue a 60?",
+        "in": "Kenapa game saya masih 60?"
+      },
+      "a": {
+        "en": "Check these three things:\n1. The game isn't tagged **60 MAX**. Those games can't go higher.\n2. The game's own FPS setting is on **120 / Ultra / Max**.\n3. **Settings → Display → Refresh rate** is set to 120Hz.",
+        "es": "Revisa estas tres cosas:\n1. El juego no tiene la etiqueta **60 MÁX**. Esos juegos no pueden ir más alto.\n2. El ajuste de FPS del juego está en **120 / Ultra / Máx**.\n3. **Ajustes → Pantalla → Tasa de refresco** está en 120Hz.",
+        "in": "Cek tiga hal ini:\n1. Game tidak bertanda **60 MAX**. Game itu tidak bisa lebih tinggi.\n2. Pengaturan FPS di game sudah **120 / Ultra / Max**.\n3. **Setelan → Tampilan → Kecepatan refresh** sudah 120Hz."
+      }
+    },
+    {
+      "id": "safe",
+      "q": {
+        "en": "Is it safe?",
+        "es": "¿Es seguro?",
+        "in": "Apakah aman?"
+      },
+      "a": {
+        "en": "Yes. Hyper120 only asks HyperOS's own PowerKeeper service for a higher refresh rate, the same way Game Turbo does.\n- **Open source:** all the code is public on GitHub.\n- **No root,** and no system files are changed.\n- **No ads, no account.** It only sends an anonymous install ID and the app version, to count users.\n- **Signed APK:** download it only from GitHub or hyper120.aten-systems.site.",
+        "es": "Sí. Hyper120 solo pide una tasa de refresco más alta al servicio PowerKeeper de HyperOS, igual que Game Turbo.\n- **Código abierto:** todo el código es público en GitHub.\n- **Sin root,** y no cambia archivos del sistema.\n- **Sin anuncios ni cuenta.** Solo envía un ID de instalación anónimo y la versión de la app, para contar usuarios.\n- **APK firmado:** descárgalo solo desde GitHub o hyper120.aten-systems.site.",
+        "in": "Ya. Hyper120 hanya meminta refresh rate lebih tinggi ke layanan PowerKeeper milik HyperOS, sama seperti Game Turbo.\n- **Open source:** semua kodenya publik di GitHub.\n- **Tanpa root,** dan tidak mengubah file sistem.\n- **Tanpa iklan, tanpa akun.** Hanya mengirim ID instalasi anonim dan versi aplikasi, untuk menghitung pengguna.\n- **APK bertanda tangan:** unduh hanya dari GitHub atau hyper120.aten-systems.site."
+      }
+    },
+    {
+      "id": "check",
+      "q": {
+        "en": "How do I see the real FPS?",
+        "es": "¿Cómo veo los FPS reales?",
+        "in": "Bagaimana melihat FPS asli?"
+      },
+      "a": {
+        "en": "- Use the **FPS tester** in this app to check the override works.\n- In a game, turn on **Game Turbo's performance overlay**.\n- Apps like **Scene** also show the real frame rate.",
+        "es": "- Usa el **probador de FPS** de esta app para comprobar que funciona.\n- En un juego, activa la **superposición de rendimiento de Game Turbo**.\n- Apps como **Scene** también muestran los FPS reales.",
+        "in": "- Pakai **penguji FPS** di aplikasi ini untuk cek override berjalan.\n- Di dalam game, nyalakan **overlay performa Game Turbo**.\n- Aplikasi seperti **Scene** juga menampilkan FPS asli."
+      }
+    },
+    {
+      "id": "root",
+      "q": {
+        "en": "Does it need root, Shizuku or a PC?",
+        "es": "¿Necesita root, Shizuku o un PC?",
+        "in": "Perlu root, Shizuku, atau PC?"
+      },
+      "a": {
+        "en": "**No.** Install the APK and pick your games. That's it.",
+        "es": "**No.** Instala el APK y elige tus juegos. Eso es todo.",
+        "in": "**Tidak.** Pasang APK dan pilih game kamu. Itu saja."
+      }
+    },
+    {
+      "id": "battery",
+      "q": {
+        "en": "Will it drain my battery?",
+        "es": "¿Gasta más batería?",
+        "in": "Apakah boros baterai?"
+      },
+      "a": {
+        "en": "Only the games you select get the higher rate. Everything else keeps **adaptive refresh**, so normal battery life stays the same.",
+        "es": "Solo los juegos que elijas usan la tasa alta. Todo lo demás mantiene la **tasa adaptativa**, así que la batería dura lo mismo.",
+        "in": "Hanya game yang kamu pilih yang memakai refresh tinggi. Yang lain tetap **adaptif**, jadi daya tahan baterai tetap sama."
+      }
+    },
+    {
+      "id": "stopped",
+      "q": {
+        "en": "It worked, then stopped",
+        "es": "Funcionó y luego dejó de funcionar",
+        "in": "Sempat jalan, lalu berhenti"
+      },
+      "a": {
+        "en": "HyperOS closed Hyper120 in the background. Open **App info** and:\n1. Turn on **Autostart**.\n2. Set **Battery saver** to **No restrictions**.",
+        "es": "HyperOS cerró Hyper120 en segundo plano. Abre **Info de la app** y:\n1. Activa **Inicio automático**.\n2. Pon **Ahorro de batería** en **Sin restricciones**.",
+        "in": "HyperOS menutup Hyper120 di latar belakang. Buka **Info aplikasi** lalu:\n1. Nyalakan **Mulai otomatis**.\n2. Atur **Penghemat baterai** ke **Tanpa batasan**."
+      }
+    },
+    {
+      "id": "high",
+      "q": {
+        "en": "Can I get 144Hz or more?",
+        "es": "¿Puedo tener 144Hz o más?",
+        "in": "Bisa 144Hz atau lebih?"
+      },
+      "a": {
+        "en": "Only if your screen supports it. The option appears by itself on those phones.\nThe game must support **144 FPS** too. Most games stop at 120.",
+        "es": "Solo si tu pantalla lo soporta. La opción aparece sola en esos móviles.\nEl juego también debe soportar **144 FPS**. La mayoría se queda en 120.",
+        "in": "Hanya jika layarmu mendukung. Opsinya muncul sendiri di HP tersebut.\nGame juga harus mendukung **144 FPS**. Kebanyakan berhenti di 120."
+      }
+    },
+    {
+      "id": "off",
+      "q": {
+        "en": "How do I turn it off?",
+        "es": "¿Cómo lo desactivo?",
+        "in": "Bagaimana mematikannya?"
+      },
+      "a": {
+        "en": "1. Switch off **Background override**, or unselect the game.\n2. Restart the game (or the phone) to go back to normal.",
+        "es": "1. Apaga la **anulación en segundo plano** o quita el juego de la lista.\n2. Reinicia el juego (o el móvil) para volver a lo normal.",
+        "in": "1. Matikan **Override latar belakang**, atau hapus centang game.\n2. Mulai ulang game (atau HP) untuk kembali normal."
+      }
+    }
+  ]
+}

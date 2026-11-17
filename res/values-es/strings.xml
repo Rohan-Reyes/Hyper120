@@ -14,8 +14,8 @@
     <string name="set_bg_sub">Se reenvía cada 15 s mientras la pantalla está encendida</string>
     <string name="set_add_title">Añadir juegos automáticamente</string>
     <string name="set_add_sub">Los juegos nuevos se añaden solos</string>
-    <string name="tool_tester">Probador de FPS</string>
-    <string name="tool_tester_sub">Comprueba que funciona</string>
+    <string name="tool_tester">Comprobar anulación</string>
+    <string name="tool_tester_sub">Detalles y reporte</string>
     <string name="tool_log">Registro</string>
     <string name="tool_log_show">Ver envíos</string>
     <string name="tool_log_hide">Ocultar envíos</string>
@@ -85,7 +85,7 @@
     <string name="upd_failed">No se pudo conectar con GitHub. Toca para abrir Releases.</string>
 
     <!-- Probador de FPS -->
-    <string name="tester_title">Probador de FPS</string>
+    <string name="tester_title">Comprobar anulación</string>
     <string name="tester_measuring">Midiendo…</string>
     <string name="tester_keep_open">Mantén esta pantalla abierta unos segundos.</string>
     <string name="tester_test_at">Probar a</string>
@@ -160,4 +160,70 @@
     <string name="ob3_refresh_done">✓ Tasa de refresco: %dHz</string>
     <string name="ob3_refresh_hint">En Pantalla → Tasa de refresco, elige 120Hz (Alta). Los juegos no pueden ir más rápido que esto.</string>
     <string name="v_clamped_refresh">Primero comprueba que Ajustes → Pantalla → Tasa de refresco esté en 120Hz (Alta). En 60Hz (Estándar) nada puede subir.</string>
+
+    <!-- v4.3: rate options + before-you-play -->
+    <string name="main_caption_high">Los juegos necesitan soporte de %1$dHz para llegar a %1$d FPS. La mayoría se queda en 120.</string>
+    <string name="rate_locked">Tu móvil está a %1$dHz. Primero pon Ajustes → Pantalla → Tasa de refresco en %2$dHz.</string>
+    <string name="ob2_before">Antes de jugar</string>
+    <string name="ob2_need_screen">Tu pantalla debe soportar 120Hz</string>
+    <string name="ob2_need_screen_ok">Tu pantalla llega hasta %dHz ✓. Pon también Ajustes → Pantalla → Tasa de refresco en la opción más alta.</string>
+    <string name="ob2_need_screen_low">Tu pantalla solo llega a %dHz, así que los juegos no pueden ir más alto en este móvil.</string>
+    <string name="ob2_set_game">Pon 120 FPS dentro de cada juego</string>
+    <string name="ob2_set_game_body">En los ajustes gráficos del juego, elige 120 FPS o la opción más alta (p. ej. MLBB → Ultra, CODM → Max). Si un juego solo ofrece 60, se queda en 60.</string>
+    <string name="ob2_understand">Entendido</string>
+    <string name="ob2_understood">Entendido</string>
+    <string name="ob2_understand_first">Toca “Entendido” para continuar</string>
+
+    <!-- v4.3: tester, FAQ, guide redesign -->
+    <string name="tester_pacing">El %d%% de los fotogramas llegó a tiempo en los últimos 2 segundos.</string>
+    <string name="faq_title">¿Dudas? Lee esto primero</string>
+    <string name="faq_sub">%d respuestas rápidas · toca para abrir</string>
+    <string name="faq_more">FAQ completa y lista de juegos →</string>
+    <string name="ob1_sub">Desbloquea 90 / 120Hz en los juegos que elijas. Todo lo demás sigue igual.</string>
+    <string name="ob1_demo">Mismo movimiento, el doble de fotogramas</string>
+    <string name="ob1_chip_root">Sin root</string>
+    <string name="ob1_chip_pc">Sin PC</string>
+    <string name="ob1_chip_battery">Cuida la batería</string>
+    <string name="ob2_sub">Dos cosas deciden tus FPS.</string>
+    <string name="ob2_req_screen">Pantalla de 120Hz</string>
+    <string name="ob2_req_screen_ok">La tuya: hasta %dHz ✓</string>
+    <string name="ob2_req_screen_low">La tuya: solo %dHz ✕</string>
+    <string name="ob2_req_game">120 FPS en el juego</string>
+    <string name="ob2_req_game_hint">Elige Ultra / Máx / 120 en sus ajustes</string>
+    <string name="ob2_tags_title">Etiquetas en la lista</string>
+    <string name="ob2_cap120">Puede ir a 120</string>
+    <string name="ob2_cap90">Se queda en 90</string>
+    <string name="ob2_cap60">Fijo en 60</string>
+    <string name="ob3_sub">Para que HyperOS no detenga Hyper120.</string>
+    <string name="ob3_s_refresh">Tasa de refresco: 120Hz</string>
+    <string name="ob3_s_battery">Ahorro de batería: Sin restricciones</string>
+    <string name="ob3_s_autostart">Permitir inicio automático</string>
+    <string name="ob3_open">Abrir</string>
+    <string name="ob3_done">Listo</string>
+    <string name="ob3_need120">Pon la pantalla a 120Hz para terminar</string>
+    <string name="ob3_no120">Esta pantalla no llega a 120Hz</string>
+    <string name="wn_title">Actualizado a v%s</string>
+    <string name="wn_kept">Tus juegos y ajustes se mantienen. No se ha reiniciado nada.</string>
+    <string name="wn_new">Novedades</string>
+    <string name="wn_tester">Probador de FPS más preciso</string>
+    <string name="wn_faq">FAQ rápida sobre la lista de apps</string>
+    <string name="wn_rates">144Hz+ en pantallas compatibles</string>
+    <string name="wn_check">Una revisión de 20 segundos</string>
+    <string name="wn_next">Ahora: una revisión rápida de que tu móvil está listo para 120 FPS.</string>
+    <string name="check_running">Comprobando %dHz…</string>
+    <string name="check_ok">%dHz funciona</string>
+    <string name="check_ok_body">Tu móvil cambió a %1$dHz. Los juegos llegan a %1$d FPS si el juego lo soporta.</string>
+    <string name="check_fail_title">La pantalla se quedó en %1$d Hz, no %2$d</string>
+    <string name="check_fail_title_unknown">No se pudo confirmar %d Hz</string>
+    <string name="check_fail_refresh">La tasa de refresco del móvil está demasiado baja. Pon Ajustes → Pantalla → Tasa de refresco en la opción más alta y vuelve a tocar Aplicar.</string>
+    <string name="check_fail_body">El móvil no aceptó la tasa más alta. Inténtalo de nuevo; si sigue fallando, reporta tu móvil para poder arreglarlo.</string>
+    <string name="check_retry">Reintentar</string>
+    <string name="check_report">Reportar en GitHub</string>
+    <string name="check_faq">Ver la FAQ</string>
+    <string name="check_badge">Cambiado a %dHz</string>
+    <string name="check_verified">Verificado</string>
+    <string name="check_measured">Medido: %d FPS</string>
+    <string name="check_caption">Los juegos llegan a %d FPS si el juego lo soporta</string>
+    <string name="limit_note_short">*Los juegos van a la tasa que soportan. La etiqueta muestra el máximo de cada juego (60 MÁX se queda en 60).</string>
+    <string name="check_caption_limit">*Cada app y juego tiene su propio límite. Un juego 60 MÁX se queda en 60. Mira la etiqueta de cada juego abajo.</string>
 </resources>

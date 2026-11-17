@@ -33,7 +33,7 @@ public final class FpsApplier {
     private static final String KEY_LAST_PING = "last_ping_ms";
     private static final String KEY_GAME_FPS_PREFIX = "game_fps_";
     private static final String KEY_SERVICE_BEAT = "service_heartbeat_ms";
-    private static final String KEY_ONBOARDED = "onboarded_v42";
+    private static final String KEY_ONBOARDED = "onboarded_v43_guide2";
     private static final String PING_URL = "https://hyper120.aten-systems.site/api/ping";
     private static final long PING_INTERVAL_MS = 12L * 60L * 60L * 1000L;
     private static final String ACTION_OVERRIDE = "com.xiaomi.joyose.OVERRIDE_GAME_FRESHRATE";
@@ -132,6 +132,50 @@ public final class FpsApplier {
             out[i++] = r;
         }
         return out;
+    }
+
+    /** Standard rates we offer. Above 120 only appears when the screen really supports it. */
+    private static final int[] STANDARD_RATES = {60, 90, 120, 144, 165, 185};
+
+    /** Rates for the selector: standard rates this screen supports (60/90/120, plus 144/165/185 if available). */
+    public static int[] selectableRates(Context ctx) {
+        int[] supported = detectSupportedFps(ctx);
+        java.util.List<Integer> out = new ArrayList<>();
+        for (int r : STANDARD_RATES) {
+            for (int s : supported) {
+                if (Math.abs(s - r) <= 1) {
+                    out.add(r);
+                    break;
+                }
+            }
+        }
+        if (out.isEmpty()) {
+            for (int s : supported) out.add(s);
+        }
+        int[] arr = new int[out.size()];
+        for (int i = 0; i < arr.length; i++) arr[i] = out.get(i);
+        return arr;
+    }
+
+    /**
+     * The rate the user can actually get right now: their chosen target, capped by the phone's own
+     * refresh setting (e.g. 60 while Settings → Display → Refresh rate is on 60Hz). The saved choice
+     * is kept, so it comes back when the phone is set to 120Hz again.
+     */
+    public static int getEffectiveTargetFps(Context ctx) {
+        int target = getTargetFps(ctx);
+        if (!isRateLocked(ctx, target)) return target;
+        int best = 60;
+        for (int r : selectableRates(ctx)) {
+            if (!isRateLocked(ctx, r)) best = Math.max(best, r);
+        }
+        return best;
+    }
+
+    /** A rate is locked when the phone's own refresh setting is known and lower than it. */
+    public static boolean isRateLocked(Context ctx, int rate) {
+        int setting = getSystemRefreshSetting(ctx);
+        return setting > 0 && rate > setting + 1;
     }
 
     public static int getMaxSupportedFps(Context ctx) {
@@ -234,9 +278,17 @@ public final class FpsApplier {
     public static ApplyResult applyTargetFps(Context ctx, Set<String> pkgs, int fps) {
         boolean pkFound = isPowerKeeperInstalled(ctx);
         List<String> sent = new ArrayList<>();
+        PackageManager pm = ctx.getPackageManager();
         for (String pkg : pkgs) {
             String trimmed = pkg.trim();
             if (trimmed.isEmpty()) continue;
+            // Selected but not installed (e.g. from the default list): skip, so counts match the app list.
+            // PackageReceiver re-applies when a game is installed later.
+            try {
+                pm.getApplicationInfo(trimmed, 0);
+            } catch (PackageManager.NameNotFoundException notInstalled) {
+                continue;
+            }
             int own = getGameFps(ctx, trimmed);
             Intent intent = new Intent(ACTION_OVERRIDE);
             intent.putExtra("override_pkg_name", trimmed);
@@ -273,6 +325,12 @@ public final class FpsApplier {
 
     public static long lastServiceBeat(Context ctx) {
         return ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE).getLong(KEY_SERVICE_BEAT, 0L);
+    }
+
+    /** True when this install was already set up by an older version (so the guide is a re-check, not a reset). */
+    public static boolean isUpdateFromOlder(Context ctx) {
+        android.content.SharedPreferences p = ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
+        return p.contains("onboarded_v42") || p.contains(KEY_TARGET_FPS) || p.contains(KEY_AUTO_ENABLED);
     }
 
     public static boolean isOnboarded(Context ctx) {

@@ -470,7 +470,7 @@ extras   override_pkg_name  = <span class="s">"com.mobile.legends"</span>
         <div class="screens reveal">
           <div class="screen"><img src="assets/home.png" alt="Home screen with the 120Hz target and Apply button" class="zoom" loading="lazy" /><h3>Home</h3><p>Pick the rate, tap Apply</p></div>
           <div class="screen"><img src="assets/apps.png" alt="App list with games ticked" class="zoom" loading="lazy" /><h3>Apps</h3><p>Games found automatically</p></div>
-          <div class="screen"><img src="assets/tester.png" alt="FPS tester showing 120 FPS and a Works verdict" class="zoom" loading="lazy" /><h3>FPS tester</h3><p>Real frames, real verdict</p></div>
+          <div class="screen"><img src="assets/tester.png" alt="Check override showing 120 FPS and a Works verdict" class="zoom" loading="lazy" /><h3>Check override</h3><p>Real frames, real verdict</p></div>
           <div class="screen"><img src="assets/about.png" alt="About screen with update check and setup help" class="zoom" loading="lazy" /><h3>About</h3><p>Updates and setup help</p></div>
         </div>
 
@@ -494,7 +494,7 @@ extras   override_pkg_name  = <span class="s">"com.mobile.legends"</span>
           <div class="card feature"><div class="ico t-sky"><svg><use href="#i-zap"/></svg></div><h3>Per-game refresh rate</h3><p>Rates come from your panel: 60, 90, 120 or 144Hz. Only the apps you tick get them.</p></div>
           <div class="card feature"><div class="ico t-teal"><svg><use href="#i-battery"/></svg></div><h3>No battery trade-off</h3><p>PowerKeeper and adaptive refresh stay on, so your home screen and apps still drop to save power.</p></div>
           <div class="card feature"><div class="ico t-ind"><svg><use href="#i-gamepad"/></svg></div><h3>Auto-adds new games</h3><p>Install a game and it's unlocked straight away. Untick one and it stays unticked.</p></div>
-          <div class="card feature"><div class="ico t-sky"><svg><use href="#i-gauge"/></svg></div><h3>Built-in FPS tester</h3><p>Tests 60, 90 and 120Hz on your own phone and tells you which ones work.</p></div>
+          <div class="card feature"><div class="ico t-sky"><svg><use href="#i-gauge"/></svg></div><h3>Verified on Apply</h3><p>Every Apply measures your screen and shows ✓ Verified, or tells you what to fix.</p></div>
           <div class="card feature"><div class="ico t-amb"><svg><use href="#i-tile"/></svg></div><h3>Rate per game + widget</h3><p>Long-press a game to give it its own rate, like 120 for MLBB and 90 for Free Fire. Long-press your home screen → Widgets → Hyper120 to add a widget that switches rates in one tap (on HyperOS, allow the Home screen shortcuts permission first).</p></div>
           <div class="card feature"><div class="ico t-red"><svg><use href="#i-flag"/></svg></div><h3>One-tap game reports</h3><p>Tell us if a game hit 120. The report fills in the game, your phone, ROM and region. The game list updates in the app daily.</p></div>
         </div>
@@ -514,7 +514,7 @@ extras   override_pkg_name  = <span class="s">"com.mobile.legends"</span>
             <li><b>Open Hyper120</b>Your games are found and set to your screen's top rate straight away.</li>
             <li><b>Set your phone to 120Hz</b>Settings → Display → Refresh rate → <b style="display:inline">120Hz (High)</b>. Games can't go faster than this, and Hyper120 warns you if it's on 60Hz.</li>
             <li><b>Let it run in the background</b>In <b style="display:inline">About → Open App info</b>, turn on Autostart and set Battery saver to No restrictions.</li>
-            <li><b>Check it worked</b>Tap the gauge icon to open the FPS tester. You should see "120 Hz works".</li>
+            <li><b>Check it worked</b>Tap Apply. You should see "✓ Verified · Switched to 120Hz" next to the big number.</li>
           </ol>
           <div class="side">
             <div class="card">
@@ -540,13 +540,13 @@ adb shell appops set com.custom.game120hz RUN_ANY_IN_BACKGROUND allow</pre>
         <div class="head reveal">
           <div class="overline">Compatibility</div>
           <h2>Will it work on my phone?</h2>
-          <p>If it's a Xiaomi, Redmi or POCO phone with HyperOS or MIUI and a 90Hz or faster screen, yes. The FPS tester confirms it in five seconds.</p>
+          <p>If it's a Xiaomi, Redmi or POCO phone with HyperOS or MIUI and a 90Hz or faster screen, yes. Tapping Apply confirms it in two seconds.</p>
         </div>
         <div class="card compat reveal">
           <div class="row"><span><span class="pill p-ok"><i></i>Verified</span></span><p><b>Xiaomi 14</b> (<code>houji</code>), HyperOS · Android 16, China ROM. 60, 90 and 120Hz confirmed with <code>dumpsys</code>.</p></div>
           <div class="row"><span><span class="pill p-ok"><i></i>Reported working</span></span><p><b>Xiaomi 17</b>, Global HyperOS 3 (after setting the phone to 120Hz) · <b>POCO X8 Pro</b>, EEA HyperOS 3, 121 FPS · <b>HyperOS 4</b>: World of Tanks Blitz at 120 FPS.</p></div>
           <div class="row"><span><span class="pill p-ok"><i></i>Expected to work</span></span><p>Any <b>Xiaomi</b>, <b>Redmi</b> or <b>POCO</b> phone with HyperOS or MIUI and a 90Hz+ screen, including the Xiaomi 15 / 14 / 13 / 12 series, Redmi K and Note Pro series, POCO F / X / M series and Xiaomi Pad 6 / 7.</p></div>
-          <div class="row"><span><span class="pill p-amb"><i></i>Still 60?</span></span><p>If the FPS tester says <b>works</b> but a game stays at 60, the game itself is the limit. Check the <a href="#games" style="color:var(--sky)">game list</a>.</p></div>
+          <div class="row"><span><span class="pill p-amb"><i></i>Still 60?</span></span><p>If Apply shows <b>✓ Verified</b> but a game stays at 60, the game itself is the limit. Check the <a href="#games" style="color:var(--sky)">game list</a>.</p></div>
         </div>
         <p style="margin-top:18px;color:var(--muted);font-size:.94rem" class="reveal">Tried it? <a href="https://github.com/Rohan-Reyes/Hyper120/issues/new/choose" target="_blank" rel="noopener" style="color:var(--sky);font-weight:700">Report your device →</a> The tester's Report button fills in the details for you.</p>
       </div>
@@ -588,7 +588,7 @@ mPrivGames={com.mobile.legends=120, ...}</pre>
         </div>
 
         <div class="explain reveal">
-          <div class="card"><div class="k">LIMIT 1 · THE PHONE</div><h3>HyperOS caps games at 60Hz</h3><p>This is what Hyper120 fixes. The FPS tester proves it on your phone.</p></div>
+          <div class="card"><div class="k">LIMIT 1 · THE PHONE</div><h3>HyperOS caps games at 60Hz</h3><p>This is what Hyper120 fixes. Apply proves it on your phone.</p></div>
           <div class="card"><div class="k">LIMIT 2 · THE GAME ENGINE</div><h3>Some games never go past 60</h3><p>Roblox, Genshin Impact and others are built to stop at 60 on Android. Nothing on the phone side can change that.</p></div>
           <div class="card"><div class="k">LIMIT 3 · THE GAME'S WHITELIST</div><h3>120 only on approved phones</h3><p>MLBB, PUBG and CODM show their 90/120 option only on phones the developer has approved. If you don't see it, the game is still the limit.</p></div>
         </div>
@@ -683,7 +683,8 @@ mPrivGames={com.mobile.legends=120, ...}</pre>
           <h2>Questions</h2>
         </div>
         <div class="faq reveal">
-          <details open><summary>It works in the tester, but my game still runs at 60. Why?</summary><p>Because the game has its own limit. Hyper120 lifts the phone's cap, which the FPS tester proves, but some games are built to stop at 60 on Android (Roblox, Genshin Impact, Honkai: Star Rail and others). Check the <a href="#games" style="color:var(--sky)">game list</a>. If your game is in the 60 max column, no app can push it higher without modding the game.</p></details>
+          <details><summary>Is it safe?</summary><p>Yes. Hyper120 only asks HyperOS's own PowerKeeper service for a higher refresh rate, the same way Game Turbo does. All the code is <a href="https://github.com/Rohan-Reyes/Hyper120" style="color:var(--sky)">open source on GitHub</a>, it needs no root and changes no system files, and there are no ads or accounts. It only sends an anonymous install ID and the app version, to count users. Download the signed APK only from GitHub or this site.</p></details>
+          <details open><summary>It says Verified, but my game still runs at 60. Why?</summary><p>Because the game has its own limit. Hyper120 lifts the phone's cap, which Apply verifies, but some games are built to stop at 60 on Android (Roblox, Genshin Impact, Honkai: Star Rail and others). Check the <a href="#games" style="color:var(--sky)">game list</a>. If your game is in the 60 max column, no app can push it higher without modding the game.</p></details>
           <details><summary>Which popular games are stuck at 60?</summary><p><!-- games:names60 -->Roblox, Genshin Impact, Honkai: Star Rail, Zenless Zone Zero, Wuthering Waves, Pokémon UNITE, PPSSPP (PSP games), Bus Simulator Indonesia, Truckers of Europe 3, eFootball, Monster Hunter Now and Archero 2<!-- /games:names60 -->. These games limit themselves, so they stay at 60 even with Hyper120 on. The app tags them <b style="color:var(--amber)">60 MAX</b>. See the <a href="#games" style="color:var(--sky)">full game list</a>.</p></details>
           <details><summary>Which games can go above 60?</summary><p><!-- games:names120 -->Mobile Legends: Bang Bang, Call of Duty: Mobile, PUBG Mobile / BGMI, Honor of Kings, League of Legends: Wild Rift, Delta Force, Standoff 2, Brawl Stars, Clash of Clans, Minecraft, Asphalt Legends, CSR 2, Top Drives, Pokémon GO, EA SPORTS FC Mobile, World of Tanks Blitz, Block Blast!, Spaceflight Simulator, 8 Ball Pool, Subway Surfers, Shadow Fight 2, Shadow Fight 3, Shadowgun Legends, Dead Trigger 2, Pixel Gun 3D, Plants vs Zombies 2, Soul Knight, Hill Climb Racing 2, Temple Run 2, Sonic Dash, Marvel Contest of Champions, Mortal Kombat, Injustice 2, Summoners War, Toon Blast, Tank Stars, Stick War: Legacy, Traffic Rider, Bullet Force, Mini Metro, Alto&#x27;s Odyssey, Grimvalor, Super Mario Run, Dragon Ball Legends and Old School RuneScape<!-- /games:names120 --> can, but you must turn on the high frame rate in each game's settings, and many only show it on phones the developer has approved. <!-- games:names90 -->Free Fire / Free Fire MAX and Fortnite<!-- /games:names90 --> top out at 90.</p></details>
           <details><summary>My game isn't on the list. How do I know?</summary><p>Look in the game's graphics settings for a frame-rate option. If the highest choice is 60 (or there's no option at all), the game is most likely capped at 60. Then check with Game Turbo's FPS counter while playing, long-press the game in Hyper120 and tap <b style="color:var(--text)">Report how it runs</b>. We'll add it to the list.</p></details>

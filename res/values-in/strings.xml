@@ -13,8 +13,8 @@
     <string name="set_bg_sub">Dikirim ulang tiap 15 detik selama layar menyala</string>
     <string name="set_add_title">Tambah game otomatis</string>
     <string name="set_add_sub">Game yang baru dipasang langsung ditambahkan</string>
-    <string name="tool_tester">Tes FPS</string>
-    <string name="tool_tester_sub">Cek apakah berfungsi</string>
+    <string name="tool_tester">Cek override</string>
+    <string name="tool_tester_sub">Detail &amp; laporan</string>
     <string name="tool_log">Log aktivitas</string>
     <string name="tool_log_show">Tampilkan kiriman</string>
     <string name="tool_log_hide">Sembunyikan kiriman</string>
@@ -84,7 +84,7 @@
     <string name="upd_failed">Tidak bisa terhubung ke GitHub. Ketuk untuk membuka Releases.</string>
 
     <!-- Tes FPS -->
-    <string name="tester_title">Tes FPS</string>
+    <string name="tester_title">Cek override</string>
     <string name="tester_measuring">Mengukur…</string>
     <string name="tester_keep_open">Biarkan layar ini terbuka beberapa detik.</string>
     <string name="tester_test_at">Tes di</string>
@@ -159,4 +159,70 @@
     <string name="ob3_refresh_done">✓ Refresh rate layar: %dHz</string>
     <string name="ob3_refresh_hint">Di Tampilan → Kecepatan refresh, pilih 120Hz (Tinggi). Game tidak bisa lebih cepat dari ini.</string>
     <string name="v_clamped_refresh">Pastikan dulu Setelan → Tampilan → Kecepatan refresh diatur ke 120Hz (Tinggi). Di 60Hz (Standar) tidak ada yang bisa lebih tinggi.</string>
+
+    <!-- v4.3: rate options + before-you-play -->
+    <string name="main_caption_high">Game perlu dukungan %1$dHz untuk mencapai %1$d FPS. Kebanyakan berhenti di 120.</string>
+    <string name="rate_locked">HP kamu diatur ke %1$dHz. Atur dulu Setelan → Tampilan → Kecepatan refresh ke %2$dHz.</string>
+    <string name="ob2_before">Sebelum bermain</string>
+    <string name="ob2_need_screen">Layar harus mendukung 120Hz</string>
+    <string name="ob2_need_screen_ok">Layar kamu hingga %dHz ✓. Atur juga Setelan → Tampilan → Kecepatan refresh ke opsi tertinggi.</string>
+    <string name="ob2_need_screen_low">Layar kamu hanya hingga %dHz, jadi game tidak bisa lebih tinggi di HP ini.</string>
+    <string name="ob2_set_game">Atur 120 FPS di dalam setiap game</string>
+    <string name="ob2_set_game_body">Di pengaturan grafis game, pilih 120 FPS atau opsi tertinggi (mis. MLBB → Ultra, CODM → Max). Jika game hanya menawarkan 60, tetap di 60.</string>
+    <string name="ob2_understand">Saya mengerti</string>
+    <string name="ob2_understood">Saya mengerti</string>
+    <string name="ob2_understand_first">Ketuk “Saya mengerti” untuk lanjut</string>
+
+    <!-- v4.3: tester, FAQ, guide redesign -->
+    <string name="tester_pacing">%d%% frame tiba tepat waktu dalam 2 detik terakhir.</string>
+    <string name="faq_title">Ada pertanyaan? Baca ini dulu</string>
+    <string name="faq_sub">%d jawaban singkat · ketuk untuk buka</string>
+    <string name="faq_more">FAQ lengkap &amp; daftar game →</string>
+    <string name="ob1_sub">Membuka 90 / 120Hz untuk game pilihanmu. Yang lain tetap normal.</string>
+    <string name="ob1_demo">Gerakan sama, frame dua kali lipat</string>
+    <string name="ob1_chip_root">Tanpa root</string>
+    <string name="ob1_chip_pc">Tanpa PC</string>
+    <string name="ob1_chip_battery">Hemat baterai</string>
+    <string name="ob2_sub">Dua hal menentukan FPS kamu.</string>
+    <string name="ob2_req_screen">Layar 120Hz</string>
+    <string name="ob2_req_screen_ok">Milikmu: hingga %dHz ✓</string>
+    <string name="ob2_req_screen_low">Milikmu: hanya %dHz ✕</string>
+    <string name="ob2_req_game">120 FPS di game</string>
+    <string name="ob2_req_game_hint">Pilih Ultra / Max / 120 di pengaturannya</string>
+    <string name="ob2_tags_title">Tanda di daftar aplikasi</string>
+    <string name="ob2_cap120">Bisa 120</string>
+    <string name="ob2_cap90">Maks 90</string>
+    <string name="ob2_cap60">Terkunci 60</string>
+    <string name="ob3_sub">Agar HyperOS tidak menghentikan Hyper120.</string>
+    <string name="ob3_s_refresh">Kecepatan refresh: 120Hz</string>
+    <string name="ob3_s_battery">Penghemat baterai: Tanpa batasan</string>
+    <string name="ob3_s_autostart">Izinkan Mulai otomatis</string>
+    <string name="ob3_open">Buka</string>
+    <string name="ob3_done">Selesai</string>
+    <string name="ob3_need120">Atur layar ke 120Hz untuk selesai</string>
+    <string name="ob3_no120">Layar ini tidak mendukung 120Hz</string>
+    <string name="wn_title">Diperbarui ke v%s</string>
+    <string name="wn_kept">Game dan pengaturanmu tetap tersimpan. Tidak ada yang direset.</string>
+    <string name="wn_new">Yang baru</string>
+    <string name="wn_tester">Penguji FPS lebih akurat</string>
+    <string name="wn_faq">FAQ singkat di atas daftar aplikasi</string>
+    <string name="wn_rates">144Hz+ di layar yang mendukung</string>
+    <string name="wn_check">Cek pengaturan 20 detik</string>
+    <string name="wn_next">Berikutnya: cek singkat apakah HP kamu siap untuk 120 FPS.</string>
+    <string name="check_running">Mengecek %dHz…</string>
+    <string name="check_ok">%dHz berfungsi</string>
+    <string name="check_ok_body">HP kamu beralih ke %1$dHz. Game mencapai %1$d FPS jika game mendukungnya.</string>
+    <string name="check_fail_title">Layar tetap %1$d Hz, bukan %2$d</string>
+    <string name="check_fail_title_unknown">Tidak bisa memastikan %d Hz</string>
+    <string name="check_fail_refresh">Pengaturan refresh rate HP terlalu rendah. Atur Setelan → Tampilan → Kecepatan refresh ke opsi tertinggi, lalu ketuk Terapkan lagi.</string>
+    <string name="check_fail_body">HP tidak menerima refresh rate lebih tinggi. Coba lagi; jika masih gagal, laporkan HP kamu agar bisa diperbaiki.</string>
+    <string name="check_retry">Coba lagi</string>
+    <string name="check_report">Lapor di GitHub</string>
+    <string name="check_faq">Baca FAQ</string>
+    <string name="check_badge">Beralih ke %dHz</string>
+    <string name="check_verified">Terverifikasi</string>
+    <string name="check_measured">Terukur %d FPS</string>
+    <string name="check_caption">Game mencapai %d FPS jika game mendukungnya</string>
+    <string name="limit_note_short">*Game berjalan di rate yang didukungnya. Tanda menunjukkan batas tiap game (60 MAX tetap 60).</string>
+    <string name="check_caption_limit">*Setiap aplikasi dan game punya batasnya sendiri. Game 60 MAX tetap di 60. Cek tanda tiap game di bawah.</string>
 </resources>

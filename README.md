@@ -13,7 +13,7 @@
 
 [**Download the APK**](https://github.com/Rohan-Reyes/Hyper120/releases/latest) · [Website](https://hyper120.aten-systems.site) · [Add to Obtainium](https://apps.obtainium.imranr.dev/redirect.html?r=obtainium://app/%7B%22id%22%3A%22com.custom.game120hz%22%2C%22url%22%3A%22https%3A%2F%2Fgithub.com%2FRohan-Reyes%2FHyper120%22%2C%22author%22%3A%22Rohan-Reyes%22%2C%22name%22%3A%22Hyper120%22%7D) · [Report your device](https://github.com/Rohan-Reyes/Hyper120/issues/new/choose)
 
-<img src="docs/images/banner.png" alt="Hyper120 on a Xiaomi 14: home screen, app picker and FPS tester">
+<img src="docs/images/banner.png" alt="Hyper120 on a Xiaomi 14: home screen, app picker and Check override">
 
 </div>
 
@@ -23,7 +23,7 @@ HyperOS and MIUI quietly cap many games at **60Hz**, even when your screen is se
 
 - **Only your games go fast.** Hyper120 asks PowerKeeper (the system service that sets the cap) to unlock the rate you pick for the apps you pick. Everything else keeps adaptive refresh and drops to 60Hz or lower as usual.
 - **Set it once.** It starts on boot, adds new games when you install them, and re-sends the override every 15 seconds while the screen is on, so the cap doesn't creep back.
-- **Proof built in.** The FPS tester switches the screen to each rate and measures the frames that actually arrive, then tells you whether your phone supports it.
+- **Proof built in.** Every time you tap Apply, Hyper120 checks that the phone really switched and shows **✓ Verified** with the measured FPS. If it didn't, it tells you why and gives you a one-tap GitHub report.
 
 ## Screenshots
 
@@ -31,7 +31,7 @@ HyperOS and MIUI quietly cap many games at **60Hz**, even when your screen is se
   <tr>
     <td align="center"><img src="docs/images/home.png" width="200"><br><sub><b>Home</b><br>Pick 60 / 90 / 120 / 144Hz</sub></td>
     <td align="center"><img src="docs/images/apps.png" width="200"><br><sub><b>Apps</b><br>Games are found automatically</sub></td>
-    <td align="center"><img src="docs/images/tester.png" width="200"><br><sub><b>FPS tester</b><br>Live check with a verdict</sub></td>
+    <td align="center"><img src="docs/images/tester.png" width="200"><br><sub><b>Check override</b><br>Live check with a verdict</sub></td>
     <td align="center"><img src="docs/images/about.png" width="200"><br><sub><b>About</b><br>Updates, setup help, support</sub></td>
   </tr>
 </table>
@@ -55,7 +55,7 @@ HyperOS and MIUI quietly cap many games at **60Hz**, even when your screen is se
 | **Per-app refresh rate** | Choose any rate your panel supports (detected from the display: 60, 90, 120, 144Hz). Only the apps you tick get it. |
 | **Auto-add games** | Installed games are ticked on first launch, and new ones are added the moment you install them. Untick a game and it stays unticked. |
 | **Background override** | A small foreground service re-sends the override every 15 s while the screen is on and again after every reboot. |
-| **FPS tester** | Points the override at Hyper120 itself, asks for the matching display mode and counts real frames. Test 60, 90 and 120Hz one after another to see exactly where your ROM stops. |
+| **Check override** | Apply checks itself automatically. The full screen points the override at Hyper120 itself, asks for the matching display mode and counts real frames. Test 60, 90 and 120Hz one after another to see exactly where your ROM stops. |
 | **Game limit tags** | Known games are tagged `UP TO 120`, `90 MAX` or `60 MAX`, so you can tell when the game itself is the limit. The list updates itself daily from the website, no app update needed. |
 | **Rate per game** | Long-press a game to give it its own rate, e.g. 120 for MLBB and 90 for Free Fire. |
 | **Report a game** | Long-press → *Report how it runs* opens a GitHub issue with the game version, your phone, ROM version and region filled in. |
@@ -99,7 +99,7 @@ adb shell appops set com.custom.game120hz RUN_ANY_IN_BACKGROUND allow
 
 ## Does it work on my phone?
 
-Open the **FPS tester** (gauge icon, top right). It runs the override against itself, so the result is what your games will get.
+Tap **Apply**. Hyper120 measures its own screen right after and shows **✓ Verified · Switched to 120Hz** next to the big number. For full details, open **Check override** (gauge icon, top right).
 
 | Status | Devices |
 |---|---|

@@ -16,8 +16,8 @@
     <string name="set_bg_sub">Re-sends every 15 s while the screen is on</string>
     <string name="set_add_title">Auto-add games</string>
     <string name="set_add_sub">Newly installed games are added for you</string>
-    <string name="tool_tester">FPS tester</string>
-    <string name="tool_tester_sub">Check it works</string>
+    <string name="tool_tester">Check override</string>
+    <string name="tool_tester_sub">Full details &amp; report</string>
     <string name="tool_log">Activity log</string>
     <string name="tool_log_show">Show broadcasts</string>
     <string name="tool_log_hide">Hide broadcasts</string>
@@ -91,7 +91,7 @@
     <string name="upd_failed">Couldn\'t reach GitHub. Tap to open Releases.</string>
 
     <!-- FPS tester -->
-    <string name="tester_title">FPS tester</string>
+    <string name="tester_title">Check override</string>
     <string name="tester_measuring">Measuring…</string>
     <string name="tester_keep_open">Keep this screen open for a few seconds.</string>
     <string name="tester_test_at">Test at</string>
@@ -167,4 +167,70 @@
     <string name="ob3_refresh_done">✓ Screen refresh rate: %dHz</string>
     <string name="ob3_refresh_hint">In Display → Refresh rate, choose 120Hz (High). Games can\'t go faster than this.</string>
     <string name="v_clamped_refresh">First check Settings → Display → Refresh rate is set to 120Hz (High). On 60Hz (Standard) nothing can go higher.</string>
+
+    <!-- v4.3: rate options + before-you-play -->
+    <string name="main_caption_high">Games need %1$dHz support to reach %1$d FPS. Most stop at 120.</string>
+    <string name="rate_locked">Your phone is set to %1$dHz. Set Settings → Display → Refresh rate to %2$dHz first.</string>
+    <string name="ob2_before">Before you play</string>
+    <string name="ob2_need_screen">Your screen must support 120Hz</string>
+    <string name="ob2_need_screen_ok">Your screen goes up to %dHz ✓. Also set Settings → Display → Refresh rate to the highest option.</string>
+    <string name="ob2_need_screen_low">Your screen only goes up to %dHz, so games can\'t go higher on this phone.</string>
+    <string name="ob2_set_game">Set 120 FPS inside each game</string>
+    <string name="ob2_set_game_body">In the game\'s graphics settings, pick 120 FPS or the highest option (e.g. MLBB → Ultra, CODM → Max). If a game only offers 60, it stays at 60.</string>
+    <string name="ob2_understand">I understand</string>
+    <string name="ob2_understood">I understand</string>
+    <string name="ob2_understand_first">Tap “I understand” to continue</string>
+
+    <!-- v4.3: tester, FAQ, guide redesign -->
+    <string name="tester_pacing">%d%% of frames arrived on time over the last 2 seconds.</string>
+    <string name="faq_title">Questions? Read this first</string>
+    <string name="faq_sub">%d quick answers · tap to open</string>
+    <string name="faq_more">Full FAQ &amp; game list →</string>
+    <string name="ob1_sub">Unlocks 90 / 120Hz for the games you pick. Everything else stays normal.</string>
+    <string name="ob1_demo">Same motion, twice the frames</string>
+    <string name="ob1_chip_root">No root</string>
+    <string name="ob1_chip_pc">No PC</string>
+    <string name="ob1_chip_battery">Battery-friendly</string>
+    <string name="ob2_sub">Two things decide your FPS.</string>
+    <string name="ob2_req_screen">A 120Hz screen</string>
+    <string name="ob2_req_screen_ok">Yours: up to %dHz ✓</string>
+    <string name="ob2_req_screen_low">Yours: only %dHz ✕</string>
+    <string name="ob2_req_game">120 FPS in game</string>
+    <string name="ob2_req_game_hint">Pick Ultra / Max / 120 in its settings</string>
+    <string name="ob2_tags_title">Tags in the app list</string>
+    <string name="ob2_cap120">Can go 120</string>
+    <string name="ob2_cap90">Stops at 90</string>
+    <string name="ob2_cap60">Stuck at 60</string>
+    <string name="ob3_sub">So HyperOS doesn\’t stop Hyper120.</string>
+    <string name="ob3_s_refresh">Screen refresh rate: 120Hz</string>
+    <string name="ob3_s_battery">Battery saver: No restrictions</string>
+    <string name="ob3_s_autostart">Allow Autostart</string>
+    <string name="ob3_open">Open</string>
+    <string name="ob3_done">Done</string>
+    <string name="ob3_need120">Set screen to 120Hz to finish</string>
+    <string name="ob3_no120">This screen can’t do 120Hz</string>
+    <string name="wn_title">Updated to v%s</string>
+    <string name="wn_kept">Your games and settings are kept. Nothing was reset.</string>
+    <string name="wn_new">What’s new</string>
+    <string name="wn_tester">More accurate FPS tester</string>
+    <string name="wn_faq">Quick FAQ above the app list</string>
+    <string name="wn_rates">144Hz+ on screens that support it</string>
+    <string name="wn_check">A 20-second setup check</string>
+    <string name="wn_next">Next: a quick check that your phone is ready for 120 FPS.</string>
+    <string name="check_running">Checking %dHz…</string>
+    <string name="check_ok">%dHz works</string>
+    <string name="check_ok_body">Your phone switched to %1$dHz. Games reach %1$d FPS if the game supports it.</string>
+    <string name="check_fail_title">Screen stayed at %1$d Hz, not %2$d</string>
+    <string name="check_fail_title_unknown">Couldn’t confirm %d Hz</string>
+    <string name="check_fail_refresh">Your phone’s refresh rate setting is too low. Set Settings → Display → Refresh rate to the highest option, then tap Apply again.</string>
+    <string name="check_fail_body">The phone didn’t accept the higher rate. Try again; if it still fails, report your phone so it can be fixed.</string>
+    <string name="check_retry">Try again</string>
+    <string name="check_report">Report on GitHub</string>
+    <string name="check_faq">Read the FAQ</string>
+    <string name="check_badge">Switched to %dHz</string>
+    <string name="check_verified">Verified</string>
+    <string name="check_measured">Measured %d FPS</string>
+    <string name="check_caption">Games reach %d FPS if the game supports it</string>
+    <string name="limit_note_short">*Games run at their supported rate. The tag shows each game’s max (60 MAX stays at 60).</string>
+    <string name="check_caption_limit">*Apps and games have their own limits. A 60 MAX game stays at 60. Check each game’s tag below.</string>
 </resources>

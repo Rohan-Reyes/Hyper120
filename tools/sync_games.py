@@ -55,12 +55,34 @@ def names(games, cap):
     return ', '.join(n[:-1]) + ' and ' + n[-1] if len(n) > 1 else ''.join(n)
 
 
+def sync_faq():
+    """data/faq.json -> res/raw/faq.json (bundled) + web/faq.json (fetched by the app daily)."""
+    path = os.path.join(ROOT, 'data', 'faq.json')
+    with open(path, encoding='utf-8') as f:
+        faq = json.load(f)
+    if not isinstance(faq.get('version'), int):
+        sys.exit('faq.json: "version" must be an integer')
+    ids = set()
+    for it in faq['items']:
+        if it.get('id') in ids:
+            sys.exit(f'faq.json: duplicate id {it.get("id")}')
+        ids.add(it.get('id'))
+        for k in ('q', 'a'):
+            if not it.get(k, {}).get('en'):
+                sys.exit(f'faq.json: {it.get("id")} needs {k}.en')
+    faq.pop('_format', None)
+    compact = json.dumps(faq, ensure_ascii=False, separators=(',', ':')) + '\n'
+    write('res/raw/faq.json', compact)
+    write('web/faq.json', compact)
+
+
 def main():
     data = load()
     games = data['games']
     compact = json.dumps(data, ensure_ascii=False, separators=(',', ':')) + '\n'
     write('res/raw/games.json', compact)
     write('web/games.json', compact)
+    sync_faq()
 
     # README table
     cols = {c: [g for g in games if g['cap'] == c] for c in CAPS}

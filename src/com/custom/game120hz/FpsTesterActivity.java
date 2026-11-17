@@ -33,10 +33,19 @@ public class FpsTesterActivity extends Activity implements Choreographer.FrameCa
     private TextView statTarget;
     private TextView applyBtn;
     private boolean running = false;
-    private long windowStartNs = 0L;
-    private int frameCount = 0;
-    private int sampleCount = 0;
+    // Per-frame timing: every vsync interval goes into a ring buffer; the reading is the median
+    // over the last 2 s, so one hitch or a dropped frame doesn't move it.
+    private static final long WARMUP_NS = 1_000_000_000L;   // ignore the display-mode switch
+    private static final long WINDOW_NS = 2_000_000_000L;
+    private final long[] intervals = new long[1024];
+    private int iHead = 0;
+    private int iCount = 0;
+    private long lastFrameNs = 0L;
+    private long warmUntilNs = 0L;
+    private long lastReadoutNs = 0L;
+    private long collectedNs = 0L;
     private float measuredFps = 0f;
+    private int onTimePct = 0;
     private float displayHz = 0f;
     private int maxHz = 120;
     private int testFps = 120;
@@ -218,7 +227,7 @@ public class FpsTesterActivity extends Activity implements Choreographer.FrameCa
         LinearLayout seg = new LinearLayout(this);
         seg.setBackground(UiHelper.pillBg(this, UiHelper.alpha(0xFF000000, 0.28f), UiHelper.COL_OUTLINE, 16));
         seg.setPadding(dp(4), dp(4), dp(4), dp(4));
-        for (int fps : FpsApplier.detectSupportedFps(this)) {
+        for (int fps : FpsApplier.selectableRates(this)) {
             TextView s = UiHelper.text(this, fps + " Hz", 14, UiHelper.COL_MUTED, UiHelper.TF_BOLD);
             s.setGravity(Gravity.CENTER);
             s.setTag(fps);
@@ -311,9 +320,7 @@ public class FpsTesterActivity extends Activity implements Choreographer.FrameCa
     protected void onResume() {
         super.onResume();
         running = true;
-        windowStartNs = 0L;
-        frameCount = 0;
-        sampleCount = 0;
+        resetSamples();
         Choreographer.getInstance().postFrameCallback(this);
         startTest(testFps);
     }
@@ -348,9 +355,7 @@ public class FpsTesterActivity extends Activity implements Choreographer.FrameCa
                 : UiHelper.ripple(this, null, 12));
         }
         if (statTarget != null) statTarget.setText(getString(R.string.hz_value, fps));
-        windowStartNs = 0L;
-        frameCount = 0;
-        sampleCount = -1; // drop the first window while the display mode switches
+        resetSamples();
         UiHelper.setChip(this, verdictChip, getString(R.string.tester_measuring_at, fps), UiHelper.COL_PRIMARY);
         verdictText.setText(getString(R.string.tester_sent_self, fps));
     }
@@ -366,29 +371,67 @@ public class FpsTesterActivity extends Activity implements Choreographer.FrameCa
     public void doFrame(long frameTimeNanos) {
         if (!running) return;
         motionBar.step(frameTimeNanos);
-        if (windowStartNs == 0L) windowStartNs = frameTimeNanos;
-        frameCount++;
-        long elapsedNs = frameTimeNanos - windowStartNs;
-        if (elapsedNs >= 500_000_000L) {
-            measuredFps = (frameCount * 1_000_000_000f) / elapsedNs;
-            windowStartNs = frameTimeNanos;
-            frameCount = 0;
-            sampleCount++;
+        if (warmUntilNs == 0L) warmUntilNs = frameTimeNanos + WARMUP_NS;
+        if (lastFrameNs != 0L && frameTimeNanos >= warmUntilNs) {
+            long dt = frameTimeNanos - lastFrameNs;
+            if (dt > 0 && dt < 250_000_000L) {   // skip pauses (e.g. notification shade)
+                intervals[iHead] = dt;
+                iHead = (iHead + 1) % intervals.length;
+                if (iCount < intervals.length) iCount++;
+                collectedNs += dt;
+            }
+        }
+        lastFrameNs = frameTimeNanos;
+        if (frameTimeNanos - lastReadoutNs >= 250_000_000L) {
+            lastReadoutNs = frameTimeNanos;
+            computeStats();
             updateReadouts();
         }
         Choreographer.getInstance().postFrameCallback(this);
+    }
+
+    private void resetSamples() {
+        iHead = 0;
+        iCount = 0;
+        lastFrameNs = 0L;
+        warmUntilNs = 0L;
+        lastReadoutNs = 0L;
+        collectedNs = 0L;
+        measuredFps = 0f;
+        onTimePct = 0;
+    }
+
+    /** Median frame interval over the last 2 s -> FPS, plus the share of frames that arrived on time. */
+    private void computeStats() {
+        if (iCount < 8) return;
+        long[] w = new long[iCount];
+        int n = 0;
+        long sum = 0;
+        for (int k = 1; k <= iCount && sum < WINDOW_NS; k++) {
+            long dt = intervals[(iHead - k + intervals.length) % intervals.length];
+            w[n++] = dt;
+            sum += dt;
+        }
+        long[] sorted = java.util.Arrays.copyOf(w, n);
+        java.util.Arrays.sort(sorted);
+        long median = sorted[n / 2];
+        if (median <= 0) return;
+        measuredFps = 1_000_000_000f / median;
+        int onTime = 0;
+        for (int i = 0; i < n; i++) if (w[i] <= median * 1.5) onTime++;
+        onTimePct = Math.round(onTime * 100f / n);
     }
 
     private void updateReadouts() {
         Display d = getWindowManager().getDefaultDisplay();
         displayHz = d != null ? d.getRefreshRate() : 0f;
         int expected = Math.min(testFps, maxHz);
-        if (sampleCount <= 0) {
-            gauge.setValue(measuredFps);
+        if (collectedNs < 1_500_000_000L) {   // not enough clean frames yet
+            if (measuredFps > 0) gauge.setValue(measuredFps);
             return;
         }
         boolean pkOk = FpsApplier.isPowerKeeperInstalled(this);
-        boolean high = measuredFps >= expected - 6f;
+        boolean high = measuredFps >= expected * 0.95f;
 
         gauge.setValue(measuredFps);
         statDisplay.setText(getString(R.string.hz_value, Math.round(displayHz)));
@@ -401,8 +444,9 @@ public class FpsTesterActivity extends Activity implements Choreographer.FrameCa
             verdictText.setText(getString(R.string.v_testing60_body));
         } else if (high) {
             UiHelper.setChip(this, verdictChip, getString(R.string.v_works, expected), UiHelper.COL_TEAL);
-            verdictText.setText(getString(R.string.v_works_body, Math.round(measuredFps), expected));
-        } else if (sampleCount >= 3) {
+            verdictText.setText(getString(R.string.v_works_body, Math.round(measuredFps), expected)
+                + "\n\n" + getString(R.string.tester_pacing, onTimePct));
+        } else if (collectedNs >= 3_000_000_000L) {
             UiHelper.setChip(this, verdictChip, getString(R.string.v_clamped, Math.round(measuredFps)), UiHelper.COL_ERROR);
             verdictText.setText(getString(R.string.v_clamped_body, Math.round(displayHz), expected)
                 + "\n\n" + getString(R.string.v_clamped_refresh));
@@ -413,7 +457,8 @@ public class FpsTesterActivity extends Activity implements Choreographer.FrameCa
         String pk = FpsApplier.isPowerKeeperInstalled(this) ? "OK" : "Missing";
         return "Hyper120 Diagnostic Report\n" + FpsApplier.deviceReport(this) + "\n"
             + "Tested at: " + testFps + "Hz | "
-            + String.format(java.util.Locale.US, "Display Mode: %.1f Hz | Measured: %.1f FPS", displayHz, measuredFps);
+            + String.format(java.util.Locale.US, "Display Mode: %.1f Hz | Measured: %.1f FPS (median of 2 s) | On time: %d%%",
+                displayHz, measuredFps, onTimePct);
     }
 
     private void copyReport() {
@@ -429,7 +474,7 @@ public class FpsTesterActivity extends Activity implements Choreographer.FrameCa
             int expected = Math.min(testFps, maxHz);
             String verdict = !FpsApplier.isPowerKeeperInstalled(this)
                 ? "PowerKeeper missing"
-                : (measuredFps >= expected - 6f ? "Works (" + Math.round(measuredFps) + " FPS)"
+                : (measuredFps >= expected * 0.95f ? "Works (" + Math.round(measuredFps) + " FPS)"
                     : "Clamped at " + Math.round(measuredFps) + " FPS");
             String title = "[Compatibility] " + Build.MANUFACTURER + " " + Build.MODEL + " (" + Build.DEVICE + ") - " + verdict;
             String body = "### Device & Tester Output\n```\n" + buildReportText()

@@ -29,6 +29,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.HorizontalScrollView;
 import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -86,6 +87,16 @@ public class MainActivity extends Activity {
     private TextView emptyText;
     private Switch autoSwitch;
     private LinearLayout healthSlot;
+    private TextView heroCaption;
+    private LinearLayout verifiedBadge;
+    private TextView verifiedTitle;
+    private TextView verifiedSub;
+    private int verifiedFps = 0;
+    private LinearLayout faqSlot;
+    private ScrollView mainScroll;
+    /** Result of the check that runs after tapping Apply (pass line, or fixes + report on failure). */
+    private LinearLayout checkBox;
+    private OverrideCheck check;
     private boolean serviceWasKilled = false;
     private boolean batteryDismissed = false;
     private int filter = FILTER_ALL;
@@ -97,6 +108,7 @@ public class MainActivity extends Activity {
         UiHelper.setupDarkBars(this);
         selectedPackages = FpsApplier.syncInstalledGames(this);
         GameCaps.init(this);
+        FaqData.init(this);
         // A stale heartbeat means HyperOS killed the background service while we were away.
         long beat = FpsApplier.lastServiceBeat(this);
         serviceWasKilled = FpsApplier.isAutoEnabled(this) && beat > 0
@@ -116,6 +128,7 @@ public class MainActivity extends Activity {
         content.addView(buildAppsSection());
 
         ScrollView scroll = new ScrollView(this);
+        mainScroll = scroll;
         scroll.setBackgroundColor(UiHelper.COL_BG);
         scroll.setFillViewport(true);
         scroll.setVerticalScrollBarEnabled(false);
@@ -130,8 +143,24 @@ public class MainActivity extends Activity {
         FpsApplier.pingActiveUser(this);
         loadInstalledAppsAsync();
         GameCaps.refreshAsync(this, this::rebindTags);
+        FaqData.refreshAsync(this, () -> fillFaq(false));
+    }
+
+    /** Shows the setup guide until it is finished; reuses the open guide instead of stacking copies. */
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (check != null) {   // don't leave the window pinned to a rate or the button half-filled
+            check.cancel();
+            check = null;
+            resetApplyButton();
+        }
+    }
+
+    private void ensureOnboarded() {
         if (!FpsApplier.isOnboarded(this)) {
-            startActivity(new Intent(this, OnboardingActivity.class));
+            startActivity(new Intent(this, OnboardingActivity.class)
+                .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
         }
     }
 
@@ -139,6 +168,8 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
         updateHealth();
+        if (hzNumber != null) updateSegments();
+        ensureOnboarded();
     }
 
     /** Re-tags rows after a newer game list was downloaded. */
@@ -286,12 +317,40 @@ public class MainActivity extends Activity {
         TextView hz = UiHelper.text(this, "Hz", 24, UiHelper.COL_MUTED, UiHelper.TF_BOLD);
         hz.setPadding(dp(6), 0, 0, dp(10));
         numRow.addView(hz);
+        numRow.addView(new View(this), new LinearLayout.LayoutParams(0, 1, 1f));
+
+        // Shown after a successful Apply check, beside the big number so it's hard to miss
+        verifiedBadge = new LinearLayout(this);
+        verifiedBadge.setOrientation(LinearLayout.VERTICAL);
+        verifiedBadge.setVisibility(View.GONE);
+        verifiedBadge.setPadding(dp(12), dp(10), dp(14), dp(11));
+        verifiedBadge.setBackground(UiHelper.pillBg(this, UiHelper.alpha(UiHelper.COL_TEAL, 0.1f),
+            UiHelper.alpha(UiHelper.COL_TEAL, 0.45f), 16));
+        TextView over = UiHelper.overline(this, getString(R.string.check_verified), UiHelper.COL_TEAL);
+        Drawable ck = getDrawable(R.drawable.ui_check).mutate();
+        ck.setTint(UiHelper.COL_TEAL);
+        ck.setBounds(0, 0, dp(12), dp(12));
+        over.setCompoundDrawables(ck, null, null, null);
+        over.setCompoundDrawablePadding(dp(5));
+        verifiedBadge.addView(over);
+        verifiedTitle = UiHelper.text(this, "", 14, UiHelper.COL_TEXT, UiHelper.TF_BOLD);
+        verifiedTitle.setPadding(0, dp(6), 0, 0);
+        verifiedBadge.addView(verifiedTitle);
+        verifiedSub = UiHelper.text(this, "", 11.5f, UiHelper.COL_MUTED, UiHelper.TF_REGULAR);
+        verifiedSub.setPadding(0, dp(3), 0, 0);
+        verifiedBadge.addView(verifiedSub);
+        LinearLayout.LayoutParams vb = new LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        vb.gravity = Gravity.CENTER_VERTICAL;
+        vb.leftMargin = dp(8);
+        numRow.addView(verifiedBadge, vb);
         hero.addView(numRow);
 
-        TextView caption = UiHelper.text(this, getString(R.string.main_caption),
+        heroCaption = UiHelper.text(this, getString(R.string.main_caption),
             13.5f, UiHelper.COL_MUTED, UiHelper.TF_REGULAR);
-        caption.setPadding(0, dp(6), 0, dp(18));
-        hero.addView(caption);
+        heroCaption.setPadding(0, dp(6), 0, dp(18));
+        heroCaption.setLineSpacing(dp(3), 1f);
+        hero.addView(heroCaption);
 
         // Segmented control
         LinearLayout seg = new LinearLayout(this);
@@ -299,12 +358,22 @@ public class MainActivity extends Activity {
         seg.setBackground(UiHelper.pillBg(this, UiHelper.alpha(0xFF000000, 0.28f), UiHelper.COL_OUTLINE, 16));
         seg.setPadding(dp(4), dp(4), dp(4), dp(4));
         segments.clear();
-        for (int fps : FpsApplier.detectSupportedFps(this)) {
+        for (int fps : FpsApplier.selectableRates(this)) {
             TextView s = UiHelper.text(this, String.valueOf(fps), 15, UiHelper.COL_MUTED, UiHelper.TF_BOLD);
             s.setGravity(Gravity.CENTER);
             s.setTag(fps);
             s.setOnClickListener(v -> {
+                if (FpsApplier.isRateLocked(this, fps)) {
+                    v.performHapticFeedback(HapticFeedbackConstants.REJECT);
+                    android.widget.Toast.makeText(this, getString(R.string.rate_locked,
+                        FpsApplier.getSystemRefreshSetting(this), fps), android.widget.Toast.LENGTH_LONG).show();
+                    return;
+                }
                 v.performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK);
+                if (fps > 120) {
+                    android.widget.Toast.makeText(this, getString(R.string.main_caption_high, fps),
+                        android.widget.Toast.LENGTH_LONG).show();
+                }
                 FpsApplier.setTargetFps(this, fps);
                 updateSegments();
                 if (FpsApplier.isAutoEnabled(this)) syncServiceState(true);
@@ -318,10 +387,16 @@ public class MainActivity extends Activity {
 
         applyBtn = UiHelper.button(this, "", R.drawable.ui_zap, true, v -> {
             v.performHapticFeedback(HapticFeedbackConstants.CONFIRM);
-            applyNow(true, "Manual tap");
+            applyNow(false, "Manual tap");
+            startCheck();
         });
         ((LinearLayout.LayoutParams) applyBtn.getLayoutParams()).topMargin = dp(12);
         hero.addView(applyBtn);
+
+        checkBox = new LinearLayout(this);
+        checkBox.setOrientation(LinearLayout.VERTICAL);
+        checkBox.setVisibility(View.GONE);
+        hero.addView(checkBox, UiHelper.matchWrap(this, 12));
 
         lastApplied = UiHelper.text(this, "", 12, UiHelper.COL_DIM, UiHelper.TF_REGULAR);
         lastApplied.setGravity(Gravity.CENTER);
@@ -331,14 +406,39 @@ public class MainActivity extends Activity {
     }
 
     private void updateSegments() {
-        int active = FpsApplier.getTargetFps(this);
+        int active = FpsApplier.getEffectiveTargetFps(this);
         hzNumber.setText(String.valueOf(active));
+        if (verifiedBadge != null && active != verifiedFps) {
+            verifiedBadge.setVisibility(View.GONE);
+            verifiedFps = 0;
+        }
         for (TextView s : segments) {
-            boolean on = (Integer) s.getTag() == active;
-            s.setTextColor(on ? UiHelper.COL_ON_PRIMARY : UiHelper.COL_MUTED);
+            int rate = (Integer) s.getTag();
+            boolean on = rate == active;
+            boolean locked = FpsApplier.isRateLocked(this, rate);
+            s.setText(locked ? "\uD83D\uDD12 " + rate : String.valueOf(rate));
+            s.setTextColor(on ? UiHelper.COL_ON_PRIMARY : locked ? UiHelper.COL_DIM : UiHelper.COL_MUTED);
             s.setBackground(on
                 ? UiHelper.gradientBg(this, 12, UiHelper.COL_PRIMARY, 0xFF818CF8)
                 : UiHelper.ripple(this, null, 12));
+        }
+        if (heroCaption != null) {
+            boolean verified = verifiedFps == active && active > 60;
+            if (verified && active <= 120) {
+                // Teal confirmation + a muted reminder that every game keeps its own limit
+                String head = getString(R.string.check_caption, active);
+                String limit = getString(R.string.check_caption_limit);
+                android.text.SpannableStringBuilder sb = new android.text.SpannableStringBuilder(head + "\n" + limit);
+                sb.setSpan(new ForegroundColorSpan(UiHelper.COL_MUTED), head.length() + 1, sb.length(),
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                sb.setSpan(new android.text.style.RelativeSizeSpan(0.92f), head.length() + 1, sb.length(),
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                heroCaption.setText(sb);
+            } else {
+                heroCaption.setText(active > 120 ? getString(R.string.main_caption_high, active)
+                    : getString(R.string.main_caption));
+            }
+            heroCaption.setTextColor(active > 120 ? UiHelper.COL_WARN : verified ? UiHelper.COL_TEAL : UiHelper.COL_MUTED);
         }
         resetApplyButton();
     }
@@ -524,22 +624,21 @@ public class MainActivity extends Activity {
         }
         sec.addView(chips);
 
-        // Explains why some games stay at 60 even when the override works
+        // Short reminder that each game keeps its own limit (details are in the FAQ)
         LinearLayout note = new LinearLayout(this);
-        note.setGravity(Gravity.TOP);
-        note.setBackground(UiHelper.pillBg(this, UiHelper.alpha(UiHelper.COL_WARN, 0.06f),
-            UiHelper.alpha(UiHelper.COL_WARN, 0.22f), 18));
-        note.setPadding(dp(14), dp(12), dp(14), dp(12));
+        note.setGravity(Gravity.CENTER_VERTICAL);
+        note.setBackground(UiHelper.pillBg(this, UiHelper.alpha(UiHelper.COL_WARN, 0.07f),
+            UiHelper.alpha(UiHelper.COL_WARN, 0.3f), 14));
+        note.setPadding(dp(12), dp(10), dp(12), dp(10));
         note.setLayoutParams(UiHelper.matchWrap(this, 12));
-        ImageView ni = UiHelper.icon(this, R.drawable.ui_info, UiHelper.COL_WARN, 18);
+        ImageView ni = UiHelper.icon(this, R.drawable.ui_info, UiHelper.COL_WARN, 16);
         ((LinearLayout.LayoutParams) ni.getLayoutParams()).rightMargin = dp(10);
         note.addView(ni);
-        TextView nt = UiHelper.text(this,
-            getString(R.string.limit_note),
-            12.5f, UiHelper.COL_MUTED, UiHelper.TF_REGULAR);
-        nt.setLineSpacing(dp(3), 1f);
+        TextView nt = UiHelper.text(this, getString(R.string.limit_note_short), 12.5f, UiHelper.COL_MUTED, UiHelper.TF_REGULAR);
+        nt.setLineSpacing(dp(2), 1f);
         note.addView(nt, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
         sec.addView(note);
+        sec.addView(buildFaqCard());
 
         listCard = UiHelper.card(this);
         listCard.setPadding(dp(14), dp(4), dp(14), dp(4));
@@ -560,10 +659,154 @@ public class MainActivity extends Activity {
         return sec;
     }
 
+    /** Collapsible FAQ above the app list. Content comes from FaqData (bundled + updated from the website). */
+    private View buildFaqCard() {
+        faqSlot = new LinearLayout(this);
+        faqSlot.setOrientation(LinearLayout.VERTICAL);
+        faqSlot.setLayoutParams(UiHelper.matchWrap(this, 12));
+        fillFaq(false);
+        return faqSlot;
+    }
+
+    private void fillFaq(boolean open) {
+        if (faqSlot == null) return;
+        faqSlot.removeAllViews();
+        java.util.List<FaqData.Item> qa = FaqData.items();
+        if (qa.isEmpty()) return;
+        LinearLayout card = new LinearLayout(this);
+        card.setOrientation(LinearLayout.VERTICAL);
+        card.setBackground(UiHelper.pillBg(this, UiHelper.alpha(UiHelper.COL_PRIMARY, 0.05f),
+            UiHelper.alpha(UiHelper.COL_PRIMARY, 0.25f), 18));
+
+        LinearLayout head = new LinearLayout(this);
+        head.setGravity(Gravity.CENTER_VERTICAL);
+        head.setPadding(dp(14), dp(13), dp(14), dp(13));
+        head.setBackground(UiHelper.ripple(this, null, 18));
+        ImageView hi = UiHelper.icon(this, R.drawable.ui_info, UiHelper.COL_PRIMARY, 18);
+        ((LinearLayout.LayoutParams) hi.getLayoutParams()).rightMargin = dp(10);
+        head.addView(hi);
+        LinearLayout ht = new LinearLayout(this);
+        ht.setOrientation(LinearLayout.VERTICAL);
+        ht.addView(UiHelper.text(this, getString(R.string.faq_title), 14.5f, UiHelper.COL_TEXT, UiHelper.TF_MEDIUM));
+        TextView hs = UiHelper.text(this, getString(R.string.faq_sub, qa.size()), 12, UiHelper.COL_MUTED, UiHelper.TF_REGULAR);
+        hs.setPadding(0, dp(3), 0, 0);
+        ht.addView(hs);
+        head.addView(ht, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+        ImageView chev = UiHelper.icon(this, R.drawable.ui_chevron, UiHelper.COL_MUTED, 18);
+        chev.setRotation(open ? 270 : 90);
+        head.addView(chev);
+        card.addView(head);
+
+        LinearLayout list = new LinearLayout(this);
+        list.setOrientation(LinearLayout.VERTICAL);
+        list.setPadding(dp(14), 0, dp(14), dp(8));
+        list.setVisibility(open ? View.VISIBLE : View.GONE);
+        for (FaqData.Item item : qa) {
+            list.addView(UiHelper.divider(this, 0));
+            LinearLayout q = new LinearLayout(this);
+            q.setOrientation(LinearLayout.VERTICAL);
+            q.setPadding(0, dp(13), 0, dp(13));
+            LinearLayout qrow = new LinearLayout(this);
+            qrow.setGravity(Gravity.CENTER_VERTICAL);
+            TextView qt = UiHelper.text(this, item.question, 14.5f, UiHelper.COL_TEXT, UiHelper.TF_MEDIUM);
+            qrow.addView(qt, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+            TextView plus = UiHelper.text(this, "+", 18, UiHelper.COL_PRIMARY, UiHelper.TF_BOLD);
+            plus.setPadding(dp(10), 0, 0, 0);
+            qrow.addView(plus);
+            q.addView(qrow);
+            View answer = formatAnswer(item.answer);
+            answer.setVisibility(View.GONE);
+            q.addView(answer);
+            q.setOnClickListener(v -> {
+                boolean show = answer.getVisibility() != View.VISIBLE;
+                answer.setVisibility(show ? View.VISIBLE : View.GONE);
+                plus.setText(show ? "\u2212" : "+");
+                qt.setTextColor(show ? UiHelper.COL_PRIMARY : UiHelper.COL_TEXT);
+            });
+            list.addView(q);
+        }
+        list.addView(UiHelper.divider(this, 0));
+        TextView more = UiHelper.text(this, getString(R.string.faq_more), 13, UiHelper.COL_PRIMARY, UiHelper.TF_MEDIUM);
+        more.setPadding(0, dp(12), 0, dp(6));
+        more.setOnClickListener(v -> UiHelper.openUrl(this, "https://hyper120.aten-systems.site/#faq"));
+        list.addView(more);
+        card.addView(list);
+
+        head.setOnClickListener(v -> {
+            boolean show = list.getVisibility() != View.VISIBLE;
+            list.setVisibility(show ? View.VISIBLE : View.GONE);
+            chev.animate().rotation(show ? 270 : 90).setDuration(180).start();
+        });
+        faqSlot.addView(card);
+    }
+
+    /** Renders an answer: paragraphs, "1. " numbered steps, "- " bullets, **bold**. */
+    private View formatAnswer(String src) {
+        LinearLayout box = new LinearLayout(this);
+        box.setOrientation(LinearLayout.VERTICAL);
+        box.setPadding(0, dp(4), dp(8), dp(2));
+        for (String raw : src.split("\n")) {
+            String line = raw.trim();
+            if (line.isEmpty()) continue;
+            String marker = null;
+            java.util.regex.Matcher m = java.util.regex.Pattern.compile("^(\\d+)\\.\\s+(.*)$").matcher(line);
+            if (m.matches()) {
+                marker = m.group(1);
+                line = m.group(2);
+            } else if (line.startsWith("- ")) {
+                marker = "\u2022";
+                line = line.substring(2);
+            }
+            TextView t = UiHelper.text(this, boldSpans(line), 13.5f, UiHelper.COL_MUTED, UiHelper.TF_REGULAR);
+            t.setLineSpacing(dp(3), 1f);
+            if (marker == null) {
+                t.setPadding(0, dp(6), 0, dp(2));
+                box.addView(t);
+                continue;
+            }
+            LinearLayout row = new LinearLayout(this);
+            row.setPadding(0, dp(7), 0, 0);
+            boolean num = !marker.equals("\u2022");
+            TextView mk = UiHelper.text(this, marker, num ? 11 : 15, UiHelper.COL_PRIMARY, UiHelper.TF_BOLD);
+            mk.setGravity(Gravity.CENTER);
+            LinearLayout.LayoutParams mp;
+            if (num) {
+                mk.setBackground(UiHelper.pillBg(this, UiHelper.alpha(UiHelper.COL_PRIMARY, 0.15f), 0, 99));
+                mp = new LinearLayout.LayoutParams(dp(20), dp(20));
+            } else {
+                mp = new LinearLayout.LayoutParams(dp(20), ViewGroup.LayoutParams.WRAP_CONTENT);
+            }
+            mp.rightMargin = dp(10);
+            row.addView(mk, mp);
+            row.addView(t, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+            box.addView(row);
+        }
+        return box;
+    }
+
+    private CharSequence boldSpans(String s) {
+        android.text.SpannableStringBuilder b = new android.text.SpannableStringBuilder();
+        String[] parts = s.split("\\*\\*", -1);
+        for (int i = 0; i < parts.length; i++) {
+            int st = b.length();
+            b.append(parts[i]);
+            if (i % 2 == 1) {
+                b.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), st, b.length(), 0);
+                b.setSpan(new android.text.style.ForegroundColorSpan(UiHelper.COL_TEXT), st, b.length(), 0);
+            }
+        }
+        return b;
+    }
+
     private void updateFilterChips() {
         int games = 0;
-        for (AppEntry e : allApps) if (e.isGame) games++;
-        int[] counts = {allApps.size(), selectedPackages.size(), games};
+        int selected = 0;
+        for (AppEntry e : allApps) {
+            if (inGamesFilter(e)) games++;
+            if (selectedPackages.contains(e.packageName)) selected++;
+        }
+        if (allApps.isEmpty()) selected = selectedPackages.size();
+        int[] counts = {allApps.size(), selected, games};
         String[] names = {getString(R.string.filter_all), getString(R.string.filter_selected), getString(R.string.filter_games)};
         for (int i = 0; i < 3; i++) {
             TextView c = filterChips[i];
@@ -574,7 +817,7 @@ public class MainActivity extends Activity {
                 on ? UiHelper.alpha(UiHelper.COL_PRIMARY, 0.14f) : UiHelper.COL_SURFACE,
                 on ? UiHelper.alpha(UiHelper.COL_PRIMARY, 0.45f) : UiHelper.COL_OUTLINE, 99), 99));
         }
-        selectedCountText.setText(getString(R.string.apps_selected, selectedPackages.size()));
+        selectedCountText.setText(getString(R.string.apps_selected, selected));
     }
 
     /**
@@ -607,7 +850,8 @@ public class MainActivity extends Activity {
                 if (pm.getLaunchIntentForPackage(ai.packageName) == null) continue;
                 if (getPackageName().equals(ai.packageName)) continue;
                 list.add(new AppEntry(pm.getApplicationLabel(ai).toString(), ai.packageName,
-                    smallIcon(pm.getApplicationIcon(ai)), FpsApplier.isGameApp(ai)));
+                    smallIcon(pm.getApplicationIcon(ai)),
+                    FpsApplier.isGameApp(ai) || GameCaps.get(ai.packageName) != null));
             }
             Collections.sort(list, (a, b) -> {
                 boolean as = selectedPackages.contains(a.packageName);
@@ -625,12 +869,17 @@ public class MainActivity extends Activity {
         }).start();
     }
 
+    /** Games tab: detected games, games from our list, and anything the user selected (so Selected ⊆ Games). */
+    private boolean inGamesFilter(AppEntry e) {
+        return e.isGame || selectedPackages.contains(e.packageName);
+    }
+
     private void refreshList() {
         listCard.removeAllViews();
         int shown = 0;
         for (AppEntry e : allApps) {
             if (filter == FILTER_SELECTED && !selectedPackages.contains(e.packageName)) continue;
-            if (filter == FILTER_GAMES && !e.isGame) continue;
+            if (filter == FILTER_GAMES && !inGamesFilter(e)) continue;
             if (!query.isEmpty()
                 && !e.label.toLowerCase(Locale.ROOT).contains(query)
                 && !e.packageName.toLowerCase(Locale.ROOT).contains(query)) continue;
@@ -780,7 +1029,7 @@ public class MainActivity extends Activity {
         seg.setBackground(UiHelper.pillBg(this, UiHelper.alpha(0xFF000000, 0.28f), UiHelper.COL_OUTLINE, 16));
         seg.setPadding(dp(4), dp(4), dp(4), dp(4));
         List<TextView> opts = new ArrayList<>();
-        int[] rates = FpsApplier.detectSupportedFps(this);
+        int[] rates = FpsApplier.selectableRates(this);
         int[] values = new int[rates.length + 1];
         values[0] = 0;
         System.arraycopy(rates, 0, values, 1, rates.length);
@@ -959,8 +1208,205 @@ public class MainActivity extends Activity {
         ui.postDelayed(resetBtnRunnable, 1500);
     }
 
+    // ---------------------------------------------------------------- apply check
+
+    /**
+     * After Apply: sends the same rate to Hyper120 itself, asks for that display mode on this window,
+     * keeps the button animating (HyperOS drops the rate on a still screen) and times every frame.
+     * The median over ~1.6 s shows whether the phone really switched.
+     */
+    private final class OverrideCheck implements android.view.Choreographer.FrameCallback {
+        final int fps;
+        final long[] dts = new long[600];
+        int n = 0;
+        long last = 0, start = 0;
+        boolean done = false;
+        android.animation.ValueAnimator anim;
+
+        OverrideCheck(int fps) {
+            this.fps = fps;
+        }
+
+        void begin() {
+            FpsApplier.applyTargetFps(MainActivity.this, java.util.Collections.singleton(getPackageName()), fps);
+            setWindowRate(fps);
+            ui.removeCallbacks(resetBtnRunnable);
+            applyBtn.setText(getString(R.string.check_running, fps));
+            setButtonIcon(R.drawable.ui_gauge);
+            android.graphics.drawable.ClipDrawable fill = new android.graphics.drawable.ClipDrawable(
+                UiHelper.gradientBg(MainActivity.this, 18, UiHelper.COL_PRIMARY, 0xFF818CF8), Gravity.START,
+                android.graphics.drawable.ClipDrawable.HORIZONTAL);
+            applyBtn.setBackground(new android.graphics.drawable.LayerDrawable(new Drawable[]{
+                UiHelper.gradientBg(MainActivity.this, 18, UiHelper.alpha(UiHelper.COL_PRIMARY, 0.45f), UiHelper.alpha(0xFF818CF8, 0.45f)), fill}));
+            anim = android.animation.ValueAnimator.ofInt(0, 10000);
+            anim.setDuration(2400);
+            anim.addUpdateListener(a -> fill.setLevel((Integer) a.getAnimatedValue()));
+            anim.start();
+            android.view.Choreographer.getInstance().postFrameCallback(this);
+        }
+
+        void cancel() {
+            done = true;
+            if (anim != null) anim.cancel();
+            android.view.Choreographer.getInstance().removeFrameCallback(this);
+            setWindowRate(0);
+        }
+
+        @Override
+        public void doFrame(long t) {
+            if (done) return;
+            if (start == 0) start = t;
+            if (t - start > 700_000_000L && last != 0) {      // skip the mode switch
+                long dt = t - last;
+                if (dt > 0 && dt < 250_000_000L && n < dts.length) dts[n++] = dt;
+            }
+            last = t;
+            if (t - start >= 2_300_000_000L) {
+                cancel();
+                float measured = 0;
+                if (n >= 10) {
+                    long[] s = java.util.Arrays.copyOf(dts, n);
+                    java.util.Arrays.sort(s);
+                    measured = 1_000_000_000f / s[n / 2];
+                }
+                onCheckDone(fps, measured);
+                return;
+            }
+            android.view.Choreographer.getInstance().postFrameCallback(this);
+        }
+    }
+
+    private void setWindowRate(int fps) {
+        try {
+            android.view.WindowManager.LayoutParams lp = getWindow().getAttributes();
+            lp.preferredDisplayModeId = 0;
+            lp.preferredRefreshRate = 0;
+            if (fps > 0) {
+                android.view.Display d = getWindowManager().getDefaultDisplay();
+                android.view.Display.Mode cur = d.getMode();
+                for (android.view.Display.Mode m : d.getSupportedModes()) {
+                    if (m.getPhysicalWidth() == cur.getPhysicalWidth() && m.getPhysicalHeight() == cur.getPhysicalHeight()
+                        && Math.round(m.getRefreshRate()) == fps) {
+                        lp.preferredDisplayModeId = m.getModeId();
+                    }
+                }
+                lp.preferredRefreshRate = fps;
+            }
+            getWindow().setAttributes(lp);
+        } catch (Exception ignored) {
+        }
+    }
+
+    /** Badge beside the big number: stays while the target is still the verified rate. */
+    private void showVerified(int fps, float measured) {
+        verifiedFps = fps;
+        verifiedTitle.setText(getString(R.string.check_badge, fps));
+        verifiedSub.setText(getString(R.string.check_measured, Math.round(measured)));
+        updateSegments();
+        if (verifiedBadge.getVisibility() != View.VISIBLE) {
+            verifiedBadge.setAlpha(0f);
+            verifiedBadge.setTranslationX(dp(12));
+            verifiedBadge.setVisibility(View.VISIBLE);
+            verifiedBadge.animate().alpha(1f).translationX(0).setDuration(260).start();
+        }
+    }
+
+    private void startCheck() {
+        if (check != null) check.cancel();
+        checkBox.setVisibility(View.GONE);
+        verifiedBadge.setVisibility(View.GONE);
+        verifiedFps = 0;
+        updateSegments();
+        int fps = FpsApplier.getEffectiveTargetFps(this);
+        if (fps <= 60 || !FpsApplier.isPowerKeeperInstalled(this)) {
+            // nothing to verify at 60; PowerKeeper missing is shown by the normal button state
+            animateApplyButton(FpsApplier.applyTargetFps(this, selectedPackages, fps));
+            return;
+        }
+        check = new OverrideCheck(fps);
+        check.begin();
+    }
+
+    private void onCheckDone(int fps, float measured) {
+        check = null;
+        boolean ok = measured >= fps * 0.95f;
+        appendLog(String.format(Locale.US, "Check %dHz: measured %.1f FPS (%s)", fps, measured, ok ? "works" : "not applied"));
+        checkBox.removeAllViews();
+        checkBox.setVisibility(View.VISIBLE);
+        if (ok) {
+            applyBtn.setText(getString(R.string.check_ok, fps));
+            setButtonIcon(R.drawable.ui_check);
+            applyBtn.setBackground(UiHelper.ripple(this, UiHelper.gradientBg(this, 18, UiHelper.COL_TEAL, 0xFF5EEAD4), 18));
+            checkBox.setVisibility(View.GONE);
+            showVerified(fps, measured);
+            ui.postDelayed(resetBtnRunnable, 2500);
+            return;
+        }
+
+        resetApplyButton();
+        int shown = Math.round(measured);
+        LinearLayout card = new LinearLayout(this);
+        card.setOrientation(LinearLayout.VERTICAL);
+        card.setPadding(dp(14), dp(14), dp(14), dp(12));
+        card.setBackground(UiHelper.pillBg(this, UiHelper.alpha(UiHelper.COL_ERROR, 0.08f),
+            UiHelper.alpha(UiHelper.COL_ERROR, 0.4f), 16));
+        card.addView(UiHelper.text(this, measured > 0 ? getString(R.string.check_fail_title, shown, fps)
+            : getString(R.string.check_fail_title_unknown, fps), 15, UiHelper.COL_TEXT, UiHelper.TF_BOLD));
+
+        boolean refreshLow = FpsApplier.isRateLocked(this, fps) || FpsApplier.isSystemRefreshTooLow(this);
+        TextView body = UiHelper.text(this, getString(refreshLow ? R.string.check_fail_refresh : R.string.check_fail_body),
+            13, UiHelper.COL_MUTED, UiHelper.TF_REGULAR);
+        body.setLineSpacing(dp(3), 1f);
+        body.setPadding(0, dp(6), 0, dp(10));
+        card.addView(body);
+
+        LinearLayout actions = new LinearLayout(this);
+        actions.setOrientation(LinearLayout.HORIZONTAL);
+        if (refreshLow) {
+            actions.addView(actionChip(getString(R.string.health_open_display), UiHelper.COL_WARN,
+                v -> UiHelper.openDisplaySettings(this)));
+        } else {
+            actions.addView(actionChip(getString(R.string.check_retry), UiHelper.COL_PRIMARY, v -> startCheck()));
+            actions.addView(actionChip(getString(R.string.check_report), UiHelper.COL_ERROR, v -> reportCheck(fps, measured)));
+            actions.addView(actionChip(getString(R.string.check_faq), UiHelper.COL_MUTED, v -> openFaq()));
+        }
+        HorizontalScrollView hs = new HorizontalScrollView(this);
+        hs.setHorizontalScrollBarEnabled(false);
+        hs.addView(actions);
+        card.addView(hs);
+        checkBox.addView(card);
+    }
+
+    private void reportCheck(int fps, float measured) {
+        try {
+            String title = "[Compatibility] " + android.os.Build.MANUFACTURER + " " + android.os.Build.MODEL
+                + " (" + android.os.Build.DEVICE + ") - Apply check: " + Math.round(measured) + " FPS at " + fps + "Hz";
+            String body = "### Device & check result\n```\n" + FpsApplier.deviceReport(this) + "\n"
+                + String.format(Locale.US, "Apply check: target %dHz | measured %.1f FPS (median) | phone refresh setting: %d",
+                    fps, measured, FpsApplier.getSystemRefreshSetting(this))
+                + "\n```\n\n### Games tested & notes\n- Autostart ON & Battery saver = No restrictions?\n- Games tested:\n";
+            UiHelper.openUrl(this, UiHelper.GITHUB_REPO_URL + "/issues/new?title="
+                + java.net.URLEncoder.encode(title, "UTF-8") + "&body=" + java.net.URLEncoder.encode(body, "UTF-8"));
+        } catch (Exception e) {
+            UiHelper.openUrl(this, UiHelper.GITHUB_REPO_URL + "/issues/new/choose");
+        }
+    }
+
+    /** Opens the FAQ card and scrolls to it. */
+    private void openFaq() {
+        fillFaq(true);
+        if (mainScroll == null || faqSlot == null) return;
+        mainScroll.post(() -> {
+            int[] slot = new int[2], sv = new int[2];
+            faqSlot.getLocationOnScreen(slot);
+            mainScroll.getLocationOnScreen(sv);
+            int y = mainScroll.getScrollY() + slot[1] - sv[1] - dp(16);
+            mainScroll.smoothScrollTo(0, Math.max(0, y));
+        });
+    }
+
     private void resetApplyButton() {
-        applyBtn.setText(getString(R.string.btn_apply, FpsApplier.getTargetFps(this)));
+        applyBtn.setText(getString(R.string.btn_apply, FpsApplier.getEffectiveTargetFps(this)));
         setButtonIcon(R.drawable.ui_zap);
         UiHelper.styleButton(this, applyBtn, true);
     }
