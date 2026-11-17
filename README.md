@@ -101,15 +101,15 @@ Since v4.1 the app tags these games in its list (`UP TO 120`, `90 MAX`, `60 MAX`
 
 | ✅ Up to 120 (turn it on in the game) | 🔵 90 max | 🟠 60 max (game's own limit) |
 |---|---|---|
-| **Mobile Legends**: Graphics → Ultra (120) / Super (90) | **Free Fire / Free Fire MAX**: High FPS gives 90 on some phones | **Roblox**: mobile app capped at 60 on every phone |
+| **Mobile Legends**: Graphics → Ultra (120) / Super (90) | **Free Fire / Free Fire MAX**: High FPS gives 90 on some phones | **Roblox**: capped at 60 (measured 60 FPS with the screen at 120Hz) |
 | **Call of Duty: Mobile**: Frame Rate → Max / Ultra | **Fortnite**: 60 on most Android phones, 90 on a few | **Genshin Impact**: 120 is iPhone / iPad only |
 | **PUBG Mobile / BGMI**: Graphics Smooth → Ultra Extreme | | **Honkai: Star Rail**: 120 is iPhone / iPad only |
 | **Honor of Kings**: Graphics → 120 FPS | | **Zenless Zone Zero**: locked to 60 on phones |
 | **Delta Force**: up to 90 / 120 on supported phones | | **Wuthering Waves**: 120 option was removed |
 | **Brawl Stars**: 120 in matches, 60 in menus | | **Pokémon UNITE**: high frame rate mode = 60 |
 | **Pokémon GO**: Advanced → Native refresh rate | | **PPSSPP**: PSP games run at their original 60 / 30 |
-| **EA SPORTS FC Mobile**: 90 / 120 only on some phones | | |
-| **CSR 2**: up to 120 | | |
+| **EA SPORTS FC Mobile**: 90 / 120 only on some phones | | **Bus Simulator Indonesia**: in-game setting tops out at 60 |
+| **CSR 2**: up to 120 | | **Truckers of Europe 3**: in-game setting tops out at 60 |
 
 <sub>Compiled from developer pages, patch coverage and player reports as of November 2026. Games change their limits in updates. Know a game that belongs here? <a href="https://github.com/Rohan-Reyes/Hyper120/issues/new/choose">Open an issue</a>.</sub>
 

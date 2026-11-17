@@ -72,6 +72,8 @@ final class GameCaps {
             "jp.pokemon.pokemonunite");
         put(MAX_60, "PSP games run at their original 60 (or 30) FPS. A faster screen can't add frames.",
             "org.ppsspp.ppsspp", "org.ppsspp.ppssppgold");
+        put(MAX_60, "The game's own frame-rate setting goes up to 60. Pick 60 in its graphics settings.",
+            "com.maleo.bussimulatorid", "com.WandaSoftware.TruckersofEurope3");
     }
 
     private GameCaps() {}
