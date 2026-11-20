@@ -106,9 +106,9 @@
     <string name="v_testing60">Tes 60 Hz</string>
     <string name="v_testing60_body">Pilih refresh rate lebih tinggi di bawah untuk mengecek apakah batasnya terbuka.</string>
     <string name="v_works">%d Hz berfungsi</string>
-    <string name="v_works_body">Frame masuk di %1$d FPS, jadi PowerKeeper menerima override. Game bisa mencapai %2$d FPS jika game-nya sendiri mendukung.</string>
+    <string name="v_works_body">Hyper120 mengukur %1$d FPS saat meminta %2$d Hz. Periksa FPS saat bermain.</string>
     <string name="v_clamped">Tertahan di %d</string>
-    <string name="v_clamped_body">Layar tetap sekitar %1$dHz meski dengan override %2$dHz. Ketuk Terapkan ulang, atau laporkan perangkatmu.</string>
+    <string name="v_clamped_body">Mode layar: %1$d Hz. Target: %2$d Hz. Lihat FPS tes di atas untuk mengetahui tempo frame.</string>
     <string name="copied">Laporan disalin</string>
 
     <!-- Layanan + tile -->
@@ -158,7 +158,7 @@
     <string name="ob3_refresh">3. Refresh rate layar: 120Hz</string>
     <string name="ob3_refresh_done">✓ Refresh rate layar: %dHz</string>
     <string name="ob3_refresh_hint">Di Tampilan → Kecepatan refresh, pilih 120Hz (Tinggi). Game tidak bisa lebih cepat dari ini.</string>
-    <string name="v_clamped_refresh">Pastikan dulu Setelan → Tampilan → Kecepatan refresh diatur ke 120Hz (Tinggi). Di 60Hz (Standar) tidak ada yang bisa lebih tinggi.</string>
+    <string name="v_clamped_refresh">Di Setelan → Tampilan → Kecepatan refresh, pilih opsi tertinggi yang tersedia.</string>
 
     <!-- v4.3: rate options + before-you-play -->
     <string name="main_caption_high">Game perlu dukungan %1$dHz untuk mencapai %1$d FPS. Kebanyakan berhenti di 120.</string>
@@ -184,44 +184,44 @@
     <string name="ob1_chip_pc">Tanpa PC</string>
     <string name="ob1_chip_battery">Hemat baterai</string>
     <string name="ob2_sub">Dua hal menentukan FPS kamu.</string>
-    <string name="ob2_req_screen">Layar 120Hz</string>
+    <string name="ob2_req_screen">Layar 90 Hz atau lebih</string>
     <string name="ob2_req_screen_ok">Milikmu: hingga %dHz ✓</string>
     <string name="ob2_req_screen_low">Milikmu: hanya %dHz ✕</string>
-    <string name="ob2_req_game">120 FPS di game</string>
+    <string name="ob2_req_game">FPS tertinggi di game</string>
     <string name="ob2_req_game_hint">Pilih Ultra / Max / 120 di pengaturannya</string>
     <string name="ob2_tags_title">Tanda di daftar aplikasi</string>
     <string name="ob2_cap120">Bisa 120</string>
     <string name="ob2_cap90">Maks 90</string>
     <string name="ob2_cap60">Terkunci 60</string>
     <string name="ob3_sub">Agar HyperOS tidak menghentikan Hyper120.</string>
-    <string name="ob3_s_refresh">Kecepatan refresh: 120Hz</string>
+    <string name="ob3_s_refresh">Pilih kecepatan refresh tertinggi di Setelan layar</string>
     <string name="ob3_s_battery">Penghemat baterai: Tanpa batasan</string>
     <string name="ob3_s_autostart">Izinkan Mulai otomatis</string>
     <string name="ob3_open">Buka</string>
     <string name="ob3_done">Selesai</string>
-    <string name="ob3_need120">Atur layar ke 120Hz untuk selesai</string>
-    <string name="ob3_no120">Layar ini tidak mendukung 120Hz</string>
+    <string name="ob3_need120">Pilih kecepatan refresh tinggi untuk melanjutkan</string>
+    <string name="ob3_no120">Layar perlu mendukung 90 Hz atau lebih</string>
     <string name="wn_title">Diperbarui ke v%s</string>
     <string name="wn_kept">Game dan pengaturanmu tetap tersimpan. Tidak ada yang direset.</string>
     <string name="wn_new">Yang baru</string>
-    <string name="wn_tester">Penguji FPS lebih akurat</string>
-    <string name="wn_faq">FAQ singkat di atas daftar aplikasi</string>
-    <string name="wn_rates">144Hz+ di layar yang mendukung</string>
-    <string name="wn_check">Cek pengaturan 20 detik</string>
-    <string name="wn_next">Berikutnya: cek singkat apakah HP kamu siap untuk 120 FPS.</string>
+    <string name="wn_tester">Hasil Terapkan lebih jelas</string>
+    <string name="wn_faq">Pertanyaan umum di panduan setup</string>
+    <string name="wn_rates">Deteksi 144 Hz ke atas lebih baik</string>
+    <string name="wn_check">Tombol setelan di tiap game</string>
+    <string name="wn_next">Berikutnya, periksa setelan layar dan game.</string>
     <string name="check_running">Mengecek %dHz…</string>
     <string name="check_ok">%dHz berfungsi</string>
     <string name="check_ok_body">HP kamu beralih ke %1$dHz. Game mencapai %1$d FPS jika game mendukungnya.</string>
     <string name="check_fail_title">Layar tetap %1$d Hz, bukan %2$d</string>
     <string name="check_fail_title_unknown">Tidak bisa memastikan %d Hz</string>
     <string name="check_fail_refresh">Pengaturan refresh rate HP terlalu rendah. Atur Setelan → Tampilan → Kecepatan refresh ke opsi tertinggi, lalu ketuk Terapkan lagi.</string>
-    <string name="check_fail_body">HP tidak menerima refresh rate lebih tinggi. Coba lagi; jika masih gagal, laporkan HP kamu agar bisa diperbaiki.</string>
+    <string name="check_fail_body">Buka Periksa override dan bandingkan target, mode layar, dan FPS tes.</string>
     <string name="check_retry">Coba lagi</string>
     <string name="check_report">Lapor di GitHub</string>
     <string name="check_faq">Baca FAQ</string>
     <string name="check_badge">Beralih ke %dHz</string>
     <string name="check_verified">Terverifikasi</string>
-    <string name="check_measured">Terukur %d FPS</string>
+    <string name="check_measured">Tes Hyper120: %d FPS</string>
     <string name="check_caption">Game mencapai %d FPS jika game mendukungnya</string>
     <string name="limit_note_short">*Game berjalan di rate yang didukungnya. Tanda menunjukkan batas tiap game (60 MAX tetap 60).</string>
     <string name="check_caption_limit">*Setiap aplikasi dan game punya batasnya sendiri. Game 60 MAX tetap di 60. Cek tanda tiap game di bawah.</string>
@@ -233,4 +233,10 @@
     <string name="upd_later">Nanti</string>
     <string name="upd_whats_new">Yang baru</string>
     <string name="upd_install_hint">Setelah unduhan selesai, buka dan ketuk Pasang (atau Perbarui).</string>
+    <string name="no_installed_apps">Tidak ada aplikasi yang bisa dibuka.</string>
+    <string name="apps_load_failed">Aplikasi terpasang gagal dimuat.</string>
+    <string name="check_result_modes">Target %1$d Hz · Layar %2$d Hz</string>
+    <string name="check_game_help">Game masih di 60 FPS?</string>
+    <string name="check_result_scope">Diukur di layar Hyper120. Periksa FPS saat bermain secara terpisah.</string>
+    <string name="game_settings_label">Setelan untuk %1$s</string>
 </resources>

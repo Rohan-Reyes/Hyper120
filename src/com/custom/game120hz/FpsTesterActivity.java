@@ -424,14 +424,14 @@ public class FpsTesterActivity extends Activity implements Choreographer.FrameCa
 
     private void updateReadouts() {
         Display d = getWindowManager().getDefaultDisplay();
-        displayHz = d != null ? d.getRefreshRate() : 0f;
+        displayHz = d != null ? d.getMode().getRefreshRate() : 0f;
         int expected = Math.min(testFps, maxHz);
         if (collectedNs < 1_500_000_000L) {   // not enough clean frames yet
             if (measuredFps > 0) gauge.setValue(measuredFps);
             return;
         }
         boolean pkOk = FpsApplier.isPowerKeeperInstalled(this);
-        boolean high = measuredFps >= expected * 0.95f;
+        boolean high = displayHz >= expected - 1 && measuredFps >= expected * 0.95f;
 
         gauge.setValue(measuredFps);
         statDisplay.setText(getString(R.string.hz_value, Math.round(displayHz)));
@@ -454,11 +454,10 @@ public class FpsTesterActivity extends Activity implements Choreographer.FrameCa
     }
 
     private String buildReportText() {
-        String pk = FpsApplier.isPowerKeeperInstalled(this) ? "OK" : "Missing";
         return "Hyper120 Diagnostic Report\n" + FpsApplier.deviceReport(this) + "\n"
             + "Tested at: " + testFps + "Hz | "
             + String.format(java.util.Locale.US, "Display Mode: %.1f Hz | Measured: %.1f FPS (median of 2 s) | On time: %d%%",
-                displayHz, measuredFps, onTimePct);
+                displayHz, measuredFps, onTimePct) + "\n" + FpsApplier.backgroundReport(this);
     }
 
     private void copyReport() {
@@ -474,7 +473,8 @@ public class FpsTesterActivity extends Activity implements Choreographer.FrameCa
             int expected = Math.min(testFps, maxHz);
             String verdict = !FpsApplier.isPowerKeeperInstalled(this)
                 ? "PowerKeeper missing"
-                : (measuredFps >= expected * 0.95f ? "Works (" + Math.round(measuredFps) + " FPS)"
+                : (displayHz >= expected - 1 && measuredFps >= expected * 0.95f
+                    ? "Works (" + Math.round(measuredFps) + " FPS)"
                     : "Clamped at " + Math.round(measuredFps) + " FPS");
             String title = "[Compatibility] " + Build.MANUFACTURER + " " + Build.MODEL + " (" + Build.DEVICE + ") - " + verdict;
             String body = "### Device & Tester Output\n```\n" + buildReportText()

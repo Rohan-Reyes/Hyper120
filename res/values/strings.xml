@@ -114,9 +114,9 @@
     <string name="v_testing60">Testing 60 Hz</string>
     <string name="v_testing60_body">Pick a higher rate below to test whether the cap is lifted.</string>
     <string name="v_works">%d Hz works</string>
-    <string name="v_works_body">Frames are arriving at %1$d FPS, so PowerKeeper accepted the override. Games can now reach %2$d FPS if the game itself supports it.</string>
+    <string name="v_works_body">Hyper120 measured %1$d FPS at a requested %2$d Hz. Check gameplay FPS in the game.</string>
     <string name="v_clamped">Clamped at %d</string>
-    <string name="v_clamped_body">The display stayed near %1$dHz even with the %2$dHz override. Tap Re-apply, or report your device.</string>
+    <string name="v_clamped_body">Display mode: %1$d Hz. Requested: %2$d Hz. Check the test FPS above for frame timing.</string>
     <string name="copied">Copied diagnostic report</string>
 
     <!-- Background service + tile -->
@@ -166,7 +166,7 @@
     <string name="ob3_refresh">3. Screen refresh rate: 120Hz</string>
     <string name="ob3_refresh_done">✓ Screen refresh rate: %dHz</string>
     <string name="ob3_refresh_hint">In Display → Refresh rate, choose 120Hz (High). Games can\'t go faster than this.</string>
-    <string name="v_clamped_refresh">First check Settings → Display → Refresh rate is set to 120Hz (High). On 60Hz (Standard) nothing can go higher.</string>
+    <string name="v_clamped_refresh">In Settings → Display → Refresh rate, choose the highest option your phone supports.</string>
 
     <!-- v4.3: rate options + before-you-play -->
     <string name="main_caption_high">Games need %1$dHz support to reach %1$d FPS. Most stop at 120.</string>
@@ -192,44 +192,44 @@
     <string name="ob1_chip_pc">No PC</string>
     <string name="ob1_chip_battery">Battery-friendly</string>
     <string name="ob2_sub">Two things decide your FPS.</string>
-    <string name="ob2_req_screen">A 120Hz screen</string>
+    <string name="ob2_req_screen">90 Hz or faster display</string>
     <string name="ob2_req_screen_ok">Yours: up to %dHz ✓</string>
     <string name="ob2_req_screen_low">Yours: only %dHz ✕</string>
-    <string name="ob2_req_game">120 FPS in game</string>
+    <string name="ob2_req_game">Highest FPS in the game</string>
     <string name="ob2_req_game_hint">Pick Ultra / Max / 120 in its settings</string>
     <string name="ob2_tags_title">Tags in the app list</string>
     <string name="ob2_cap120">Can go 120</string>
     <string name="ob2_cap90">Stops at 90</string>
     <string name="ob2_cap60">Stuck at 60</string>
     <string name="ob3_sub">So HyperOS doesn\’t stop Hyper120.</string>
-    <string name="ob3_s_refresh">Screen refresh rate: 120Hz</string>
+    <string name="ob3_s_refresh">Choose the highest refresh rate in Display settings</string>
     <string name="ob3_s_battery">Battery saver: No restrictions</string>
     <string name="ob3_s_autostart">Allow Autostart</string>
     <string name="ob3_open">Open</string>
     <string name="ob3_done">Done</string>
-    <string name="ob3_need120">Set screen to 120Hz to finish</string>
-    <string name="ob3_no120">This screen can’t do 120Hz</string>
+    <string name="ob3_need120">Choose a high refresh rate to finish</string>
+    <string name="ob3_no120">This screen needs 90 Hz or higher</string>
     <string name="wn_title">Updated to v%s</string>
     <string name="wn_kept">Your games and settings are kept. Nothing was reset.</string>
     <string name="wn_new">What’s new</string>
-    <string name="wn_tester">More accurate FPS tester</string>
-    <string name="wn_faq">Quick FAQ above the app list</string>
-    <string name="wn_rates">144Hz+ on screens that support it</string>
-    <string name="wn_check">A 20-second setup check</string>
-    <string name="wn_next">Next: a quick check that your phone is ready for 120 FPS.</string>
+    <string name="wn_tester">Clearer Apply results</string>
+    <string name="wn_faq">Common questions in setup</string>
+    <string name="wn_rates">Better handling for 144 Hz and higher</string>
+    <string name="wn_check">Settings button on each game</string>
+    <string name="wn_next">Next, check your display and in-game settings.</string>
     <string name="check_running">Checking %dHz…</string>
     <string name="check_ok">%dHz works</string>
     <string name="check_ok_body">Your phone switched to %1$dHz. Games reach %1$d FPS if the game supports it.</string>
     <string name="check_fail_title">Screen stayed at %1$d Hz, not %2$d</string>
     <string name="check_fail_title_unknown">Couldn’t confirm %d Hz</string>
     <string name="check_fail_refresh">Your phone’s refresh rate setting is too low. Set Settings → Display → Refresh rate to the highest option, then tap Apply again.</string>
-    <string name="check_fail_body">The phone didn’t accept the higher rate. Try again; if it still fails, report your phone so it can be fixed.</string>
+    <string name="check_fail_body">Open Check override and compare the target, display mode and test FPS.</string>
     <string name="check_retry">Try again</string>
     <string name="check_report">Report on GitHub</string>
     <string name="check_faq">Read the FAQ</string>
     <string name="check_badge">Switched to %dHz</string>
     <string name="check_verified">Verified</string>
-    <string name="check_measured">Measured %d FPS</string>
+    <string name="check_measured">Hyper120 test: %d FPS</string>
     <string name="check_caption">Games reach %d FPS if the game supports it</string>
     <string name="limit_note_short">*Games run at their supported rate. The tag shows each game’s max (60 MAX stays at 60).</string>
     <string name="check_caption_limit">*Apps and games have their own limits. A 60 MAX game stays at 60. Check each game’s tag below.</string>
@@ -241,4 +241,10 @@
     <string name="upd_later">Later</string>
     <string name="upd_whats_new">What’s new</string>
     <string name="upd_install_hint">When the download finishes, open it and tap Install (or Update).</string>
+    <string name="no_installed_apps">No launchable apps found.</string>
+    <string name="apps_load_failed">Couldn’t load installed apps.</string>
+    <string name="check_result_modes">Target %1$d Hz · Display %2$d Hz</string>
+    <string name="check_game_help">Game still at 60 FPS?</string>
+    <string name="check_result_scope">Measured on the Hyper120 screen. Check FPS during gameplay separately.</string>
+    <string name="game_settings_label">Settings for %1$s</string>
 </resources>

@@ -13,6 +13,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.PowerManager;
+import java.util.Set;
 
 /** Lightweight background service that keeps PowerKeeper's 120Hz overrides active. */
 public class Auto120Service extends Service {
@@ -29,7 +30,7 @@ public class Auto120Service extends Service {
         public void run() {
             FpsApplier.markServiceAlive(Auto120Service.this);
             if (powerManager == null || powerManager.isInteractive()) {
-                FpsApplier.apply120Hz(Auto120Service.this, FpsApplier.loadPackages(Auto120Service.this));
+                applyInBackground(FpsApplier.loadPackages(Auto120Service.this));
             }
             handler.postDelayed(this, REFRESH_INTERVAL_MS);
         }
@@ -48,7 +49,7 @@ public class Auto120Service extends Service {
             public void onReceive(Context context, Intent intent) {
                 if (Intent.ACTION_SCREEN_ON.equals(intent.getAction())) {
                     FpsApplier.markServiceAlive(context);
-                    FpsApplier.apply120Hz(context, FpsApplier.loadPackages(context));
+                    applyInBackground(FpsApplier.loadPackages(context));
                 }
             }
         };
@@ -58,12 +59,17 @@ public class Auto120Service extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        FpsApplier.apply120Hz(this, FpsApplier.syncInstalledGames(this));
+        applyInBackground(FpsApplier.syncInstalledGames(this));
         NotificationManager nm = getSystemService(NotificationManager.class);
         if (nm != null) {
             nm.notify(NOTIF_ID, buildNotification());
         }
         return START_STICKY;
+    }
+
+    private void applyInBackground(Set<String> packages) {
+        FpsApplier.ApplyResult result = FpsApplier.apply120Hz(this, packages);
+        if (result.powerKeeperFound && result.count > 0) FpsApplier.markServiceSent(this);
     }
 
     @Override
@@ -96,7 +102,7 @@ public class Auto120Service extends Service {
         Intent openIntent = new Intent(this, MainActivity.class);
         PendingIntent pi = PendingIntent.getActivity(
             this, 0, openIntent, PendingIntent.FLAG_IMMUTABLE);
-        int fps = FpsApplier.getTargetFps(this);
+        int fps = FpsApplier.getEffectiveTargetFps(this);
         return new Notification.Builder(this, CHANNEL_ID)
             .setContentTitle(getString(R.string.notif_title, fps))
             .setContentText(getString(R.string.notif_text, fps))

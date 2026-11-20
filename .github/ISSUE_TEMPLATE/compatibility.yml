@@ -6,11 +6,12 @@ body:
   - type: dropdown
     id: status
     attributes:
-      label: Does Hyper120 unlock high FPS on your device?
+      label: What happened in the Hyper120 test?
       options:
-        - "Works (90Hz / 120Hz / 144Hz unlocked)"
-        - "Not working (stays locked at 60Hz)"
-        - "Partial (works in some games only)"
+        - "The test reached the requested rate or higher"
+        - "The test stayed below the requested rate"
+        - "The app could not run the test"
+        - "I only tested gameplay"
     validations:
       required: true
   - type: input
@@ -30,10 +31,10 @@ body:
   - type: textarea
     id: tester
     attributes:
-      label: Built-in FPS Tester Report (from Hyper120 -> Test FPS -> Copy Report)
-      placeholder: "Paste the output from Hyper120's Live FPS Tester here..."
+      label: Check override report (Hyper120 → Check override → Copy report)
+      placeholder: "Include the requested rate, display mode and measured test FPS."
   - type: textarea
     id: notes
     attributes:
       label: Games Tested & Notes
-      placeholder: "e.g. MLBB, CODM — Autostart & No restrictions enabled?"
+      placeholder: "Game and version, available FPS options, graphics preset and game mode, observed FPS and the counter used."

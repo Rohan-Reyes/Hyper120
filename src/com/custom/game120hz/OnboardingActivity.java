@@ -82,6 +82,7 @@ public class OnboardingActivity extends Activity {
         super.onCreate(savedInstanceState);
         UiHelper.setupDarkBars(this);
         updater = FpsApplier.isUpdateFromOlder(this);
+        FaqData.init(this);
 
         LinearLayout root = new LinearLayout(this);
         root.setOrientation(LinearLayout.VERTICAL);
@@ -157,11 +158,11 @@ public class OnboardingActivity extends Activity {
         }
     }
 
-    /** The guide only finishes once the screen can do 120Hz+ and the phone is set to it. */
+    /** Accept 90 Hz panels and adaptive high-refresh modes during setup. */
     private boolean screenReady() {
-        if (FpsApplier.getMaxSupportedFps(this) < 120) return false;
+        if (FpsApplier.getMaxSupportedFps(this) < 90) return false;
         int setting = FpsApplier.getSystemRefreshSetting(this);
-        return setting < 0 || setting >= 119;
+        return setting < 0 || setting >= 89;
     }
 
     private void finishGuide() {
@@ -171,12 +172,24 @@ public class OnboardingActivity extends Activity {
 
     // ---------------------------------------------------------------- pages
 
+    private int renderedPage = -1;
+
     private void render() {
         body.removeAllViews();
         if (page == 0 && updater) pageWhatsNew();
         else if (page == 0) pageIntro();
         else if (page == 1) pageRequirements();
         else pageKeepRunning();
+
+        if (page == 0) addSetupFaq("safe", "compat", "adaptive");
+        else if (page == 1) addSetupFaq("stuck60", "high", "heat");
+        else addSetupFaq("stopped", "gameturbo");
+
+        if (renderedPage != page) {
+            renderedPage = page;
+            ScrollView setupScroll = (ScrollView) body.getParent();
+            setupScroll.post(() -> setupScroll.scrollTo(0, 0));
+        }
 
         body.setAlpha(0f);
         body.setTranslationX(dp(16));
@@ -340,6 +353,22 @@ public class OnboardingActivity extends Activity {
         body.addView(coffee);
     }
 
+    private void addSetupFaq(String... ids) {
+        LinearLayout faq = UiHelper.card(this);
+        faq.setLayoutParams(UiHelper.matchWrap(this, 18));
+        faq.setPadding(dp(16), dp(14), dp(16), dp(4));
+        faq.addView(UiHelper.overline(this, getString(R.string.faq_title), UiHelper.COL_PRIMARY));
+        for (String id : ids) {
+            for (FaqData.Item item : FaqData.items()) {
+                if (!id.equals(item.id)) continue;
+                faq.addView(UiHelper.divider(this, 0));
+                faq.addView(UiHelper.faqItem(this, item));
+                break;
+            }
+        }
+        body.addView(faq);
+    }
+
     // ---------------------------------------------------------------- building blocks
 
     private void title(int res, float sp) {
@@ -454,7 +483,7 @@ public class OnboardingActivity extends Activity {
         nextBtn.setEnabled(!blocked);
         nextBtn.setAlpha(blocked ? 0.4f : 1f);
         if (needAck) nextBtn.setText(getString(R.string.ob2_understand_first));
-        else if (needScreen) nextBtn.setText(getString(FpsApplier.getMaxSupportedFps(this) < 120
+        else if (needScreen) nextBtn.setText(getString(FpsApplier.getMaxSupportedFps(this) < 90
             ? R.string.ob3_no120 : R.string.ob3_need120));
         else nextBtn.setText(getString(page < 2 ? R.string.ob_next : R.string.ob_done));
     }

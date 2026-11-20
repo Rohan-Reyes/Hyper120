@@ -1,21 +1,21 @@
 {
-  "version": "4.3.1",
+  "version": "4.3.2",
   "url": "https://hyper120.aten-systems.site/download?src=app",
   "notes": {
     "en": [
-      "Update reminders: you'll be told when a new version is out",
-      "Apply checks itself and shows ✓ Verified",
-      "FAQ inside the app, new setup guide"
+      "Clearer Apply results and a settings button on game rows",
+      "Improved handling for 144 Hz and higher, with 90 Hz setup support",
+      "Common questions in setup and better app-list recovery"
     ],
     "es": [
-      "Avisos de actualización: te avisaremos cuando salga una nueva versión",
-      "Aplicar se comprueba solo y muestra ✓ Verificado",
-      "FAQ dentro de la app y nueva guía de configuración"
+      "Resultados de Aplicar más claros y ajustes visibles en cada juego",
+      "Mejor detección de 144 Hz y más, con configuración para pantallas de 90 Hz",
+      "Preguntas frecuentes en la configuración y opción de reintentar la lista de apps"
     ],
     "in": [
-      "Pengingat pembaruan: kamu akan diberi tahu saat ada versi baru",
-      "Terapkan mengecek dirinya sendiri dan menampilkan ✓ Terverifikasi",
-      "FAQ di dalam aplikasi, panduan setup baru"
+      "Hasil Terapkan lebih jelas dan tombol setelan di tiap game",
+      "Deteksi 144 Hz ke atas lebih baik, dengan dukungan setup layar 90 Hz",
+      "Pertanyaan umum di setup dan opsi mencoba ulang daftar aplikasi"
     ]
   }
 }

@@ -99,7 +99,7 @@ adb shell appops set com.custom.game120hz RUN_ANY_IN_BACKGROUND allow
 
 ## Does it work on my phone?
 
-Tap **Apply**. Hyper120 measures its own screen right after and shows **✓ Verified · Switched to 120Hz** next to the big number. For full details, open **Check override** (gauge icon, top right).
+Tap **Apply**. Hyper120 shows the requested rate, the active display mode and the FPS measured on its own screen. For full details, open **Check override** (gauge icon, top right).
 
 | Status | Devices |
 |---|---|
@@ -119,7 +119,7 @@ The app tags these games in its list (`UP TO 120`, `90 MAX`, `60 MAX`) and downl
 | ✅ Up to 120 (turn it on in the game) | 🔵 90 max | 🟠 60 max (game's own limit) |
 |---|---|---|
 | **Mobile Legends: Bang Bang**: Graphics → Ultra (120) or Super (90) | **Free Fire / Free Fire MAX**: High FPS mode gives 90 on some phones | **Roblox**: Capped at 60. Measured: 60 FPS while the screen ran at 120Hz |
-| **Call of Duty: Mobile**: Graphics → Frame Rate → Max / Ultra | **Fortnite**: 60 on most Android phones, 90 on a few | **Genshin Impact**: 120 is iPhone / iPad only |
+| **Call of Duty: Mobile**: Graphics → Frame Rate → Max / Ultra |  | **Genshin Impact**: 120 is iPhone / iPad only |
 | **PUBG Mobile / BGMI**: Graphics: Smooth → Frame Rate: Ultra Extreme |  | **Honkai: Star Rail**: 120 is iPhone / iPad only |
 | **Honor of Kings**: Settings → Graphics → 120 FPS |  | **Zenless Zone Zero**: Locked to 60 on phones |
 | **League of Legends: Wild Rift**: Graphics → 90 / 120 on supported phones |  | **Wuthering Waves**: The 120 option was removed |
@@ -163,6 +163,7 @@ The app tags these games in its list (`UP TO 120`, `90 MAX`, `60 MAX`) and downl
 | **Super Mario Run**: 120 FPS in 2020 high-refresh game lists (untested) |  |  |
 | **Dragon Ball Legends**: 120 FPS in 2020 high-refresh game lists (untested) |  |  |
 | **Old School RuneScape**: 120 FPS in 2020 high-refresh game lists (untested) |  |  |
+| **Fortnite**: Device-dependent; up to 120 FPS reported |  |  |
 <!-- /games:table -->
 
 <sub>Compiled from developer pages, patch coverage and player reports as of November 2026. Games change their limits in updates. Know a game that belongs here? <a href="https://github.com/Rohan-Reyes/Hyper120/issues/new/choose">Open an issue</a>.</sub>
@@ -179,7 +180,7 @@ The game has its own limit. The tester proves the phone's cap is gone; games lik
 <!-- games:names60 -->Roblox, Genshin Impact, Honkai: Star Rail, Zenless Zone Zero, Wuthering Waves, Pokémon UNITE, PPSSPP (PSP games), Bus Simulator Indonesia, Truckers of Europe 3, eFootball, Monster Hunter Now and Archero 2<!-- /games:names60 -->. They limit themselves, so they stay at 60 even with Hyper120 on. The app tags them `60 MAX`.
 
 **Which games can go above 60?**
-<!-- games:names120 -->Mobile Legends: Bang Bang, Call of Duty: Mobile, PUBG Mobile / BGMI, Honor of Kings, League of Legends: Wild Rift, Delta Force, Standoff 2, Brawl Stars, Clash of Clans, Minecraft, Asphalt Legends, CSR 2, Top Drives, Pokémon GO, EA SPORTS FC Mobile, World of Tanks Blitz, Block Blast!, Spaceflight Simulator, 8 Ball Pool, Subway Surfers, Shadow Fight 2, Shadow Fight 3, Shadowgun Legends, Dead Trigger 2, Pixel Gun 3D, Plants vs Zombies 2, Soul Knight, Hill Climb Racing 2, Temple Run 2, Sonic Dash, Marvel Contest of Champions, Mortal Kombat, Injustice 2, Summoners War, Toon Blast, Tank Stars, Stick War: Legacy, Traffic Rider, Bullet Force, Mini Metro, Alto's Odyssey, Grimvalor, Super Mario Run, Dragon Ball Legends and Old School RuneScape<!-- /games:names120 -->, once you turn on the high frame rate in the game's settings. Many only show that option on phones the developer has approved. <!-- games:names90 -->Free Fire / Free Fire MAX and Fortnite<!-- /games:names90 --> top out at 90.
+<!-- games:names120 -->Mobile Legends: Bang Bang, Call of Duty: Mobile, PUBG Mobile / BGMI, Honor of Kings, League of Legends: Wild Rift, Delta Force, Standoff 2, Brawl Stars, Clash of Clans, Minecraft, Asphalt Legends, CSR 2, Top Drives, Pokémon GO, EA SPORTS FC Mobile, World of Tanks Blitz, Block Blast!, Spaceflight Simulator, 8 Ball Pool, Subway Surfers, Shadow Fight 2, Shadow Fight 3, Shadowgun Legends, Dead Trigger 2, Pixel Gun 3D, Plants vs Zombies 2, Soul Knight, Hill Climb Racing 2, Temple Run 2, Sonic Dash, Marvel Contest of Champions, Mortal Kombat, Injustice 2, Summoners War, Toon Blast, Tank Stars, Stick War: Legacy, Traffic Rider, Bullet Force, Mini Metro, Alto's Odyssey, Grimvalor, Super Mario Run, Dragon Ball Legends, Old School RuneScape and Fortnite<!-- /games:names120 -->, once you turn on the high frame rate in the game's settings. Many only show that option on phones the developer has approved. <!-- games:names90 -->Free Fire / Free Fire MAX<!-- /games:names90 --> top out at 90.
 
 **My game isn't on the list. How do I know?**
 Look in the game's graphics settings for a frame-rate option. If the highest choice is 60 (or there's none), the game is most likely capped at 60. Confirm with Game Turbo's FPS counter, then long-press the game in Hyper120 and tap **Report how it runs** so it can be added.

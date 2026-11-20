@@ -33,10 +33,12 @@ final class FaqData {
     private static final long FETCH_INTERVAL_MS = 24L * 60L * 60L * 1000L;
 
     static final class Item {
+        final String id;
         final String question;
         final String answer;
 
-        Item(String q, String a) {
+        Item(String id, String q, String a) {
+            this.id = id;
             question = q;
             answer = a;
         }
@@ -116,7 +118,7 @@ final class FaqData {
             JSONObject it = arr.getJSONObject(i);
             String q = pick(it.optJSONObject("q"), lang);
             String a = pick(it.optJSONObject("a"), lang);
-            if (q != null && a != null) out.add(new Item(q, a));
+            if (q != null && a != null) out.add(new Item(it.optString("id"), q, a));
         }
         if (out.isEmpty()) return false;
         items = Collections.unmodifiableList(out);

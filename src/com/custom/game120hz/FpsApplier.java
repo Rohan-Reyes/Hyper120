@@ -33,6 +33,7 @@ public final class FpsApplier {
     private static final String KEY_LAST_PING = "last_ping_ms";
     private static final String KEY_GAME_FPS_PREFIX = "game_fps_";
     private static final String KEY_SERVICE_BEAT = "service_heartbeat_ms";
+    private static final String KEY_SERVICE_SENT = "service_last_sent_ms";
     private static final String KEY_ONBOARDED = "onboarded_v43_guide2";
     private static final String PING_URL = "https://hyper120.aten-systems.site/api/ping";
     private static final long PING_INTERVAL_MS = 12L * 60L * 60L * 1000L;
@@ -163,19 +164,17 @@ public final class FpsApplier {
      * is kept, so it comes back when the phone is set to 120Hz again.
      */
     public static int getEffectiveTargetFps(Context ctx) {
-        int target = getTargetFps(ctx);
-        if (!isRateLocked(ctx, target)) return target;
-        int best = 60;
-        for (int r : selectableRates(ctx)) {
-            if (!isRateLocked(ctx, r)) best = Math.max(best, r);
-        }
-        return best;
+        return effectiveRate(ctx, getTargetFps(ctx));
     }
 
-    /** A rate is locked when the phone's own refresh setting is known and lower than it. */
+    private static int effectiveRate(Context ctx, int target) {
+        return isRateLocked(ctx, target) ? 60 : target;
+    }
+
+    /** Standard (60 Hz) gets a setup prompt. Higher settings are advisory because vendor
+     * settings can report a base rate while a higher display mode is available. */
     public static boolean isRateLocked(Context ctx, int rate) {
-        int setting = getSystemRefreshSetting(ctx);
-        return setting > 0 && rate > setting + 1;
+        return rate > 60 && isSystemRefreshTooLow(ctx);
     }
 
     public static int getMaxSupportedFps(Context ctx) {
@@ -272,7 +271,7 @@ public final class FpsApplier {
     }
 
     public static ApplyResult apply120Hz(Context ctx, Set<String> pkgs) {
-        return applyTargetFps(ctx, pkgs, getTargetFps(ctx));
+        return applyTargetFps(ctx, pkgs, getEffectiveTargetFps(ctx));
     }
 
     public static ApplyResult applyTargetFps(Context ctx, Set<String> pkgs, int fps) {
@@ -292,7 +291,8 @@ public final class FpsApplier {
             int own = getGameFps(ctx, trimmed);
             Intent intent = new Intent(ACTION_OVERRIDE);
             intent.putExtra("override_pkg_name", trimmed);
-            intent.putExtra("override_freshrate", own > 0 ? own : fps);
+            int rate = trimmed.equals(ctx.getPackageName()) ? fps : effectiveRate(ctx, own > 0 ? own : fps);
+            intent.putExtra("override_freshrate", rate);
             intent.setPackage(POWERKEEPER_PKG);
             ctx.sendBroadcast(intent);
             sent.add(trimmed);
@@ -306,6 +306,11 @@ public final class FpsApplier {
     /** Rate chosen for one game, or 0 to follow the global target. */
     public static int getGameFps(Context ctx, String pkg) {
         return ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE).getInt(KEY_GAME_FPS_PREFIX + pkg, 0);
+    }
+
+    public static int getEffectiveGameFps(Context ctx, String pkg) {
+        int own = getGameFps(ctx, pkg);
+        return own > 0 ? effectiveRate(ctx, own) : getEffectiveTargetFps(ctx);
     }
 
     public static void setGameFps(Context ctx, String pkg, int fps) {
@@ -325,6 +330,23 @@ public final class FpsApplier {
 
     public static long lastServiceBeat(Context ctx) {
         return ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE).getLong(KEY_SERVICE_BEAT, 0L);
+    }
+
+    public static void markServiceSent(Context ctx) {
+        ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit()
+            .putLong(KEY_SERVICE_SENT, System.currentTimeMillis()).apply();
+    }
+
+    public static String backgroundReport(Context ctx) {
+        long now = System.currentTimeMillis();
+        return "- Background override: " + (isAutoEnabled(ctx) ? "on" : "off")
+            + "\n- Last service heartbeat: " + reportAge(now, lastServiceBeat(ctx))
+            + "\n- Last background request sent: " + reportAge(now,
+                ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE).getLong(KEY_SERVICE_SENT, 0L)) + "\n";
+    }
+
+    private static String reportAge(long now, long timestamp) {
+        return timestamp > 0 && timestamp <= now ? (now - timestamp) / 1000 + " seconds ago" : "unavailable";
     }
 
     /** True when this install was already set up by an older version (so the guide is a re-check, not a reset). */

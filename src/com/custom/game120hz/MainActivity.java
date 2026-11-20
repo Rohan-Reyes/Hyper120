@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.LinearGradient;
 import android.graphics.Shader;
 import android.graphics.Typeface;
@@ -30,7 +31,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.LinearLayout;
-import android.widget.HorizontalScrollView;
 import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Deque;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -57,6 +58,7 @@ public class MainActivity extends Activity {
         final boolean isGame;
         View row;
         FrameLayout check;
+        ImageView settings;
         TextView sub;
 
         AppEntry(String label, String packageName, Drawable icon, boolean isGame) {
@@ -68,6 +70,8 @@ public class MainActivity extends Activity {
     }
 
     private final List<AppEntry> allApps = new ArrayList<>();
+    private boolean appsLoading;
+    private boolean appsLoadFailed;
     private Set<String> selectedPackages;
     private final Handler ui = new Handler(Looper.getMainLooper());
     private final Runnable resetBtnRunnable = this::resetApplyButton;
@@ -89,13 +93,9 @@ public class MainActivity extends Activity {
     private Switch autoSwitch;
     private LinearLayout healthSlot;
     private TextView heroCaption;
-    private LinearLayout verifiedBadge;
-    private TextView verifiedTitle;
-    private TextView verifiedSub;
-    private int verifiedFps = 0;
+    private int checkResultTarget;
     private LinearLayout faqSlot;
     private ScrollView mainScroll;
-    /** Result of the check that runs after tapping Apply (pass line, or fixes + report on failure). */
     private LinearLayout checkBox;
     private OverrideCheck check;
     private boolean serviceWasKilled = false;
@@ -428,33 +428,6 @@ public class MainActivity extends Activity {
         TextView hz = UiHelper.text(this, "Hz", 24, UiHelper.COL_MUTED, UiHelper.TF_BOLD);
         hz.setPadding(dp(6), 0, 0, dp(10));
         numRow.addView(hz);
-        numRow.addView(new View(this), new LinearLayout.LayoutParams(0, 1, 1f));
-
-        // Shown after a successful Apply check, beside the big number so it's hard to miss
-        verifiedBadge = new LinearLayout(this);
-        verifiedBadge.setOrientation(LinearLayout.VERTICAL);
-        verifiedBadge.setVisibility(View.GONE);
-        verifiedBadge.setPadding(dp(12), dp(10), dp(14), dp(11));
-        verifiedBadge.setBackground(UiHelper.pillBg(this, UiHelper.alpha(UiHelper.COL_TEAL, 0.1f),
-            UiHelper.alpha(UiHelper.COL_TEAL, 0.45f), 16));
-        TextView over = UiHelper.overline(this, getString(R.string.check_verified), UiHelper.COL_TEAL);
-        Drawable ck = getDrawable(R.drawable.ui_check).mutate();
-        ck.setTint(UiHelper.COL_TEAL);
-        ck.setBounds(0, 0, dp(12), dp(12));
-        over.setCompoundDrawables(ck, null, null, null);
-        over.setCompoundDrawablePadding(dp(5));
-        verifiedBadge.addView(over);
-        verifiedTitle = UiHelper.text(this, "", 14, UiHelper.COL_TEXT, UiHelper.TF_BOLD);
-        verifiedTitle.setPadding(0, dp(6), 0, 0);
-        verifiedBadge.addView(verifiedTitle);
-        verifiedSub = UiHelper.text(this, "", 11.5f, UiHelper.COL_MUTED, UiHelper.TF_REGULAR);
-        verifiedSub.setPadding(0, dp(3), 0, 0);
-        verifiedBadge.addView(verifiedSub);
-        LinearLayout.LayoutParams vb = new LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        vb.gravity = Gravity.CENTER_VERTICAL;
-        vb.leftMargin = dp(8);
-        numRow.addView(verifiedBadge, vb);
         hero.addView(numRow);
 
         heroCaption = UiHelper.text(this, getString(R.string.main_caption),
@@ -481,6 +454,10 @@ public class MainActivity extends Activity {
                     return;
                 }
                 v.performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK);
+                if (check != null) {
+                    check.cancel();
+                    check = null;
+                }
                 if (fps > 120) {
                     android.widget.Toast.makeText(this, getString(R.string.main_caption_high, fps),
                         android.widget.Toast.LENGTH_LONG).show();
@@ -519,9 +496,9 @@ public class MainActivity extends Activity {
     private void updateSegments() {
         int active = FpsApplier.getEffectiveTargetFps(this);
         hzNumber.setText(String.valueOf(active));
-        if (verifiedBadge != null && active != verifiedFps) {
-            verifiedBadge.setVisibility(View.GONE);
-            verifiedFps = 0;
+        if (checkResultTarget != active) {
+            checkResultTarget = 0;
+            checkBox.setVisibility(View.GONE);
         }
         for (TextView s : segments) {
             int rate = (Integer) s.getTag();
@@ -533,24 +510,9 @@ public class MainActivity extends Activity {
                 ? UiHelper.gradientBg(this, 12, UiHelper.COL_PRIMARY, 0xFF818CF8)
                 : UiHelper.ripple(this, null, 12));
         }
-        if (heroCaption != null) {
-            boolean verified = verifiedFps == active && active > 60;
-            if (verified && active <= 120) {
-                // Teal confirmation + a muted reminder that every game keeps its own limit
-                String head = getString(R.string.check_caption, active);
-                String limit = getString(R.string.check_caption_limit);
-                android.text.SpannableStringBuilder sb = new android.text.SpannableStringBuilder(head + "\n" + limit);
-                sb.setSpan(new ForegroundColorSpan(UiHelper.COL_MUTED), head.length() + 1, sb.length(),
-                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                sb.setSpan(new android.text.style.RelativeSizeSpan(0.92f), head.length() + 1, sb.length(),
-                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                heroCaption.setText(sb);
-            } else {
-                heroCaption.setText(active > 120 ? getString(R.string.main_caption_high, active)
-                    : getString(R.string.main_caption));
-            }
-            heroCaption.setTextColor(active > 120 ? UiHelper.COL_WARN : verified ? UiHelper.COL_TEAL : UiHelper.COL_MUTED);
-        }
+        heroCaption.setText(active > 120 ? getString(R.string.main_caption_high, active)
+            : getString(R.string.main_caption));
+        heroCaption.setTextColor(active > 120 ? UiHelper.COL_WARN : UiHelper.COL_MUTED);
         resetApplyButton();
     }
 
@@ -814,27 +776,7 @@ public class MainActivity extends Activity {
         list.setVisibility(open ? View.VISIBLE : View.GONE);
         for (FaqData.Item item : qa) {
             list.addView(UiHelper.divider(this, 0));
-            LinearLayout q = new LinearLayout(this);
-            q.setOrientation(LinearLayout.VERTICAL);
-            q.setPadding(0, dp(13), 0, dp(13));
-            LinearLayout qrow = new LinearLayout(this);
-            qrow.setGravity(Gravity.CENTER_VERTICAL);
-            TextView qt = UiHelper.text(this, item.question, 14.5f, UiHelper.COL_TEXT, UiHelper.TF_MEDIUM);
-            qrow.addView(qt, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
-            TextView plus = UiHelper.text(this, "+", 18, UiHelper.COL_PRIMARY, UiHelper.TF_BOLD);
-            plus.setPadding(dp(10), 0, 0, 0);
-            qrow.addView(plus);
-            q.addView(qrow);
-            View answer = formatAnswer(item.answer);
-            answer.setVisibility(View.GONE);
-            q.addView(answer);
-            q.setOnClickListener(v -> {
-                boolean show = answer.getVisibility() != View.VISIBLE;
-                answer.setVisibility(show ? View.VISIBLE : View.GONE);
-                plus.setText(show ? "\u2212" : "+");
-                qt.setTextColor(show ? UiHelper.COL_PRIMARY : UiHelper.COL_TEXT);
-            });
-            list.addView(q);
+            list.addView(UiHelper.faqItem(this, item));
         }
         list.addView(UiHelper.divider(this, 0));
         TextView more = UiHelper.text(this, getString(R.string.faq_more), 13, UiHelper.COL_PRIMARY, UiHelper.TF_MEDIUM);
@@ -849,64 +791,6 @@ public class MainActivity extends Activity {
             chev.animate().rotation(show ? 270 : 90).setDuration(180).start();
         });
         faqSlot.addView(card);
-    }
-
-    /** Renders an answer: paragraphs, "1. " numbered steps, "- " bullets, **bold**. */
-    private View formatAnswer(String src) {
-        LinearLayout box = new LinearLayout(this);
-        box.setOrientation(LinearLayout.VERTICAL);
-        box.setPadding(0, dp(4), dp(8), dp(2));
-        for (String raw : src.split("\n")) {
-            String line = raw.trim();
-            if (line.isEmpty()) continue;
-            String marker = null;
-            java.util.regex.Matcher m = java.util.regex.Pattern.compile("^(\\d+)\\.\\s+(.*)$").matcher(line);
-            if (m.matches()) {
-                marker = m.group(1);
-                line = m.group(2);
-            } else if (line.startsWith("- ")) {
-                marker = "\u2022";
-                line = line.substring(2);
-            }
-            TextView t = UiHelper.text(this, boldSpans(line), 13.5f, UiHelper.COL_MUTED, UiHelper.TF_REGULAR);
-            t.setLineSpacing(dp(3), 1f);
-            if (marker == null) {
-                t.setPadding(0, dp(6), 0, dp(2));
-                box.addView(t);
-                continue;
-            }
-            LinearLayout row = new LinearLayout(this);
-            row.setPadding(0, dp(7), 0, 0);
-            boolean num = !marker.equals("\u2022");
-            TextView mk = UiHelper.text(this, marker, num ? 11 : 15, UiHelper.COL_PRIMARY, UiHelper.TF_BOLD);
-            mk.setGravity(Gravity.CENTER);
-            LinearLayout.LayoutParams mp;
-            if (num) {
-                mk.setBackground(UiHelper.pillBg(this, UiHelper.alpha(UiHelper.COL_PRIMARY, 0.15f), 0, 99));
-                mp = new LinearLayout.LayoutParams(dp(20), dp(20));
-            } else {
-                mp = new LinearLayout.LayoutParams(dp(20), ViewGroup.LayoutParams.WRAP_CONTENT);
-            }
-            mp.rightMargin = dp(10);
-            row.addView(mk, mp);
-            row.addView(t, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
-            box.addView(row);
-        }
-        return box;
-    }
-
-    private CharSequence boldSpans(String s) {
-        android.text.SpannableStringBuilder b = new android.text.SpannableStringBuilder();
-        String[] parts = s.split("\\*\\*", -1);
-        for (int i = 0; i < parts.length; i++) {
-            int st = b.length();
-            b.append(parts[i]);
-            if (i % 2 == 1) {
-                b.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), st, b.length(), 0);
-                b.setSpan(new android.text.style.ForegroundColorSpan(UiHelper.COL_TEXT), st, b.length(), 0);
-            }
-        }
-        return b;
     }
 
     private void updateFilterChips() {
@@ -954,26 +838,45 @@ public class MainActivity extends Activity {
     }
 
     private void loadInstalledAppsAsync() {
+        if (appsLoading) return;
+        appsLoading = true;
+        appsLoadFailed = false;
+        refreshList();
         new Thread(() -> {
-            PackageManager pm = getPackageManager();
             List<AppEntry> list = new ArrayList<>();
-            for (ApplicationInfo ai : pm.getInstalledApplications(0)) {
-                if (pm.getLaunchIntentForPackage(ai.packageName) == null) continue;
-                if (getPackageName().equals(ai.packageName)) continue;
-                list.add(new AppEntry(pm.getApplicationLabel(ai).toString(), ai.packageName,
-                    smallIcon(pm.getApplicationIcon(ai)),
-                    FpsApplier.isGameApp(ai) || GameCaps.get(ai.packageName) != null));
+            boolean failed = false;
+            try {
+                PackageManager pm = getPackageManager();
+                Set<String> seen = new HashSet<>();
+                Intent launcher = new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER);
+                for (ResolveInfo entry : pm.queryIntentActivities(launcher, 0)) {
+                    if (entry.activityInfo == null) continue;
+                    ApplicationInfo ai = entry.activityInfo.applicationInfo;
+                    if (ai == null || getPackageName().equals(ai.packageName) || !seen.add(ai.packageName)) continue;
+                    list.add(new AppEntry(pm.getApplicationLabel(ai).toString(), ai.packageName,
+                        smallIcon(pm.getApplicationIcon(ai)),
+                        FpsApplier.isGameApp(ai) || GameCaps.get(ai.packageName) != null));
+                }
+            } catch (RuntimeException ex) {
+                android.util.Log.w("Hyper120", "Could not load installed apps", ex);
+                failed = true;
             }
-            Collections.sort(list, (a, b) -> {
-                boolean as = selectedPackages.contains(a.packageName);
-                boolean bs = selectedPackages.contains(b.packageName);
-                if (as != bs) return as ? -1 : 1;
-                if (a.isGame != b.isGame) return a.isGame ? -1 : 1;
-                return a.label.compareToIgnoreCase(b.label);
-            });
+            boolean loadFailed = failed;
             ui.post(() -> {
-                allApps.clear();
-                allApps.addAll(list);
+                if (isDestroyed()) return;
+                appsLoading = false;
+                appsLoadFailed = loadFailed;
+                if (!loadFailed) {
+                    list.sort((a, b) -> {
+                        boolean aSelected = selectedPackages.contains(a.packageName);
+                        boolean bSelected = selectedPackages.contains(b.packageName);
+                        if (aSelected != bSelected) return aSelected ? -1 : 1;
+                        if (a.isGame != b.isGame) return a.isGame ? -1 : 1;
+                        return a.label.compareToIgnoreCase(b.label);
+                    });
+                    allApps.clear();
+                    allApps.addAll(list);
+                }
                 updateFilterChips();
                 refreshList();
             });
@@ -1001,8 +904,14 @@ public class MainActivity extends Activity {
             shown++;
         }
         if (shown == 0) {
-            emptyText.setText(getString(allApps.isEmpty() ? R.string.loading_apps : R.string.no_match));
+            int message = appsLoading ? R.string.loading_apps
+                : allApps.isEmpty() ? R.string.no_installed_apps : R.string.no_match;
+            emptyText.setText(getString(appsLoadFailed ? R.string.apps_load_failed : message));
             listCard.addView(emptyText);
+        }
+        if (appsLoadFailed || (!appsLoading && allApps.isEmpty())) {
+            listCard.addView(actionChip(getString(R.string.check_retry), UiHelper.COL_PRIMARY,
+                v -> loadInstalledAppsAsync()));
         }
     }
 
@@ -1034,6 +943,15 @@ public class MainActivity extends Activity {
         bindSub(e);
         row.addView(col, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
 
+        ImageView settings = UiHelper.icon(this, R.drawable.ui_settings, UiHelper.COL_MUTED, 20);
+        settings.setLayoutParams(new LinearLayout.LayoutParams(dp(48), dp(48)));
+        settings.setPadding(dp(14), dp(14), dp(14), dp(14));
+        settings.setBackground(UiHelper.ripple(this, null, 12));
+        settings.setContentDescription(getString(R.string.game_settings_label, e.label));
+        settings.setFocusable(true);
+        settings.setOnClickListener(v -> showGameSheet(e));
+        row.addView(settings);
+
         FrameLayout check = new FrameLayout(this);
         ImageView tick = UiHelper.icon(this, R.drawable.ui_check, UiHelper.COL_ON_PRIMARY, 16);
         check.addView(tick, new FrameLayout.LayoutParams(dp(16), dp(16), Gravity.CENTER));
@@ -1043,6 +961,7 @@ public class MainActivity extends Activity {
 
         e.row = row;
         e.check = check;
+        e.settings = settings;
         styleCheck(e, false);
         row.setOnLongClickListener(v -> {
             v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
@@ -1224,16 +1143,17 @@ public class MainActivity extends Activity {
         } catch (Exception ignored) {
         }
         GameCaps.Info caps = GameCaps.get(e.packageName);
-        int own = FpsApplier.getGameFps(this, e.packageName);
         String title = "[Game] " + e.label + " - " + result + " - " + FpsApplier.getDeviceName(this)
             + " (" + FpsApplier.romRegion() + ")";
         String body = "### Game\n" + e.label + " (`" + e.packageName + "` v" + gameVer + ")\n"
             + "Listed as: " + (caps == null ? "not in list" : caps.cap + " max") + "\n"
-            + "Rate sent: " + (own > 0 ? own : FpsApplier.getTargetFps(this)) + "Hz"
+            + "Configured rate to send: " + FpsApplier.getEffectiveGameFps(this, e.packageName) + "Hz"
             + (selectedPackages.contains(e.packageName) ? "" : " (game not ticked!)") + "\n\n"
             + "### Result\n" + result + "\n\n"
             + "### Device\n```\n" + FpsApplier.deviceReport(this) + "\n```\n\n"
-            + "### Notes\n- In-game frame-rate setting used:\n- FPS seen in Game Turbo:\n";
+            + "### Notes\n- FPS options shown in the game:\n- Selected FPS option, graphics preset and game mode:"
+            + "\n- Observed gameplay FPS and measurement tool:\n- Test result in Hyper120, if available:\n"
+            + FpsApplier.backgroundReport(this);
         try {
             UiHelper.openUrl(this, UiHelper.GITHUB_REPO_URL + "/issues/new?title="
                 + java.net.URLEncoder.encode(title, "UTF-8") + "&body=" + java.net.URLEncoder.encode(body, "UTF-8"));
@@ -1244,6 +1164,7 @@ public class MainActivity extends Activity {
 
     private void styleCheck(AppEntry e, boolean animate) {
         boolean on = selectedPackages.contains(e.packageName);
+        e.settings.setVisibility(e.isGame || on ? View.VISIBLE : View.GONE);
         GradientDrawable d;
         if (on) {
             d = new GradientDrawable(GradientDrawable.Orientation.TL_BR,
@@ -1373,6 +1294,8 @@ public class MainActivity extends Activity {
             }
             last = t;
             if (t - start >= 2_300_000_000L) {
+                android.view.Display display = getWindowManager().getDefaultDisplay();
+                int displayHz = Math.round(display.getMode().getRefreshRate());
                 cancel();
                 float measured = 0;
                 if (n >= 10) {
@@ -1380,7 +1303,7 @@ public class MainActivity extends Activity {
                     java.util.Arrays.sort(s);
                     measured = 1_000_000_000f / s[n / 2];
                 }
-                onCheckDone(fps, measured);
+                onCheckDone(fps, displayHz, measured);
                 return;
             }
             android.view.Choreographer.getInstance().postFrameCallback(this);
@@ -1408,94 +1331,85 @@ public class MainActivity extends Activity {
         }
     }
 
-    /** Badge beside the big number: stays while the target is still the verified rate. */
-    private void showVerified(int fps, float measured) {
-        verifiedFps = fps;
-        verifiedTitle.setText(getString(R.string.check_badge, fps));
-        verifiedSub.setText(getString(R.string.check_measured, Math.round(measured)));
-        updateSegments();
-        if (verifiedBadge.getVisibility() != View.VISIBLE) {
-            verifiedBadge.setAlpha(0f);
-            verifiedBadge.setTranslationX(dp(12));
-            verifiedBadge.setVisibility(View.VISIBLE);
-            verifiedBadge.animate().alpha(1f).translationX(0).setDuration(260).start();
-        }
-    }
-
     private void startCheck() {
-        if (check != null) check.cancel();
-        checkBox.setVisibility(View.GONE);
-        verifiedBadge.setVisibility(View.GONE);
-        verifiedFps = 0;
+        if (check != null) {
+            check.cancel();
+            check = null;
+        }
+        checkResultTarget = 0;
         updateSegments();
         int fps = FpsApplier.getEffectiveTargetFps(this);
-        if (fps <= 60 || !FpsApplier.isPowerKeeperInstalled(this)) {
-            // nothing to verify at 60; PowerKeeper missing is shown by the normal button state
-            animateApplyButton(FpsApplier.applyTargetFps(this, selectedPackages, fps));
-            return;
-        }
+        if (fps <= 60 || !FpsApplier.isPowerKeeperInstalled(this)) return;
         check = new OverrideCheck(fps);
         check.begin();
     }
 
-    private void onCheckDone(int fps, float measured) {
+    private void onCheckDone(int fps, int displayHz, float measured) {
         check = null;
-        boolean ok = measured >= fps * 0.95f;
-        appendLog(String.format(Locale.US, "Check %dHz: measured %.1f FPS (%s)", fps, measured, ok ? "works" : "not applied"));
-        checkBox.removeAllViews();
-        checkBox.setVisibility(View.VISIBLE);
-        if (ok) {
-            applyBtn.setText(getString(R.string.check_ok, fps));
-            setButtonIcon(R.drawable.ui_check);
-            applyBtn.setBackground(UiHelper.ripple(this, UiHelper.gradientBg(this, 18, UiHelper.COL_TEAL, 0xFF5EEAD4), 18));
-            checkBox.setVisibility(View.GONE);
-            showVerified(fps, measured);
-            ui.postDelayed(resetBtnRunnable, 2500);
-            return;
-        }
-
+        boolean verified = displayHz >= fps - 1 && measured >= fps * 0.95f;
+        appendLog(String.format(Locale.US, "Check %dHz: display %dHz, Hyper120 test %.1f FPS",
+            fps, displayHz, measured));
         resetApplyButton();
-        int shown = Math.round(measured);
-        LinearLayout card = new LinearLayout(this);
-        card.setOrientation(LinearLayout.VERTICAL);
-        card.setPadding(dp(14), dp(14), dp(14), dp(12));
-        card.setBackground(UiHelper.pillBg(this, UiHelper.alpha(UiHelper.COL_ERROR, 0.08f),
-            UiHelper.alpha(UiHelper.COL_ERROR, 0.4f), 16));
-        card.addView(UiHelper.text(this, measured > 0 ? getString(R.string.check_fail_title, shown, fps)
-            : getString(R.string.check_fail_title_unknown, fps), 15, UiHelper.COL_TEXT, UiHelper.TF_BOLD));
 
-        boolean refreshLow = FpsApplier.isRateLocked(this, fps) || FpsApplier.isSystemRefreshTooLow(this);
-        TextView body = UiHelper.text(this, getString(refreshLow ? R.string.check_fail_refresh : R.string.check_fail_body),
-            13, UiHelper.COL_MUTED, UiHelper.TF_REGULAR);
+        int accent = verified ? UiHelper.COL_TEAL : UiHelper.COL_WARN;
+        checkBox.removeAllViews();
+        checkBox.setPadding(dp(14), dp(14), dp(14), dp(6));
+        checkBox.setBackground(UiHelper.pillBg(this, UiHelper.alpha(accent, 0.07f),
+            UiHelper.alpha(accent, 0.30f), 16));
+
+        TextView heading = UiHelper.text(this, verified ? getString(R.string.check_verified)
+            : getString(R.string.check_fail_title_unknown, fps), 15, accent, UiHelper.TF_BOLD);
+        Drawable icon = getDrawable(verified ? R.drawable.ui_check : R.drawable.ui_info).mutate();
+        icon.setTint(accent);
+        icon.setBounds(0, 0, dp(16), dp(16));
+        heading.setCompoundDrawablesRelative(icon, null, null, null);
+        heading.setCompoundDrawablePadding(dp(8));
+        checkBox.addView(heading, UiHelper.matchWrap(this, 0));
+
+        TextView details = UiHelper.text(this, getString(R.string.check_result_modes, fps, displayHz)
+            + "\n" + getString(R.string.check_measured, Math.round(measured)),
+            13, UiHelper.COL_TEXT, UiHelper.TF_MEDIUM);
+        details.setLineSpacing(dp(4), 1f);
+        checkBox.addView(details, UiHelper.matchWrap(this, 8));
+
+        boolean refreshLow = FpsApplier.isRateLocked(this, fps);
+        int bodyRes = verified ? R.string.check_result_scope
+            : refreshLow ? R.string.check_fail_refresh : R.string.check_fail_body;
+        TextView body = UiHelper.text(this, getString(bodyRes), 13, UiHelper.COL_MUTED, UiHelper.TF_REGULAR);
         body.setLineSpacing(dp(3), 1f);
-        body.setPadding(0, dp(6), 0, dp(10));
-        card.addView(body);
+        checkBox.addView(body, UiHelper.matchWrap(this, 8));
 
-        LinearLayout actions = new LinearLayout(this);
-        actions.setOrientation(LinearLayout.HORIZONTAL);
-        if (refreshLow) {
-            actions.addView(actionChip(getString(R.string.health_open_display), UiHelper.COL_WARN,
-                v -> UiHelper.openDisplaySettings(this)));
+        if (verified) {
+            addCheckAction(R.string.check_game_help, v -> openFaq());
+        } else if (refreshLow) {
+            addCheckAction(R.string.health_open_display, v -> UiHelper.openDisplaySettings(this));
         } else {
-            actions.addView(actionChip(getString(R.string.check_retry), UiHelper.COL_PRIMARY, v -> startCheck()));
-            actions.addView(actionChip(getString(R.string.check_report), UiHelper.COL_ERROR, v -> reportCheck(fps, measured)));
-            actions.addView(actionChip(getString(R.string.check_faq), UiHelper.COL_MUTED, v -> openFaq()));
+            addCheckAction(R.string.check_report, v -> reportCheck(fps, displayHz, measured));
+            addCheckAction(R.string.check_faq, v -> openFaq());
         }
-        HorizontalScrollView hs = new HorizontalScrollView(this);
-        hs.setHorizontalScrollBarEnabled(false);
-        hs.addView(actions);
-        card.addView(hs);
-        checkBox.addView(card);
+        checkResultTarget = fps;
+        checkBox.setVisibility(View.VISIBLE);
     }
 
-    private void reportCheck(int fps, float measured) {
+    private void addCheckAction(int label, View.OnClickListener onClick) {
+        TextView action = UiHelper.text(this, getString(label), 13, UiHelper.COL_PRIMARY, UiHelper.TF_BOLD);
+        action.setGravity(Gravity.CENTER_VERTICAL | Gravity.START);
+        action.setMinHeight(dp(48));
+        action.setPadding(0, dp(8), 0, dp(8));
+        action.setBackground(UiHelper.ripple(this, null, 8));
+        action.setOnClickListener(onClick);
+        checkBox.addView(action, UiHelper.matchWrap(this, 0));
+    }
+
+    private void reportCheck(int fps, int displayHz, float measured) {
         try {
             String title = "[Compatibility] " + android.os.Build.MANUFACTURER + " " + android.os.Build.MODEL
                 + " (" + android.os.Build.DEVICE + ") - Apply check: " + Math.round(measured) + " FPS at " + fps + "Hz";
             String body = "### Device & check result\n```\n" + FpsApplier.deviceReport(this) + "\n"
-                + String.format(Locale.US, "Apply check: target %dHz | measured %.1f FPS (median) | phone refresh setting: %d",
-                    fps, measured, FpsApplier.getSystemRefreshSetting(this))
-                + "\n```\n\n### Games tested & notes\n- Autostart ON & Battery saver = No restrictions?\n- Games tested:\n";
+                + String.format(Locale.US, "Apply check: requested %dHz | display mode %dHz | Hyper120 test %.1f FPS (median)",
+                    fps, displayHz, measured)
+                + "\n```\n\n### Games tested & notes\n- Autostart ON & Battery saver = No restrictions?\n- Games tested:\n"
+                + FpsApplier.backgroundReport(this);
             UiHelper.openUrl(this, UiHelper.GITHUB_REPO_URL + "/issues/new?title="
                 + java.net.URLEncoder.encode(title, "UTF-8") + "&body=" + java.net.URLEncoder.encode(body, "UTF-8"));
         } catch (Exception e) {

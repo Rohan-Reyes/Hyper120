@@ -1,6 +1,6 @@
 {
-  "version": 5,
-  "updated": "2026-11-17",
+  "version": 6,
+  "updated": "2026-11-20",
   "games": [
     {
       "name": "Mobile Legends: Bang Bang",
@@ -425,12 +425,12 @@
     },
     {
       "name": "Fortnite",
-      "cap": 90,
+      "cap": 120,
       "packages": [
         "com.epicgames.fortnite"
       ],
-      "short": "60 on most Android phones, 90 on a few",
-      "tip": "60 FPS on most Android phones, 90 on a few. No 120 on Android."
+      "short": "Device-dependent; up to 120 FPS reported",
+      "tip": "Use the highest frame-rate option the game offers on your device. Players have reported 120 FPS on some devices, including Xiaomi Pad 8 Pro. Sustained FPS can drop as the device heats up."
     },
     {
       "name": "Roblox",

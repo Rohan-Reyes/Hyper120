@@ -232,6 +232,88 @@ public final class UiHelper {
         return (TextView) row.findViewWithTag("subtitle");
     }
 
+    static View faqItem(Activity act, FaqData.Item item) {
+        LinearLayout q = new LinearLayout(act);
+        q.setOrientation(LinearLayout.VERTICAL);
+        q.setPadding(0, dp(act, 13), 0, dp(act, 13));
+        LinearLayout qrow = new LinearLayout(act);
+        qrow.setGravity(Gravity.CENTER_VERTICAL);
+        TextView qt = UiHelper.text(act, item.question, 14.5f, UiHelper.COL_TEXT, UiHelper.TF_MEDIUM);
+        qrow.addView(qt, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+        TextView plus = UiHelper.text(act, "+", 18, UiHelper.COL_PRIMARY, UiHelper.TF_BOLD);
+        plus.setPadding(dp(act, 10), 0, 0, 0);
+        qrow.addView(plus);
+        q.addView(qrow);
+        View answer = formatAnswer(act, item.answer);
+        answer.setVisibility(View.GONE);
+        q.addView(answer);
+        q.setOnClickListener(v -> {
+            boolean show = answer.getVisibility() != View.VISIBLE;
+            answer.setVisibility(show ? View.VISIBLE : View.GONE);
+            plus.setText(show ? "\u2212" : "+");
+            qt.setTextColor(show ? UiHelper.COL_PRIMARY : UiHelper.COL_TEXT);
+        });
+        return q;
+    }
+
+    /** Renders an answer: paragraphs, "1. " numbered steps, "- " bullets, **bold**. */
+    private static View formatAnswer(Activity act, String src) {
+        LinearLayout box = new LinearLayout(act);
+        box.setOrientation(LinearLayout.VERTICAL);
+        box.setPadding(0, dp(act, 4), dp(act, 8), dp(act, 2));
+        for (String raw : src.split("\n")) {
+            String line = raw.trim();
+            if (line.isEmpty()) continue;
+            String marker = null;
+            java.util.regex.Matcher m = java.util.regex.Pattern.compile("^(\\d+)\\.\\s+(.*)$").matcher(line);
+            if (m.matches()) {
+                marker = m.group(1);
+                line = m.group(2);
+            } else if (line.startsWith("- ")) {
+                marker = "\u2022";
+                line = line.substring(2);
+            }
+            TextView t = UiHelper.text(act, boldSpans(line), 13.5f, UiHelper.COL_MUTED, UiHelper.TF_REGULAR);
+            t.setLineSpacing(dp(act, 3), 1f);
+            if (marker == null) {
+                t.setPadding(0, dp(act, 6), 0, dp(act, 2));
+                box.addView(t);
+                continue;
+            }
+            LinearLayout row = new LinearLayout(act);
+            row.setPadding(0, dp(act, 7), 0, 0);
+            boolean num = !marker.equals("\u2022");
+            TextView mk = UiHelper.text(act, marker, num ? 11 : 15, UiHelper.COL_PRIMARY, UiHelper.TF_BOLD);
+            mk.setGravity(Gravity.CENTER);
+            LinearLayout.LayoutParams mp;
+            if (num) {
+                mk.setBackground(UiHelper.pillBg(act, UiHelper.alpha(UiHelper.COL_PRIMARY, 0.15f), 0, 99));
+                mp = new LinearLayout.LayoutParams(dp(act, 20), dp(act, 20));
+            } else {
+                mp = new LinearLayout.LayoutParams(dp(act, 20), ViewGroup.LayoutParams.WRAP_CONTENT);
+            }
+            mp.rightMargin = dp(act, 10);
+            row.addView(mk, mp);
+            row.addView(t, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+            box.addView(row);
+        }
+        return box;
+    }
+
+    private static CharSequence boldSpans(String s) {
+        android.text.SpannableStringBuilder b = new android.text.SpannableStringBuilder();
+        String[] parts = s.split("\\*\\*", -1);
+        for (int i = 0; i < parts.length; i++) {
+            int st = b.length();
+            b.append(parts[i]);
+            if (i % 2 == 1) {
+                b.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), st, b.length(), 0);
+                b.setSpan(new android.text.style.ForegroundColorSpan(UiHelper.COL_TEXT), st, b.length(), 0);
+            }
+        }
+        return b;
+    }
+
     public static Switch styledSwitch(Activity act) {
         Switch sw = new Switch(act);
         int[][] states = {{android.R.attr.state_checked}, {}};
