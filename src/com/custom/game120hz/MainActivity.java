@@ -94,6 +94,9 @@ public class MainActivity extends Activity {
     private LinearLayout healthSlot;
     private TextView heroCaption;
     private int checkResultTarget;
+    private int checkDisplayHz;
+    private float checkMeasuredFps;
+    private View appsSection;
     private LinearLayout faqSlot;
     private ScrollView mainScroll;
     private LinearLayout checkBox;
@@ -126,7 +129,8 @@ public class MainActivity extends Activity {
         content.addView(buildSettings());
         content.addView(buildTools());
         content.addView(buildLog());
-        content.addView(buildAppsSection());
+        appsSection = buildAppsSection();
+        content.addView(appsSection);
 
         ScrollView scroll = new ScrollView(this);
         mainScroll = scroll;
@@ -566,6 +570,16 @@ public class MainActivity extends Activity {
             }
         });
         card.addView(addRow);
+        card.addView(UiHelper.divider(this, 58));
+
+        Switch usageSwitch = UiHelper.styledSwitch(this);
+        usageSwitch.setChecked(FpsApplier.isUsageSharingEnabled(this));
+        LinearLayout usageRow = UiHelper.row(this, R.drawable.ui_info, UiHelper.COL_PRIMARY,
+            getString(R.string.set_usage_title), getString(R.string.set_usage_sub), usageSwitch, null);
+        usageRow.setOnClickListener(v -> usageSwitch.toggle());
+        usageRow.setBackground(UiHelper.ripple(this, null, 14));
+        usageSwitch.setOnCheckedChangeListener((button, on) -> FpsApplier.setUsageSharingEnabled(this, on));
+        card.addView(usageRow);
         return card;
     }
 
@@ -1087,9 +1101,9 @@ public class MainActivity extends Activity {
         styleOptions(opts, FpsApplier.getGameFps(this, e.packageName));
         c.addView(seg, UiHelper.matchWrap(this, 0));
 
-        TextView report = UiHelper.button(this, getString(R.string.dlg_report), R.drawable.ui_flag, false, v -> {
+        TextView report = UiHelper.button(this, getString(R.string.check_game_help), R.drawable.ui_gauge, false, v -> {
             holder[0].dismiss();
-            showReportSheet(e);
+            showGameCheck(e);
         });
         ((LinearLayout.LayoutParams) report.getLayoutParams()).topMargin = dp(20);
         c.addView(report);
@@ -1110,6 +1124,57 @@ public class MainActivity extends Activity {
             o.setBackground(on ? UiHelper.gradientBg(this, 12, UiHelper.COL_PRIMARY, 0xFF818CF8)
                 : UiHelper.ripple(this, null, 12));
         }
+    }
+
+    private void pickGameToCheck() {
+        List<AppEntry> candidates = new ArrayList<>();
+        for (AppEntry entry : allApps) {
+            if (selectedPackages.contains(entry.packageName)) candidates.add(entry);
+        }
+        if (candidates.isEmpty()) {
+            scrollTo(appsSection);
+            return;
+        }
+        String[] labels = new String[candidates.size()];
+        for (int i = 0; i < labels.length; i++) labels[i] = candidates.get(i).label;
+        new android.app.AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert)
+            .setTitle(R.string.check_game_help)
+            .setItems(labels, (dialog, index) -> showGameCheck(candidates.get(index)))
+            .setNegativeButton(R.string.check_browse_apps, (dialog, which) -> scrollTo(appsSection))
+            .show();
+    }
+
+    private void showGameCheck(AppEntry e) {
+        LinearLayout content = new LinearLayout(this);
+        content.setOrientation(LinearLayout.VERTICAL);
+        content.addView(UiHelper.text(this, e.label, 18, UiHelper.COL_TEXT, UiHelper.TF_BOLD));
+        boolean selected = selectedPackages.contains(e.packageName);
+        TextView summary = UiHelper.text(this, gameRequestStatus(e), 14, UiHelper.COL_TEXT, UiHelper.TF_MEDIUM);
+        summary.setLineSpacing(dp(4), 1f);
+        content.addView(summary, UiHelper.matchWrap(this, 12));
+        FpsApplier.SentRequest sent = FpsApplier.lastRequest(e.packageName);
+        int guidance = !selected ? R.string.game_check_select_guide
+            : !FpsApplier.isPowerKeeperInstalled(this) ? R.string.pk_not_found_long
+            : sent == null ? R.string.game_check_apply_guide : R.string.game_check_play_guide;
+        content.addView(UiHelper.text(this, getString(guidance), 13, UiHelper.COL_MUTED, UiHelper.TF_REGULAR),
+            UiHelper.matchWrap(this, 10));
+        android.app.Dialog dialog = UiHelper.sheet(this, content);
+        content.addView(UiHelper.button(this, getString(R.string.dlg_report), R.drawable.ui_flag, true, v -> {
+            dialog.dismiss();
+            showReportSheet(e);
+        }), UiHelper.matchWrap(this, 16));
+        dialog.show();
+    }
+
+    private String gameRequestStatus(AppEntry e) {
+        boolean selected = selectedPackages.contains(e.packageName);
+        FpsApplier.SentRequest sent = FpsApplier.lastRequest(e.packageName);
+        String status = selected
+            ? getString(R.string.game_check_selected, FpsApplier.getEffectiveGameFps(this, e.packageName))
+            : getString(R.string.game_check_unselected);
+        if (sent == null) return status + "\n" + getString(R.string.game_check_no_request);
+        long elapsed = (android.os.SystemClock.elapsedRealtime() - sent.sentAt) / 1000;
+        return status + "\n" + getString(R.string.game_check_last_request, sent.rate, elapsed);
     }
 
     private void showReportSheet(AppEntry e) {
@@ -1143,16 +1208,18 @@ public class MainActivity extends Activity {
         } catch (Exception ignored) {
         }
         GameCaps.Info caps = GameCaps.get(e.packageName);
-        String title = "[Game] " + e.label + " - " + result + " - " + FpsApplier.getDeviceName(this)
+        String title = (e.isGame ? "[Game] " : "[App] ") + e.label + " - " + result + " - " + FpsApplier.getDeviceName(this)
             + " (" + FpsApplier.romRegion() + ")";
         String body = "### Game\n" + e.label + " (`" + e.packageName + "` v" + gameVer + ")\n"
             + "Listed as: " + (caps == null ? "not in list" : caps.cap + " max") + "\n"
-            + "Configured rate to send: " + FpsApplier.getEffectiveGameFps(this, e.packageName) + "Hz"
-            + (selectedPackages.contains(e.packageName) ? "" : " (game not ticked!)") + "\n\n"
+            + gameRequestStatus(e) + "\n\n"
             + "### Result\n" + result + "\n\n"
             + "### Device\n```\n" + FpsApplier.deviceReport(this) + "\n```\n\n"
             + "### Notes\n- FPS options shown in the game:\n- Selected FPS option, graphics preset and game mode:"
-            + "\n- Observed gameplay FPS and measurement tool:\n- Test result in Hyper120, if available:\n"
+            + "\n- Observed gameplay FPS and measurement tool:\n- Low immediately or drops after a few minutes?:\n"
+            + "- Hyper120 display test: " + (checkResultTarget > 0
+                ? String.format(Locale.US, "requested %d Hz | display %d Hz | Hyper120 test %.1f FPS",
+                    checkResultTarget, checkDisplayHz, checkMeasuredFps) : "not run for current target") + "\n"
             + FpsApplier.backgroundReport(this);
         try {
             UiHelper.openUrl(this, UiHelper.GITHUB_REPO_URL + "/issues/new?title="
@@ -1339,7 +1406,7 @@ public class MainActivity extends Activity {
         checkResultTarget = 0;
         updateSegments();
         int fps = FpsApplier.getEffectiveTargetFps(this);
-        if (fps <= 60 || !FpsApplier.isPowerKeeperInstalled(this)) return;
+        if (!FpsApplier.isPowerKeeperInstalled(this)) return;
         check = new OverrideCheck(fps);
         check.begin();
     }
@@ -1367,7 +1434,8 @@ public class MainActivity extends Activity {
         checkBox.addView(heading, UiHelper.matchWrap(this, 0));
 
         TextView details = UiHelper.text(this, getString(R.string.check_result_modes, fps, displayHz)
-            + "\n" + getString(R.string.check_measured, Math.round(measured)),
+            + "\n" + (measured > 0 ? getString(R.string.check_measured, measured)
+                : getString(R.string.check_measurement_missing)),
             13, UiHelper.COL_TEXT, UiHelper.TF_MEDIUM);
         details.setLineSpacing(dp(4), 1f);
         checkBox.addView(details, UiHelper.matchWrap(this, 8));
@@ -1379,15 +1447,14 @@ public class MainActivity extends Activity {
         body.setLineSpacing(dp(3), 1f);
         checkBox.addView(body, UiHelper.matchWrap(this, 8));
 
-        if (verified) {
-            addCheckAction(R.string.check_game_help, v -> openFaq());
-        } else if (refreshLow) {
-            addCheckAction(R.string.health_open_display, v -> UiHelper.openDisplaySettings(this));
-        } else {
-            addCheckAction(R.string.check_report, v -> reportCheck(fps, displayHz, measured));
-            addCheckAction(R.string.check_faq, v -> openFaq());
+        if (!verified) {
+            if (refreshLow) addCheckAction(R.string.health_open_display, v -> UiHelper.openDisplaySettings(this));
+            else addCheckAction(R.string.check_report, v -> reportCheck(fps, displayHz, measured));
         }
+        addCheckAction(R.string.check_game_help, v -> pickGameToCheck());
         checkResultTarget = fps;
+        checkDisplayHz = displayHz;
+        checkMeasuredFps = measured;
         checkBox.setVisibility(View.VISIBLE);
     }
 
@@ -1420,10 +1487,14 @@ public class MainActivity extends Activity {
     /** Opens the FAQ card and scrolls to it. */
     private void openFaq() {
         fillFaq(true);
-        if (mainScroll == null || faqSlot == null) return;
+        scrollTo(faqSlot);
+    }
+
+    private void scrollTo(View section) {
+        if (mainScroll == null || section == null) return;
         mainScroll.post(() -> {
             int[] slot = new int[2], sv = new int[2];
-            faqSlot.getLocationOnScreen(slot);
+            section.getLocationOnScreen(slot);
             mainScroll.getLocationOnScreen(sv);
             int y = mainScroll.getScrollY() + slot[1] - sv[1] - dp(16);
             mainScroll.smoothScrollTo(0, Math.max(0, y));

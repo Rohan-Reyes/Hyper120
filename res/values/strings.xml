@@ -52,7 +52,7 @@
     <string name="health_dismiss">Dismiss</string>
 
     <!-- Game dialog -->
-    <string name="dlg_tip_unknown">No data for this game yet. If it has a frame-rate setting, pick the highest. If it still feels like 60, the game itself is probably capped.</string>
+    <string name="dlg_tip_unknown">No compatibility data yet. Check the app’s own display or frame-rate options.</string>
     <string name="dlg_rate_title">Refresh rate for this game</string>
     <string name="dlg_rate_default">Default (%dHz)</string>
     <string name="dlg_report">Report how it runs</string>
@@ -160,12 +160,12 @@
     <string name="widget_perm_manual">Add it from the home screen instead</string>
 
     <!-- Phone refresh-rate setting -->
-    <string name="health_refresh_title">Your screen is set to %dHz</string>
-    <string name="health_refresh_body">Games can\'t go faster than your phone\'s own refresh rate. Open Settings → Display → Refresh rate and choose 120Hz (High).</string>
+    <string name="health_refresh_title">Phone reports a 60 Hz setting</string>
+    <string name="health_refresh_body">Choose the highest refresh rate available in Settings → Display → Refresh rate, then tap Apply.</string>
     <string name="health_open_display">Open display settings</string>
     <string name="ob3_refresh">3. Screen refresh rate: 120Hz</string>
     <string name="ob3_refresh_done">✓ Screen refresh rate: %dHz</string>
-    <string name="ob3_refresh_hint">In Display → Refresh rate, choose 120Hz (High). Games can\'t go faster than this.</string>
+    <string name="ob3_refresh_hint">Choose the highest refresh rate available in Settings → Display → Refresh rate, then tap Apply.</string>
     <string name="v_clamped_refresh">In Settings → Display → Refresh rate, choose the highest option your phone supports.</string>
 
     <!-- v4.3: rate options + before-you-play -->
@@ -223,13 +223,13 @@
     <string name="check_fail_title">Screen stayed at %1$d Hz, not %2$d</string>
     <string name="check_fail_title_unknown">Couldn’t confirm %d Hz</string>
     <string name="check_fail_refresh">Your phone’s refresh rate setting is too low. Set Settings → Display → Refresh rate to the highest option, then tap Apply again.</string>
-    <string name="check_fail_body">Open Check override and compare the target, display mode and test FPS.</string>
+    <string name="check_fail_body">Try Apply again. If the display test stays below the requested rate, send a compatibility report.</string>
     <string name="check_retry">Try again</string>
     <string name="check_report">Report on GitHub</string>
     <string name="check_faq">Read the FAQ</string>
     <string name="check_badge">Switched to %dHz</string>
-    <string name="check_verified">Verified</string>
-    <string name="check_measured">Hyper120 test: %d FPS</string>
+    <string name="check_verified">Display test passed</string>
+    <string name="check_measured">Hyper120 test: %.1f FPS</string>
     <string name="check_caption">Games reach %d FPS if the game supports it</string>
     <string name="limit_note_short">*Games run at their supported rate. The tag shows each game’s max (60 MAX stays at 60).</string>
     <string name="check_caption_limit">*Apps and games have their own limits. A 60 MAX game stays at 60. Check each game’s tag below.</string>
@@ -243,8 +243,22 @@
     <string name="upd_install_hint">When the download finishes, open it and tap Install (or Update).</string>
     <string name="no_installed_apps">No launchable apps found.</string>
     <string name="apps_load_failed">Couldn’t load installed apps.</string>
-    <string name="check_result_modes">Target %1$d Hz · Display %2$d Hz</string>
-    <string name="check_game_help">Game still at 60 FPS?</string>
+    <string name="check_result_modes">Requested refresh rate: %1$d Hz\nObserved display mode: %2$d Hz</string>
+    <string name="check_game_help">Check this game</string>
     <string name="check_result_scope">Measured on the Hyper120 screen. Check FPS during gameplay separately.</string>
     <string name="game_settings_label">Settings for %1$s</string>
+    <string name="check_measurement_missing">Hyper120 test FPS unavailable</string>
+    <string name="check_browse_apps">Browse installed apps</string>
+    <string name="game_check_selected">Selected • Configured request: %d Hz</string>
+    <string name="game_check_unselected">Unselected • No new requests will be sent</string>
+    <string name="game_check_no_request">No request recorded in this session</string>
+    <string name="game_check_last_request">Last request sent: %1$d Hz (%2$d seconds ago)</string>
+    <string name="game_check_select_guide">Tick the app in the list to include it when you tap Apply.</string>
+    <string name="game_check_apply_guide">Tap Apply to send the request, then reopen this check.</string>
+    <string name="game_check_play_guide">Play a match and check the game’s own FPS counter where available. This screen shows Hyper120’s request.</string>
+    <string name="set_usage_title">Share anonymous usage</string>
+    <string name="set_usage_sub">Optional. Sends a random install ID and app version for the active-user count.</string>
+    <string name="ob3_continue_test">Continue and test</string>
+    <string name="ob3_panel_limit">Android reports a display below 90 Hz. You can continue to see the rates your phone supports.</string>
+    <string name="ob3_low_setting">Your phone reports a low refresh setting. Choose a higher rate in Display settings or continue and test.</string>
 </resources>

@@ -1,21 +1,21 @@
 {
-  "version": "4.3.2",
+  "version": "4.4",
   "url": "https://hyper120.aten-systems.site/download?src=app",
   "notes": {
     "en": [
-      "Clearer Apply results and a settings button on game rows",
-      "Improved handling for 144 Hz and higher, with 90 Hz setup support",
-      "Common questions in setup and better app-list recovery"
+      "Setup can continue when the reported refresh rate is low",
+      "Apply separates the request, display mode and test FPS. Check individual games from the result or their settings",
+      "Optional anonymous active-user count, off by default"
     ],
     "es": [
-      "Resultados de Aplicar más claros y ajustes visibles en cada juego",
-      "Mejor detección de 144 Hz y más, con configuración para pantallas de 90 Hz",
-      "Preguntas frecuentes en la configuración y opción de reintentar la lista de apps"
+      "La configuración puede continuar si se detecta una frecuencia baja",
+      "Aplicar separa la solicitud, el modo de pantalla y los FPS de prueba. Comprueba cada juego desde el resultado o sus ajustes",
+      "Recuento anónimo opcional, desactivado por defecto"
     ],
     "in": [
-      "Hasil Terapkan lebih jelas dan tombol setelan di tiap game",
-      "Deteksi 144 Hz ke atas lebih baik, dengan dukungan setup layar 90 Hz",
-      "Pertanyaan umum di setup dan opsi mencoba ulang daftar aplikasi"
+      "Setup dapat dilanjutkan saat refresh rate yang terbaca rendah",
+      "Terapkan memisahkan permintaan, mode layar, dan FPS tes. Periksa tiap game dari hasil atau setelannya",
+      "Hitungan pengguna aktif anonim bersifat opsional dan nonaktif secara bawaan"
     ]
   }
 }

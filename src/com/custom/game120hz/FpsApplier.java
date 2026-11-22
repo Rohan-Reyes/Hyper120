@@ -29,6 +29,9 @@ public final class FpsApplier {
     private static final String KEY_AUTO_ENABLED = "auto_enabled";
     private static final String KEY_AUTO_ADD_GAMES = "auto_add_games";
     private static final String KEY_TARGET_FPS = "target_fps";
+    private static final String KEY_SHARE_USAGE = "share_usage";
+    private static final Object PING_LOCK = new Object();
+    private static final java.util.Map<String, SentRequest> lastRequests = new java.util.HashMap<>();
     private static final String KEY_ANON_ID = "anon_id";
     private static final String KEY_LAST_PING = "last_ping_ms";
     private static final String KEY_GAME_FPS_PREFIX = "game_fps_";
@@ -261,6 +264,20 @@ public final class FpsApplier {
         }
     }
 
+    static final class SentRequest {
+        final int rate;
+        final long sentAt;
+
+        SentRequest(int rate) {
+            this.rate = rate;
+            this.sentAt = android.os.SystemClock.elapsedRealtime();
+        }
+    }
+
+    static SentRequest lastRequest(String pkg) {
+        return lastRequests.get(pkg);
+    }
+
     public static boolean isPowerKeeperInstalled(Context ctx) {
         try {
             ctx.getPackageManager().getPackageInfo(POWERKEEPER_PKG, 0);
@@ -295,6 +312,7 @@ public final class FpsApplier {
             intent.putExtra("override_freshrate", rate);
             intent.setPackage(POWERKEEPER_PKG);
             ctx.sendBroadcast(intent);
+            if (pkFound) lastRequests.put(trimmed, new SentRequest(rate));
             sent.add(trimmed);
         }
         Log.i(TAG, "applyTargetFps: fps=" + fps + " sent=" + sent.size() + " powerKeeperFound=" + pkFound + " pkgs=" + sent);
@@ -444,8 +462,28 @@ public final class FpsApplier {
             + " | Hyper120 v" + appVersion(ctx);
     }
 
-    /** Sends an anonymous random-UUID ping at most once per 12h for the active user counter. */
+    static boolean isUsageSharingEnabled(Context ctx) {
+        return ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE).getBoolean(KEY_SHARE_USAGE, false);
+    }
+
+    static void setUsageSharingEnabled(Context ctx, boolean enabled) {
+        ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().putBoolean(KEY_SHARE_USAGE, enabled).apply();
+        if (enabled) pingActiveUser(ctx);
+    }
+
+    /** Sends an opt-in ping at most once per 12 hours for the active-user counter. */
     public static void pingActiveUser(Context ctx) {
+        if (!isUsageSharingEnabled(ctx)) return;
+        Context app = ctx.getApplicationContext();
+        new Thread(() -> {
+            synchronized (PING_LOCK) {
+                sendUsagePing(app);
+            }
+        }, "Hyper120 usage").start();
+    }
+
+    private static void sendUsagePing(Context ctx) {
+        if (!isUsageSharingEnabled(ctx)) return;
         SharedPreferences sp = ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
         long now = System.currentTimeMillis();
         if (now - sp.getLong(KEY_LAST_PING, 0L) < PING_INTERVAL_MS) {
@@ -456,24 +494,20 @@ public final class FpsApplier {
             id = UUID.randomUUID().toString();
             sp.edit().putString(KEY_ANON_ID, id).apply();
         }
-        final String finalId = id;
-        final String ver = appVersion(ctx);
-        new Thread(() -> {
-            HttpURLConnection conn = null;
-            try {
-                URL url = new URL(PING_URL + "?id=" + finalId + "&v=" + ver);
-                conn = (HttpURLConnection) url.openConnection();
-                conn.setConnectTimeout(3000);
-                conn.setReadTimeout(3000);
-                conn.setRequestMethod("GET");
-                if (conn.getResponseCode() == 200) {
-                    sp.edit().putLong(KEY_LAST_PING, System.currentTimeMillis()).apply();
-                }
-            } catch (Exception ignored) {
-            } finally {
-                if (conn != null) conn.disconnect();
+        HttpURLConnection conn = null;
+        try {
+            URL url = new URL(PING_URL + "?id=" + id + "&v=" + appVersion(ctx));
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setConnectTimeout(3000);
+            conn.setReadTimeout(3000);
+            conn.setRequestMethod("GET");
+            if (isUsageSharingEnabled(ctx) && conn.getResponseCode() == 200) {
+                sp.edit().putLong(KEY_LAST_PING, System.currentTimeMillis()).apply();
             }
-        }).start();
+        } catch (Exception ignored) {
+        } finally {
+            if (conn != null) conn.disconnect();
+        }
     }
 
     public static String appVersion(Context ctx) {

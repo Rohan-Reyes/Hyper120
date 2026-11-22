@@ -58,7 +58,7 @@
         <div class="head">
           <div class="overline">Compatibility</div>
           <h1 style="font-size:clamp(2rem,5vw,3rem);line-height:1.1;letter-spacing:-.02em">Supported phones &amp; games</h1>
-          <p>Which phones Hyper120 works on, and how fast each game can go.</p>
+          <p>Test results by phone, MIUI or HyperOS version, and game.</p>
         </div>
 
         <div class="card dep-note">
@@ -80,18 +80,50 @@
       <div class="wrap">
         <div class="head" style="margin-bottom:24px">
           <div class="overline">Phones</div>
-          <h2>Compatibility reports for MIUI and HyperOS</h2>
-          <p>Results depend on the phone, ROM and game. In-app tests measure the Hyper120 screen. Gameplay reports record a specific game.</p>
+          <h2>Phone, ROM and game results</h2>
+          <p>Results vary with the phone, ROM, game, and graphics settings. We show the exact ROM build where the tester included it.</p>
         </div>
         <div class="rom-strip rom-big">
-          <span>MIUI 14</span><span>HyperOS 1</span><span>HyperOS 2</span><span>HyperOS 3</span><span>HyperOS 4</span>
+          <span>MIUI 14</span><span>HyperOS 2</span><span>HyperOS 3</span><span>HyperOS 4</span>
         </div>
-        <div class="card compat" style="margin-top:18px">
-          <div class="row"><span><span class="pill p-ok"><i></i>Verified</span></span><p><b>Xiaomi 14</b> (<code>houji</code>), HyperOS 3 · Android 16, China ROM. 60, 90 and 120Hz confirmed with <code>dumpsys</code>.</p></div>
-          <div class="row"><span><span class="pill p-ok"><i></i>In-app tests</span></span><p><a href="https://github.com/Rohan-Reyes/Hyper120/issues/1">Xiaomi 17</a>, Global HyperOS 3, worked after selecting 120 Hz in Display settings. <a href="https://github.com/Rohan-Reyes/Hyper120/issues/2">POCO X8 Pro</a>, EEA HyperOS 3, measured about 121 FPS. <a href="https://github.com/Rohan-Reyes/Hyper120/issues/13">Xiaomi 15</a>, India HyperOS 3, measured about 90 FPS at 90 Hz.</p></div>
-          <div class="row"><span><span class="pill p-ok"><i></i>Gameplay reports</span></span><p>POCO F8 Ultra, HyperOS 4, reached 120 FPS in World of Tanks Blitz. <a href="https://github.com/Rohan-Reyes/Hyper120/issues/9">POCO F6</a>, India HyperOS 3, ran Clash of Clans above 60 FPS.</p></div>
-          <div class="row"><span><span class="pill p-maybe"><i></i>Needs a retest</span></span><p><a href="https://github.com/Rohan-Reyes/Hyper120/issues/12">Xiaomi 18 Pro</a>, China HyperOS 4, measured 90 FPS for a 120 Hz request. Redmi Note 15 Pro Global was reported stuck in Clash of Clans.</p></div>
-          <div class="row"><span><span class="pill p-no"><i></i>Won't work</span></span><p>Phones with a <b>60Hz screen</b>, and phones that aren't Xiaomi, Redmi or POCO (no PowerKeeper).</p></div>
+        <h3 id="gameplay-reports" class="report-title">Gameplay reports</h3>
+        <div class="card report-panel">
+          <table class="report-table" aria-labelledby="gameplay-reports">
+            <thead><tr><th scope="col">Phone and OS</th><th scope="col">Game and result</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Xiaomi 14 <small>HyperOS 3 · Android 16</small></th><td><b>Minecraft</b> · 60 → 119 FPS in the developer’s Game Turbo comparison. <a href="https://www.reddit.com/r/PocoPhones/comments/1xyddvf/hyperos_locks_your_games_to_60_fps_hyper120_v42/">Video and test notes</a></td></tr>
+              <tr><th scope="row">POCO F8 Ultra <small>HyperOS 4</small></th><td><b>World of Tanks Blitz</b> · 120 FPS reported with Hyper120. <a href="https://www.reddit.com/r/PocoPhones/comments/1xyddvf/comment/19sreymz8ax28/">Reddit report</a></td></tr>
+              <tr><th scope="row">Redmi K90 Pro Max <small>HyperOS 4</small></th><td><b>COD Mobile, Mobile Legends, Minecraft</b> · reported working. Exact FPS was unreported. <a href="https://www.reddit.com/r/PocoPhones/comments/1xyddvf/comment/19ssd2hhc1jok/">Reddit report</a></td></tr>
+              <tr><th scope="row">POCO X7 Pro <small>HyperOS 2 in the Minecraft report · Clash Royale build unreported</small></th><td><b>Minecraft Bedrock</b> · 80–120 FPS with Vibrant Visuals off, 30–60 FPS with it on. <a href="https://www.reddit.com/r/PocoPhones/comments/1xyddvf/comment/19sruwmfauns3/">Minecraft report</a><br /><b>Clash Royale</b> · 120 FPS in a separate <a href="https://www.reddit.com/r/PocoPhones/comments/1xyddvf/comment/19swovz5cd80x/">community report</a>.</td></tr>
+              <tr><th scope="row">Redmi Note 14 Pro 5G <small>OS3.0.305.0.WOOMIXM · Global</small></th><td><b>COD Mobile Garena</b> (<code>com.garena.game.codm</code> 1.6.59) · approximately 90 FPS in a practice range with Low graphics and Ultra frame rate on v4.3.2.</td></tr>
+              <tr><th scope="row">POCO X7 Pro <small>OS3.0.303.0.WOJRUXM · Russia</small></th><td><b>Free Fire</b> (<code>com.dts.freefireth</code> 1.132.1) · above 60 FPS reported with <a href="https://github.com/Rohan-Reyes/Hyper120/issues/30">90 Hz</a> and <a href="https://github.com/Rohan-Reyes/Hyper120/issues/33">120 Hz</a> requested. Exact FPS unreported.</td></tr>
+              <tr><th scope="row">Redmi Note 15 5G <small>OS3.0.305.0.WPQINXM · India</small></th><td><b>Free Fire MAX</b> (<code>com.dts.freefiremax</code> 2.133.1) · reported stuck at 60 FPS. <a href="https://github.com/Rohan-Reyes/Hyper120/issues/31">GitHub #31</a></td></tr>
+              <tr><th scope="row">Xiaomi Pad 8 Pro <small>ROM build unreported</small></th><td><b>Fortnite</b> · started at 120 FPS, then dropped to 60 FPS when the tablet warmed up. <a href="https://www.reddit.com/r/PocoPhones/comments/1xyddvf/comment/19ste7k5b1dk4/">Reddit report</a></td></tr>
+              <tr><th scope="row">POCO F5 <small>HyperOS 3.0.4.0</small></th><td><b>Clash of Clans</b> · reported working with variable FPS. <a href="https://www.reddit.com/r/PocoPhones/comments/1xyddvf/comment/19srjsuga9e5f/">Reddit report</a></td></tr>
+              <tr><th scope="row">POCO F6 <small>HyperOS 3 · OS3.0.303.0.WNPINXM · India</small></th><td><b>Clash of Clans</b> · above 60 FPS. <a href="https://github.com/Rohan-Reyes/Hyper120/issues/9">GitHub #9</a></td></tr>
+              <tr><th scope="row">POCO F6 <small>HyperOS 3 · OS3.0.304.0.WNPIDXM · Indonesia</small></th><td><b>Free Fire</b> · mixed results on the same build. The tester saw above 60 FPS in some sessions and 60 FPS in others. <a href="https://github.com/Rohan-Reyes/Hyper120/issues/17">GitHub #17</a></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 id="display-reports" class="report-title">Display checks and setup reports</h3>
+        <div class="card report-panel">
+          <table class="report-table" aria-labelledby="display-reports">
+            <thead><tr><th scope="col">Phone and OS</th><th scope="col">Reported result</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Xiaomi 14 <small>HyperOS 3 · OS3.0.307.0.WNCCNXM · China</small></th><td>60, 90 and 120 Hz display modes checked on the developer’s Xiaomi 14. <a href="https://github.com/Rohan-Reyes/Hyper120/releases/tag/v4.3.2">v4.3.2 test notes</a></td></tr>
+              <tr><th scope="row">Unnamed device <small>MIUI 14</small></th><td>A community member reported it worked with 120 selected. Device and game details were unreported. <a href="https://www.reddit.com/r/PocoPhones/comments/1xyddvf/comment/19srqnq8o2481/">Reddit report</a></td></tr>
+              <tr><th scope="row">POCO F4 GT <small>HyperOS 2.0.3.0</small></th><td>Reported working in a quick test. Gameplay FPS was unreported. <a href="https://www.reddit.com/r/PocoPhones/comments/1xyddvf/comment/19ssawpry2m05/">Reddit report</a></td></tr>
+              <tr><th scope="row">POCO X8 Pro <small>HyperOS 3 · OS3.0.304.0.WPJEUXM · EEA</small></th><td>120 Hz display mode and 120.7 FPS in the Hyper120 tester. <a href="https://github.com/Rohan-Reyes/Hyper120/issues/2">GitHub #2</a></td></tr>
+              <tr><th scope="row">Xiaomi 15 <small>HyperOS 3 · OS3.0.304.0.WOCINXM · India</small></th><td>90 Hz display mode and 90.4 FPS in the Hyper120 tester. <a href="https://github.com/Rohan-Reyes/Hyper120/issues/13">GitHub #13</a></td></tr>
+              <tr><th scope="row">Xiaomi 17 <small>HyperOS 3 · OS3.0.303.0.WPCMIXM · Global</small></th><td>Retest worked after the tester selected 120 Hz in Display settings. <a href="https://github.com/Rohan-Reyes/Hyper120/issues/1">GitHub #1</a></td></tr>
+              <tr><th scope="row">Redmi Note 12 Turbo <small>HyperOS 3 · OS3.0.5.0.VMRCNXM · China</small></th><td>90 Hz display mode and 89.8 FPS in Hyper120. The tester reported a 90 FPS option in COD Mobile. <a href="https://github.com/Rohan-Reyes/Hyper120/issues/4">GitHub #4</a></td></tr>
+              <tr><th scope="row">Xiaomi Pad 7 <small>HyperOS 2 · OS2.0.204.0.VOZMIXM · Global</small></th><td>144 Hz display mode and 143.9 FPS in Hyper120. The reporter confirmed the v4.3.2 selector fix. <a href="https://github.com/Rohan-Reyes/Hyper120/issues/7">GitHub #7</a></td></tr>
+              <tr><th scope="row">Xiaomi 17 Ultra <small>OS4.0.3.0.XPAEUXM · EEA</small></th><td>120 Hz observed and 89.8 FPS in the v4.3.2 display test. Fortnite reportedly drops to 60. The gameplay counter and timing are unconfirmed. <a href="https://github.com/Rohan-Reyes/Hyper120/issues/34">GitHub #34</a></td></tr>
+              <tr><th scope="row">Redmi 15C 5G <small>OS4.0.6.0.XPOMIXM · Global</small></th><td>120 Hz requested, 60 Hz observed and 60.4 FPS in the v4.3.2 display test. v4.4 retest pending. <a href="https://github.com/Rohan-Reyes/Hyper120/issues/36">GitHub #36</a></td></tr>
+              <tr><th scope="row">Xiaomi 18 Pro <small>HyperOS 4 · OS4.0.29.0.XFRCNXM · China</small></th><td>90.2 FPS in Hyper120 with 120 Hz requested. The active display mode was unreported. <a href="https://github.com/Rohan-Reyes/Hyper120/issues/12">GitHub #12</a></td></tr>
+            </tbody>
+          </table>
         </div>
         <p style="margin-top:16px;color:var(--muted);font-size:.94rem">Tried it on another phone? <a href="https://github.com/Rohan-Reyes/Hyper120/issues/new/choose" target="_blank" rel="noopener" style="color:var(--sky);font-weight:700">Report your device →</a> In the app, a failed Apply check has a Report button that fills in the details for you.</p>
       </div>
@@ -102,7 +134,7 @@
       <div class="wrap">
         <div class="head" style="margin-bottom:24px">
           <div class="overline">Games</div>
-          <h2>Search a game, see its max FPS</h2>
+          <h2>Find a game and see reported FPS</h2>
           <p>Gameplay FPS depends on the options the game exposes on your device, your graphics settings and temperature.</p>
           <p>On Xiaomi 15T Taiwan, <a href="https://github.com/Rohan-Reyes/Hyper120/issues/6">Endfield</a> topped out at 60 FPS in its settings. The current <a href="https://github.com/Rohan-Reyes/Hyper120/issues/5">Umamusume</a> and <a href="https://github.com/Rohan-Reyes/Hyper120/issues/8">Subway City</a> reports leave their maximum FPS unconfirmed.</p>
         </div>
@@ -146,6 +178,18 @@
   </footer>
 
   <style>
+    .report-title { margin: 26px 0 10px; font-size: 1.12rem; }
+    .report-panel { overflow: hidden; }
+    .report-table { width: 100%; border-collapse: collapse; text-align: start; }
+    .report-table tr + tr, .report-table tbody { border-top: 1px solid var(--line); }
+    .report-table th, .report-table td { padding: 13px clamp(10px, 2vw, 22px); text-align: start; vertical-align: top; overflow-wrap: anywhere; }
+    .report-table thead { background: var(--surface-2); }
+    .report-table thead th, .report-table small { color: var(--muted); font-size: .81rem; font-weight: 600; }
+    .report-table tbody th { width: 36%; font-size: .92rem; }
+    .report-table small { display: block; margin-top: 3px; }
+    .report-table td { color: var(--muted); font-size: .9rem; }
+    .report-table td b { color: var(--text); }
+    .report-table a { color: var(--sky); text-decoration: underline; text-underline-offset: 3px; }
     .dep-note { display: flex; gap: 14px; padding: 20px 22px; border-color: rgba(251,191,36,.35); background: rgba(251,191,36,.05); }
     .dep-note > svg { width: 22px; height: 22px; color: var(--amber); flex: none; margin-top: 2px; }
     .dep-note b { color: var(--text); }

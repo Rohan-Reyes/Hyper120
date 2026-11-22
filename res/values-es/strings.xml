@@ -46,7 +46,7 @@
     <string name="health_dismiss">Cerrar</string>
 
     <!-- Diálogo de juego -->
-    <string name="dlg_tip_unknown">Aún no hay datos de este juego. Si tiene un ajuste de FPS, elige el más alto. Si sigue pareciendo 60, probablemente el propio juego está limitado.</string>
+    <string name="dlg_tip_unknown">Aún no hay datos de compatibilidad. Revisa las opciones de pantalla o FPS de la aplicación.</string>
     <string name="dlg_rate_title">Tasa de refresco para este juego</string>
     <string name="dlg_rate_default">Predeterminada (%dHz)</string>
     <string name="dlg_report">Informar cómo funciona</string>
@@ -153,12 +153,12 @@
     <string name="widget_perm_manual">Añadirlo desde la pantalla de inicio</string>
 
     <!-- Phone refresh-rate setting -->
-    <string name="health_refresh_title">Tu pantalla está a %dHz</string>
-    <string name="health_refresh_body">Los juegos no pueden ir más rápido que la tasa de refresco del móvil. Abre Ajustes → Pantalla → Tasa de refresco y elige 120Hz (Alta).</string>
+    <string name="health_refresh_title">El teléfono indica un ajuste de 60 Hz</string>
+    <string name="health_refresh_body">Elige la frecuencia más alta disponible en Ajustes → Pantalla → Tasa de refresco y pulsa Aplicar.</string>
     <string name="health_open_display">Abrir ajustes de pantalla</string>
     <string name="ob3_refresh">3. Tasa de refresco: 120Hz</string>
     <string name="ob3_refresh_done">✓ Tasa de refresco: %dHz</string>
-    <string name="ob3_refresh_hint">En Pantalla → Tasa de refresco, elige 120Hz (Alta). Los juegos no pueden ir más rápido que esto.</string>
+    <string name="ob3_refresh_hint">Elige la frecuencia más alta disponible en Ajustes → Pantalla → Tasa de refresco y pulsa Aplicar.</string>
     <string name="v_clamped_refresh">En Ajustes → Pantalla → Tasa de refresco, elige la opción más alta disponible.</string>
 
     <!-- v4.3: rate options + before-you-play -->
@@ -216,13 +216,13 @@
     <string name="check_fail_title">La pantalla se quedó en %1$d Hz, no %2$d</string>
     <string name="check_fail_title_unknown">No se pudo confirmar %d Hz</string>
     <string name="check_fail_refresh">La tasa de refresco del móvil está demasiado baja. Pon Ajustes → Pantalla → Tasa de refresco en la opción más alta y vuelve a tocar Aplicar.</string>
-    <string name="check_fail_body">Abre Comprobar y compara el objetivo, el modo de pantalla y los FPS de prueba.</string>
+    <string name="check_fail_body">Vuelve a pulsar Aplicar. Si la prueba sigue por debajo de la frecuencia solicitada, envía un informe de compatibilidad.</string>
     <string name="check_retry">Reintentar</string>
     <string name="check_report">Reportar en GitHub</string>
     <string name="check_faq">Ver la FAQ</string>
     <string name="check_badge">Cambiado a %dHz</string>
-    <string name="check_verified">Verificado</string>
-    <string name="check_measured">Prueba de Hyper120: %d FPS</string>
+    <string name="check_verified">Prueba de pantalla superada</string>
+    <string name="check_measured">Prueba de Hyper120: %.1f FPS</string>
     <string name="check_caption">Los juegos llegan a %d FPS si el juego lo soporta</string>
     <string name="limit_note_short">*Los juegos van a la tasa que soportan. La etiqueta muestra el máximo de cada juego (60 MÁX se queda en 60).</string>
     <string name="check_caption_limit">*Cada app y juego tiene su propio límite. Un juego 60 MÁX se queda en 60. Mira la etiqueta de cada juego abajo.</string>
@@ -236,8 +236,22 @@
     <string name="upd_install_hint">Cuando termine la descarga, ábrela y toca Instalar (o Actualizar).</string>
     <string name="no_installed_apps">No se encontraron apps que se puedan abrir.</string>
     <string name="apps_load_failed">No se pudieron cargar las apps instaladas.</string>
-    <string name="check_result_modes">Objetivo %1$d Hz · Pantalla %2$d Hz</string>
-    <string name="check_game_help">¿El juego sigue a 60 FPS?</string>
+    <string name="check_result_modes">Frecuencia solicitada: %1$d Hz\nModo de pantalla observado: %2$d Hz</string>
+    <string name="check_game_help">Comprobar este juego</string>
     <string name="check_result_scope">Medición en la pantalla de Hyper120. Comprueba los FPS durante la partida.</string>
     <string name="game_settings_label">Ajustes de %1$s</string>
+    <string name="check_measurement_missing">FPS de la prueba de Hyper120 no disponibles</string>
+    <string name="check_browse_apps">Ver aplicaciones instaladas</string>
+    <string name="game_check_selected">Seleccionada • Solicitud configurada: %d Hz</string>
+    <string name="game_check_unselected">Sin seleccionar • No se enviarán nuevas solicitudes</string>
+    <string name="game_check_no_request">Sin solicitudes registradas en esta sesión</string>
+    <string name="game_check_last_request">Última solicitud: %1$d Hz (hace %2$d s)</string>
+    <string name="game_check_select_guide">Marca la aplicación en la lista para incluirla al pulsar Aplicar.</string>
+    <string name="game_check_apply_guide">Pulsa Aplicar para enviar la solicitud y vuelve a abrir esta comprobación.</string>
+    <string name="game_check_play_guide">Juega una partida y consulta el contador de FPS del juego, si está disponible. Esta pantalla muestra la solicitud de Hyper120.</string>
+    <string name="set_usage_title">Compartir uso anónimo</string>
+    <string name="set_usage_sub">Opcional. Envía un ID aleatorio de instalación y la versión para contar usuarios activos.</string>
+    <string name="ob3_continue_test">Continuar y probar</string>
+    <string name="ob3_panel_limit">Android detecta una pantalla de menos de 90 Hz. Puedes continuar para ver las frecuencias disponibles.</string>
+    <string name="ob3_low_setting">El teléfono indica una frecuencia baja. Elige una más alta en Pantalla o continúa con la prueba.</string>
 </resources>

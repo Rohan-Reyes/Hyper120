@@ -1,5 +1,5 @@
 {
-  "version": 6,
+  "version": 7,
   "updated": "2026-11-20",
   "games": [
     {
@@ -8,8 +8,8 @@
       "packages": [
         "com.mobile.legends"
       ],
-      "short": "Graphics → Ultra (120) or Super (90)",
-      "tip": "In Graphics, pick Ultra (120) or Super (90). The option only appears on phones Moonton has approved."
+      "short": "HyperOS 4 working report on Redmi K90 Pro Max",
+      "tip": "Use Super (90) or Ultra (120) if Mobile Legends offers it. A Redmi K90 Pro Max user on HyperOS 4 reported it working. A Xiaomi 12 Global user reported 60 FPS, with the available game options unconfirmed."
     },
     {
       "name": "Call of Duty: Mobile",
@@ -18,8 +18,8 @@
         "com.garena.game.codm",
         "com.activision.callofduty.shooter"
       ],
-      "short": "Graphics → Frame Rate → Max / Ultra",
-      "tip": "In Graphics, set Frame Rate to Max / Ultra. 120 is only offered on approved phones."
+      "short": "FPS varies by device, regional build and game mode",
+      "tip": "Use the highest frame-rate option the game offers. A Redmi K90 Pro Max user reported it working on HyperOS 4. A Redmi Turbo 4 Pro user reported 90 FPS max. The available settings and FPS can vary by phone, build and mode."
     },
     {
       "name": "PUBG Mobile / BGMI",
@@ -77,8 +77,8 @@
       "packages": [
         "com.supercell.brawlstars"
       ],
-      "short": "120 in matches, 60 in menus",
-      "tip": "Runs at 120 in matches; menus stay at 60."
+      "short": "Up to 120 on supported devices; POCO F5 Pro EEA report stayed at 60",
+      "tip": "Check FPS during a match. A POCO F5 Pro EEA user on OS3.0.2.0.VMNEUXM reported 60 FPS. The exact cause is unconfirmed."
     },
     {
       "name": "Clash of Clans",
@@ -86,8 +86,17 @@
       "packages": [
         "com.supercell.clashofclans"
       ],
-      "short": "120 FPS, reported by a Hyper120 tester",
-      "tip": "A Hyper120 tester reports 120 FPS with the override on."
+      "short": "Above 60 reported on POCO F6 India; mixed across devices",
+      "tip": "A POCO F6 India user on OS3.0.303.0.WNPINXM reported above 60 FPS, and a POCO F5 user on HyperOS 3.0.4.0 reported it working with variable FPS. A Redmi Note 15 Pro Global user reported being stuck at 60."
+    },
+    {
+      "name": "Clash Royale",
+      "cap": 120,
+      "packages": [
+        "com.supercell.clashroyale"
+      ],
+      "short": "120 FPS reported by a POCO X7 Pro player",
+      "tip": "A POCO X7 Pro player on Reddit reported 120 FPS. Their exact HyperOS build and measurement tool were unreported."
     },
     {
       "name": "Minecraft",
@@ -95,8 +104,8 @@
       "packages": [
         "com.mojang.minecraftpe"
       ],
-      "short": "Measured: 120 FPS on a Xiaomi 14 with Hyper120",
-      "tip": "Measured at 120 FPS on a Xiaomi 14 with Hyper120. In Settings, Video, make sure Max Framerate isn't limited."
+      "short": "Xiaomi 14: 60 → 119 FPS in Game Turbo",
+      "tip": "The developer measured 60 → 119 FPS in Game Turbo on a Xiaomi 14. A POCO X7 Pro tester reported 80–120 FPS with Vibrant Visuals off and 30–60 FPS with it on. Check the game’s Video settings and Max Framerate."
     },
     {
       "name": "Asphalt Legends",
@@ -104,8 +113,8 @@
       "packages": [
         "com.gameloft.android.ANMP.GloftA9HM"
       ],
-      "short": "Graphics → Frame Rate, 120 on high-end phones",
-      "tip": "Settings, Graphics, Frame Rate. 120 on high-end phones; use the Performance preset."
+      "short": "High FPS varies by device; POCO F6 report stayed at 60",
+      "tip": "Use the highest frame-rate option shown in Graphics. A POCO F6 tester reported a 90 FPS option and measured 60 FPS during play. The ROM build was not provided."
     },
     {
       "name": "CSR 2",
@@ -149,8 +158,8 @@
       "packages": [
         "net.wargaming.wot.blitz"
       ],
-      "short": "120 FPS, reported by a Hyper120 user on HyperOS 4",
-      "tip": "A Hyper120 user reports 120 FPS on HyperOS 4. Set the frame rate to the highest option in the game's graphics settings."
+      "short": "120 FPS reported on POCO F8 Ultra with HyperOS 4",
+      "tip": "A POCO F8 Ultra user on HyperOS 4 reported 120 FPS with Hyper120. Use the highest frame-rate option available in the game’s graphics settings."
     },
     {
       "name": "Block Blast!",
@@ -420,8 +429,8 @@
         "com.dts.freefireth",
         "com.dts.freefiremax"
       ],
-      "short": "High FPS mode gives 90 on some phones",
-      "tip": "High FPS mode gives 90 on some phones. There is no 120 option."
+      "short": "Up to 90 FPS where supported; mixed results on POCO F6 Indonesia",
+      "tip": "Use the highest in-game FPS setting and try a 90 Hz target. On the same POCO F6 Indonesia build, one tester reported both above 60 FPS and stuck at 60 FPS in different sessions."
     },
     {
       "name": "Fortnite",
@@ -429,8 +438,8 @@
       "packages": [
         "com.epicgames.fortnite"
       ],
-      "short": "Device-dependent; up to 120 FPS reported",
-      "tip": "Use the highest frame-rate option the game offers on your device. Players have reported 120 FPS on some devices, including Xiaomi Pad 8 Pro. Sustained FPS can drop as the device heats up."
+      "short": "Xiaomi Pad 8 Pro: 120 FPS initially; 60 FPS after warming up",
+      "tip": "Use the highest FPS option Fortnite offers on your device. A Xiaomi Pad 8 Pro user reported 120 FPS at first, then 60 FPS after thermal throttling."
     },
     {
       "name": "Roblox",

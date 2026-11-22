@@ -128,7 +128,6 @@ public class OnboardingActivity extends Activity {
 
         nextBtn = UiHelper.button(this, "", 0, true, v -> {
             if (page == 1 && !understood) return;
-            if (page == 2 && !screenReady()) return;
             if (page < 2) {
                 page++;
                 render();
@@ -158,7 +157,7 @@ public class OnboardingActivity extends Activity {
         }
     }
 
-    /** Accept 90 Hz panels and adaptive high-refresh modes during setup. */
+    /** Used to decide whether to show display setup advice. */
     private boolean screenReady() {
         if (FpsApplier.getMaxSupportedFps(this) < 90) return false;
         int setting = FpsApplier.getSystemRefreshSetting(this);
@@ -183,7 +182,7 @@ public class OnboardingActivity extends Activity {
 
         if (page == 0) addSetupFaq("safe", "compat", "adaptive");
         else if (page == 1) addSetupFaq("stuck60", "high", "heat");
-        else addSetupFaq("stopped", "gameturbo");
+        else addSetupFaq("setup90", "stopped", "gameturbo");
 
         if (renderedPage != page) {
             renderedPage = page;
@@ -206,7 +205,6 @@ public class OnboardingActivity extends Activity {
             dots.addView(d, lp);
         }
         skipBtn.setVisibility(page == 0 || (page == 1 && understood) ? View.VISIBLE : View.INVISIBLE);
-        if (page == 2 && !screenReady()) skipBtn.setVisibility(View.INVISIBLE);
         styleNext();
     }
 
@@ -336,6 +334,13 @@ public class OnboardingActivity extends Activity {
             rate >= 90, rate >= 90 ? getString(R.string.hz_value, rate) : null, v -> UiHelper.openDisplaySettings(this));
         ((LinearLayout.LayoutParams) refreshTile.getLayoutParams()).topMargin = dp(20);
         body.addView(refreshTile);
+        if (!screenReady()) {
+            int message = FpsApplier.getMaxSupportedFps(this) < 90
+                ? R.string.ob3_panel_limit : R.string.ob3_low_setting;
+            TextView advice = UiHelper.text(this, getString(message), 13, UiHelper.COL_MUTED, UiHelper.TF_REGULAR);
+            advice.setLineSpacing(dp(3), 1f);
+            body.addView(advice, UiHelper.matchWrap(this, 8));
+        }
         batteryTile = stepTile(2, R.drawable.ui_zap, getString(R.string.ob3_s_battery),
             UiHelper.isBatteryUnrestricted(this), null, v -> UiHelper.requestBatteryExemption(this));
         body.addView(batteryTile);
@@ -478,13 +483,10 @@ public class OnboardingActivity extends Activity {
 
     private void styleNext() {
         boolean needAck = page == 1 && !understood;
-        boolean needScreen = page == 2 && !screenReady();
-        boolean blocked = needAck || needScreen;
-        nextBtn.setEnabled(!blocked);
-        nextBtn.setAlpha(blocked ? 0.4f : 1f);
+        nextBtn.setEnabled(!needAck);
+        nextBtn.setAlpha(needAck ? 0.4f : 1f);
         if (needAck) nextBtn.setText(getString(R.string.ob2_understand_first));
-        else if (needScreen) nextBtn.setText(getString(FpsApplier.getMaxSupportedFps(this) < 90
-            ? R.string.ob3_no120 : R.string.ob3_need120));
+        else if (page == 2 && !screenReady()) nextBtn.setText(getString(R.string.ob3_continue_test));
         else nextBtn.setText(getString(page < 2 ? R.string.ob_next : R.string.ob_done));
     }
 

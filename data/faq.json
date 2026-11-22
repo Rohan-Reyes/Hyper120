@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 4,
   "_format": "Answers: one line per paragraph. Lines starting with '1. ' are numbered steps, '- ' are bullets, **text** is bold. q/a keys: en (required), es, in. Edit, run tools/sync_games.py, deploy web/faq.json — apps pick it up within a day.",
   "items": [
     {
@@ -10,9 +10,9 @@
         "in": "Kenapa game saya masih 60?"
       },
       "a": {
-        "en": "1. Set Display → Refresh rate to the highest option your phone supports.\n2. In the game, choose the highest FPS option available for your graphics preset and game mode.\n3. Tap Apply. The display mode and Hyper120 test FPS describe the test screen. Measure gameplay separately.\n4. If the game stays at 60, open the game’s settings in Hyper120 (long-press the row) and tap Report how it runs. Include the FPS options you see and how you measured gameplay.\nIf FPS starts high and falls as the device heats up, try a lower graphics preset or FPS target.",
-        "es": "1. En Pantalla → Tasa de refresco, elige la opción más alta del teléfono.\n2. En el juego, elige los FPS más altos disponibles para tu modo y calidad gráfica.\n3. Pulsa Aplicar. El modo de pantalla y los FPS de prueba corresponden a Hyper120. Mide los FPS durante la partida por separado.\n4. Si sigue a 60, mantén pulsado el juego y usa la opción de informe. Indica las opciones de FPS y cómo los mediste.\nSi los FPS bajan al calentarse el dispositivo, reduce la calidad gráfica o el objetivo de FPS.",
-        "in": "1. Pilih kecepatan refresh tertinggi di Setelan → Tampilan.\n2. Di game, pilih FPS tertinggi yang tersedia untuk mode dan kualitas grafis yang dipakai.\n3. Ketuk Terapkan. Mode layar dan FPS tes berasal dari layar Hyper120. Ukur FPS saat bermain secara terpisah.\n4. Jika tetap 60, tekan lama game dan laporkan hasilnya. Sertakan opsi FPS dan alat pengukur.\nJika FPS turun saat perangkat panas, turunkan kualitas grafis atau target FPS."
+        "en": "1. In Display settings, choose the highest refresh rate your phone offers.\n2. Tap **Apply**. The requested rate, observed display mode and Hyper120 test FPS describe the display test.\n3. Tap **Check this game** on the result or open the game’s gear in Hyper120. Confirm the game is selected and see when Hyper120 last sent a request.\n4. In the game, choose the highest FPS option offered for your graphics preset and mode. Check FPS during a match and report the counter, settings and when any drop starts.",
+        "es": "1. Elige la frecuencia más alta disponible en Ajustes de pantalla.\n2. Pulsa **Aplicar** para ver la frecuencia solicitada, el modo de pantalla observado y los FPS de la prueba.\n3. Pulsa **Comprobar este juego** en el resultado o abre el engranaje del juego. Comprueba la selección y la última solicitud enviada.\n4. En el juego, elige los FPS más altos para tu calidad gráfica y modo. Mide los FPS en una partida e indica el contador, los ajustes y cuándo empieza la caída.",
+        "in": "1. Pilih refresh rate tertinggi yang tersedia di Setelan Tampilan.\n2. Ketuk **Terapkan** untuk melihat refresh rate yang diminta, mode layar teramati, dan FPS tes Hyper120.\n3. Ketuk **Periksa game ini** pada hasil atau buka ikon roda gigi game. Periksa pilihan game dan permintaan terakhir yang dikirim.\n4. Pilih FPS tertinggi yang tersedia untuk preset grafis dan mode game. Ukur FPS saat bermain dan laporkan alat ukur, setelan, dan kapan FPS turun."
       }
     },
     {
@@ -23,9 +23,9 @@
         "in": "Apakah aman?"
       },
       "a": {
-        "en": "Yes. Hyper120 only asks HyperOS's own PowerKeeper service for a higher refresh rate, the same way Game Turbo does.\n- **Open source:** all the code is public on GitHub.\n- **No root,** and no system files are changed.\n- **No ads, no account.** It only sends an anonymous install ID and the app version, to count users.\n- **Signed APK:** download it only from GitHub or hyper120.aten-systems.site.",
-        "es": "Sí. Hyper120 solo pide una tasa de refresco más alta al servicio PowerKeeper de HyperOS, igual que Game Turbo.\n- **Código abierto:** todo el código es público en GitHub.\n- **Sin root,** y no cambia archivos del sistema.\n- **Sin anuncios ni cuenta.** Solo envía un ID de instalación anónimo y la versión de la app, para contar usuarios.\n- **APK firmado:** descárgalo solo desde GitHub o hyper120.aten-systems.site.",
-        "in": "Ya. Hyper120 hanya meminta refresh rate lebih tinggi ke layanan PowerKeeper milik HyperOS, sama seperti Game Turbo.\n- **Open source:** semua kodenya publik di GitHub.\n- **Tanpa root,** dan tidak mengubah file sistem.\n- **Tanpa iklan, tanpa akun.** Hanya mengirim ID instalasi anonim dan versi aplikasi, untuk menghitung pengguna.\n- **APK bertanda tangan:** unduh hanya dari GitHub atau hyper120.aten-systems.site."
+        "en": "Yes. Hyper120 only asks HyperOS's own PowerKeeper service for a higher refresh rate, the same way Game Turbo does.\n- **Open source:** all the code is public on GitHub.\n- **No root,** and no system files are changed.\n- **No ads, no account.** From v4.4, sharing a random install ID and the app version for the active-user count is optional and off by default.\n- **Signed APK:** download it only from GitHub or hyper120.aten-systems.site.",
+        "es": "Sí. Hyper120 solo pide una tasa de refresco más alta al servicio PowerKeeper de HyperOS, igual que Game Turbo.\n- **Código abierto:** todo el código es público en GitHub.\n- **Sin root,** y no cambia archivos del sistema.\n- **Sin anuncios ni cuenta.** Desde la versión 4.4, compartir un ID aleatorio y la versión para contar usuarios activos es opcional y está desactivado por defecto.\n- **APK firmado:** descárgalo solo desde GitHub o hyper120.aten-systems.site.",
+        "in": "Ya. Hyper120 hanya meminta refresh rate lebih tinggi ke layanan PowerKeeper milik HyperOS, sama seperti Game Turbo.\n- **Open source:** semua kodenya publik di GitHub.\n- **Tanpa root,** dan tidak mengubah file sistem.\n- **Tanpa iklan, tanpa akun.** Mulai v4.4, pengiriman ID instalasi acak dan versi aplikasi untuk menghitung pengguna aktif bersifat opsional dan nonaktif secara bawaan.\n- **APK bertanda tangan:** unduh hanya dari GitHub atau hyper120.aten-systems.site."
       }
     },
     {
@@ -156,6 +156,19 @@
         "en": "Yes. Keep games in Game Turbo if you use its controls or FPS overlay. Use **Check override** for Hyper120’s test rate and an in-game counter or Game Turbo to record gameplay FPS.",
         "es": "Sí. Mantén los juegos en Game Turbo si usas sus controles o su contador. Usa **Comprobar** para la prueba de Hyper120 y el contador del juego o Game Turbo para medir los FPS al jugar.",
         "in": "Boleh. Biarkan game di Game Turbo jika memakai kontrol atau penghitung FPS-nya. Gunakan **Periksa override** untuk tes Hyper120, lalu penghitung di game atau Game Turbo untuk mengukur FPS saat bermain."
+      }
+    },
+    {
+      "id": "setup90",
+      "q": {
+        "en": "What if setup reports 60 Hz or my phone only supports 90 Hz?",
+        "es": "¿Qué hago si la configuración indica 60 Hz o mi teléfono solo admite 90 Hz?",
+        "in": "Bagaimana jika setup membaca 60 Hz atau ponsel hanya mendukung 90 Hz?"
+      },
+      "a": {
+        "en": "90 Hz is supported. Pick the highest rate in Display settings. If Hyper120 still reads a low setting, choose **Continue and test**, then tap **Apply** from the home screen. If Apply stays low, share the requested rate, observed display mode and ROM build in a compatibility report.",
+        "es": "Se admite 90 Hz. Elige la frecuencia más alta en Ajustes de pantalla. Si Hyper120 todavía indica una frecuencia baja, pulsa **Continuar y probar** y después **Aplicar**. Si sigue baja, incluye la solicitud, el modo de pantalla y la versión de ROM en el informe.",
+        "in": "90 Hz didukung. Pilih refresh rate tertinggi di Setelan Tampilan. Jika Hyper120 masih membaca angka rendah, pilih **Lanjut dan uji**, lalu ketuk **Terapkan**. Jika hasilnya masih rendah, laporkan permintaan, mode layar, dan versi ROM."
       }
     }
   ]

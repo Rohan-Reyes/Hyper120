@@ -23,7 +23,7 @@ HyperOS and MIUI quietly cap many games at **60Hz**, even when your screen is se
 
 - **Only your games go fast.** Hyper120 asks PowerKeeper (the system service that sets the cap) to unlock the rate you pick for the apps you pick. Everything else keeps adaptive refresh and drops to 60Hz or lower as usual.
 - **Set it once.** It starts on boot, adds new games when you install them, and re-sends the override every 15 seconds while the screen is on, so the cap doesn't creep back.
-- **Proof built in.** Every time you tap Apply, Hyper120 checks that the phone really switched and shows **✓ Verified** with the measured FPS. If it didn't, it tells you why and gives you a one-tap GitHub report.
+- **Display test and game checks.** Apply shows the requested rate, observed display mode and FPS measured in Hyper120. Use **Check this game** to see whether a selected game has a recent request and report gameplay FPS.
 
 ## Screenshots
 
@@ -118,22 +118,23 @@ The app tags these games in its list (`UP TO 120`, `90 MAX`, `60 MAX`) and downl
 <!-- games:table -->
 | ✅ Up to 120 (turn it on in the game) | 🔵 90 max | 🟠 60 max (game's own limit) |
 |---|---|---|
-| **Mobile Legends: Bang Bang**: Graphics → Ultra (120) or Super (90) | **Free Fire / Free Fire MAX**: High FPS mode gives 90 on some phones | **Roblox**: Capped at 60. Measured: 60 FPS while the screen ran at 120Hz |
-| **Call of Duty: Mobile**: Graphics → Frame Rate → Max / Ultra |  | **Genshin Impact**: 120 is iPhone / iPad only |
+| **Mobile Legends: Bang Bang**: HyperOS 4 working report on Redmi K90 Pro Max | **Free Fire / Free Fire MAX**: Up to 90 FPS where supported; mixed results on POCO F6 Indonesia | **Roblox**: Capped at 60. Measured: 60 FPS while the screen ran at 120Hz |
+| **Call of Duty: Mobile**: FPS varies by device, regional build and game mode |  | **Genshin Impact**: 120 is iPhone / iPad only |
 | **PUBG Mobile / BGMI**: Graphics: Smooth → Frame Rate: Ultra Extreme |  | **Honkai: Star Rail**: 120 is iPhone / iPad only |
 | **Honor of Kings**: Settings → Graphics → 120 FPS |  | **Zenless Zone Zero**: Locked to 60 on phones |
 | **League of Legends: Wild Rift**: Graphics → 90 / 120 on supported phones |  | **Wuthering Waves**: The 120 option was removed |
 | **Delta Force**: Up to 90 / 120 on supported phones |  | **Pokémon UNITE**: High frame rate mode = 60 |
 | **Standoff 2**: Settings → Video → Target frame rate 120 |  | **PPSSPP (PSP games)**: PSP games run at their original 60 / 30 |
-| **Brawl Stars**: 120 in matches, 60 in menus |  | **Bus Simulator Indonesia**: In-game frame-rate setting tops out at 60 |
-| **Clash of Clans**: 120 FPS, reported by a Hyper120 tester |  | **Truckers of Europe 3**: In-game frame-rate setting tops out at 60 |
-| **Minecraft**: Measured: 120 FPS on a Xiaomi 14 with Hyper120 |  | **eFootball**: Graphics → Frame Rate tops out at 60 |
-| **Asphalt Legends**: Graphics → Frame Rate, 120 on high-end phones |  | **Monster Hunter Now**: 30 on the map, 60 in hunts |
-| **CSR 2**: Up to 120 |  | **Archero 2**: Measured: 60 FPS in the lobby on a Xiaomi 14 |
+| **Brawl Stars**: Up to 120 on supported devices; POCO F5 Pro EEA report stayed at 60 |  | **Bus Simulator Indonesia**: In-game frame-rate setting tops out at 60 |
+| **Clash of Clans**: Above 60 reported on POCO F6 India; mixed across devices |  | **Truckers of Europe 3**: In-game frame-rate setting tops out at 60 |
+| **Clash Royale**: 120 FPS reported by a POCO X7 Pro player |  | **eFootball**: Graphics → Frame Rate tops out at 60 |
+| **Minecraft**: Xiaomi 14: 60 → 119 FPS in Game Turbo |  | **Monster Hunter Now**: 30 on the map, 60 in hunts |
+| **Asphalt Legends**: High FPS varies by device; POCO F6 report stayed at 60 |  | **Archero 2**: Measured: 60 FPS in the lobby on a Xiaomi 14 |
+| **CSR 2**: Up to 120 |  |  |
 | **Top Drives**: Settings → High FPS (120 if supported) |  |  |
 | **Pokémon GO**: Settings → Advanced → Native refresh rate |  |  |
 | **EA SPORTS FC Mobile**: 90 / 120 only on some phones |  |  |
-| **World of Tanks Blitz**: 120 FPS, reported by a Hyper120 user on HyperOS 4 |  |  |
+| **World of Tanks Blitz**: 120 FPS reported on POCO F8 Ultra with HyperOS 4 |  |  |
 | **Block Blast!**: Measured: 120 FPS on a Xiaomi 14 with Hyper120 |  |  |
 | **Spaceflight Simulator**: Measured: 120 FPS on a Xiaomi 14 with Hyper120 |  |  |
 | **8 Ball Pool**: 120 FPS in 2020 high-refresh game lists (untested) |  |  |
@@ -163,7 +164,7 @@ The app tags these games in its list (`UP TO 120`, `90 MAX`, `60 MAX`) and downl
 | **Super Mario Run**: 120 FPS in 2020 high-refresh game lists (untested) |  |  |
 | **Dragon Ball Legends**: 120 FPS in 2020 high-refresh game lists (untested) |  |  |
 | **Old School RuneScape**: 120 FPS in 2020 high-refresh game lists (untested) |  |  |
-| **Fortnite**: Device-dependent; up to 120 FPS reported |  |  |
+| **Fortnite**: Xiaomi Pad 8 Pro: 120 FPS initially; 60 FPS after warming up |  |  |
 <!-- /games:table -->
 
 <sub>Compiled from developer pages, patch coverage and player reports as of November 2026. Games change their limits in updates. Know a game that belongs here? <a href="https://github.com/Rohan-Reyes/Hyper120/issues/new/choose">Open an issue</a>.</sub>
@@ -180,7 +181,7 @@ The game has its own limit. The tester proves the phone's cap is gone; games lik
 <!-- games:names60 -->Roblox, Genshin Impact, Honkai: Star Rail, Zenless Zone Zero, Wuthering Waves, Pokémon UNITE, PPSSPP (PSP games), Bus Simulator Indonesia, Truckers of Europe 3, eFootball, Monster Hunter Now and Archero 2<!-- /games:names60 -->. They limit themselves, so they stay at 60 even with Hyper120 on. The app tags them `60 MAX`.
 
 **Which games can go above 60?**
-<!-- games:names120 -->Mobile Legends: Bang Bang, Call of Duty: Mobile, PUBG Mobile / BGMI, Honor of Kings, League of Legends: Wild Rift, Delta Force, Standoff 2, Brawl Stars, Clash of Clans, Minecraft, Asphalt Legends, CSR 2, Top Drives, Pokémon GO, EA SPORTS FC Mobile, World of Tanks Blitz, Block Blast!, Spaceflight Simulator, 8 Ball Pool, Subway Surfers, Shadow Fight 2, Shadow Fight 3, Shadowgun Legends, Dead Trigger 2, Pixel Gun 3D, Plants vs Zombies 2, Soul Knight, Hill Climb Racing 2, Temple Run 2, Sonic Dash, Marvel Contest of Champions, Mortal Kombat, Injustice 2, Summoners War, Toon Blast, Tank Stars, Stick War: Legacy, Traffic Rider, Bullet Force, Mini Metro, Alto's Odyssey, Grimvalor, Super Mario Run, Dragon Ball Legends, Old School RuneScape and Fortnite<!-- /games:names120 -->, once you turn on the high frame rate in the game's settings. Many only show that option on phones the developer has approved. <!-- games:names90 -->Free Fire / Free Fire MAX<!-- /games:names90 --> top out at 90.
+<!-- games:names120 -->Mobile Legends: Bang Bang, Call of Duty: Mobile, PUBG Mobile / BGMI, Honor of Kings, League of Legends: Wild Rift, Delta Force, Standoff 2, Brawl Stars, Clash of Clans, Clash Royale, Minecraft, Asphalt Legends, CSR 2, Top Drives, Pokémon GO, EA SPORTS FC Mobile, World of Tanks Blitz, Block Blast!, Spaceflight Simulator, 8 Ball Pool, Subway Surfers, Shadow Fight 2, Shadow Fight 3, Shadowgun Legends, Dead Trigger 2, Pixel Gun 3D, Plants vs Zombies 2, Soul Knight, Hill Climb Racing 2, Temple Run 2, Sonic Dash, Marvel Contest of Champions, Mortal Kombat, Injustice 2, Summoners War, Toon Blast, Tank Stars, Stick War: Legacy, Traffic Rider, Bullet Force, Mini Metro, Alto's Odyssey, Grimvalor, Super Mario Run, Dragon Ball Legends, Old School RuneScape and Fortnite<!-- /games:names120 -->, once you turn on the high frame rate in the game's settings. Many only show that option on phones the developer has approved. <!-- games:names90 -->Free Fire / Free Fire MAX<!-- /games:names90 --> top out at 90.
 
 **My game isn't on the list. How do I know?**
 Look in the game's graphics settings for a frame-rate option. If the highest choice is 60 (or there's none), the game is most likely capped at 60. Confirm with Game Turbo's FPS counter, then long-press the game in Hyper120 and tap **Report how it runs** so it can be added.
@@ -234,7 +235,7 @@ fpsconfig mPrivGames={com.mobile.legends=120, com.garena.game.codm=120, com.moja
 ```
 </details>
 
-**Privacy:** no account, no ads, no analytics SDKs. Once every 12 hours the app sends a random ID (no device info) to `hyper120.aten-systems.site/api/ping` so I can count active installs.
+**Privacy:** no account, no ads, no analytics SDKs. If you enable **Share anonymous usage**, the app sends a random install ID and app version at most once every 12 hours to `hyper120.aten-systems.site/api/ping` for the active-user count. The setting defaults to off on fresh installs and upgrades to v4.4.
 
 ## Build from source
 

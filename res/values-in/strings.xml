@@ -45,7 +45,7 @@
     <string name="health_dismiss">Tutup</string>
 
     <!-- Dialog game -->
-    <string name="dlg_tip_unknown">Belum ada data untuk game ini. Jika ada pengaturan frame rate, pilih yang tertinggi. Jika masih terasa 60, kemungkinan game-nya sendiri yang membatasi.</string>
+    <string name="dlg_tip_unknown">Belum ada data kompatibilitas. Periksa opsi tampilan atau frame rate di aplikasi.</string>
     <string name="dlg_rate_title">Refresh rate untuk game ini</string>
     <string name="dlg_rate_default">Bawaan (%dHz)</string>
     <string name="dlg_report">Laporkan hasilnya</string>
@@ -152,12 +152,12 @@
     <string name="widget_perm_manual">Tambahkan dari layar utama saja</string>
 
     <!-- Phone refresh-rate setting -->
-    <string name="health_refresh_title">Layar kamu diatur ke %dHz</string>
-    <string name="health_refresh_body">Game tidak bisa lebih cepat dari refresh rate HP kamu. Buka Setelan → Tampilan → Kecepatan refresh lalu pilih 120Hz (Tinggi).</string>
+    <string name="health_refresh_title">Ponsel melaporkan setelan 60 Hz</string>
+    <string name="health_refresh_body">Pilih refresh rate tertinggi yang tersedia di Setelan → Tampilan → Kecepatan refresh, lalu ketuk Terapkan.</string>
     <string name="health_open_display">Buka setelan tampilan</string>
     <string name="ob3_refresh">3. Refresh rate layar: 120Hz</string>
     <string name="ob3_refresh_done">✓ Refresh rate layar: %dHz</string>
-    <string name="ob3_refresh_hint">Di Tampilan → Kecepatan refresh, pilih 120Hz (Tinggi). Game tidak bisa lebih cepat dari ini.</string>
+    <string name="ob3_refresh_hint">Pilih refresh rate tertinggi yang tersedia di Setelan → Tampilan → Kecepatan refresh, lalu ketuk Terapkan.</string>
     <string name="v_clamped_refresh">Di Setelan → Tampilan → Kecepatan refresh, pilih opsi tertinggi yang tersedia.</string>
 
     <!-- v4.3: rate options + before-you-play -->
@@ -215,13 +215,13 @@
     <string name="check_fail_title">Layar tetap %1$d Hz, bukan %2$d</string>
     <string name="check_fail_title_unknown">Tidak bisa memastikan %d Hz</string>
     <string name="check_fail_refresh">Pengaturan refresh rate HP terlalu rendah. Atur Setelan → Tampilan → Kecepatan refresh ke opsi tertinggi, lalu ketuk Terapkan lagi.</string>
-    <string name="check_fail_body">Buka Periksa override dan bandingkan target, mode layar, dan FPS tes.</string>
+    <string name="check_fail_body">Ketuk Terapkan lagi. Jika hasil tes layar tetap di bawah refresh rate yang diminta, kirim laporan kompatibilitas.</string>
     <string name="check_retry">Coba lagi</string>
     <string name="check_report">Lapor di GitHub</string>
     <string name="check_faq">Baca FAQ</string>
     <string name="check_badge">Beralih ke %dHz</string>
-    <string name="check_verified">Terverifikasi</string>
-    <string name="check_measured">Tes Hyper120: %d FPS</string>
+    <string name="check_verified">Tes layar berhasil</string>
+    <string name="check_measured">Tes Hyper120: %.1f FPS</string>
     <string name="check_caption">Game mencapai %d FPS jika game mendukungnya</string>
     <string name="limit_note_short">*Game berjalan di rate yang didukungnya. Tanda menunjukkan batas tiap game (60 MAX tetap 60).</string>
     <string name="check_caption_limit">*Setiap aplikasi dan game punya batasnya sendiri. Game 60 MAX tetap di 60. Cek tanda tiap game di bawah.</string>
@@ -235,8 +235,22 @@
     <string name="upd_install_hint">Setelah unduhan selesai, buka dan ketuk Pasang (atau Perbarui).</string>
     <string name="no_installed_apps">Tidak ada aplikasi yang bisa dibuka.</string>
     <string name="apps_load_failed">Aplikasi terpasang gagal dimuat.</string>
-    <string name="check_result_modes">Target %1$d Hz · Layar %2$d Hz</string>
-    <string name="check_game_help">Game masih di 60 FPS?</string>
+    <string name="check_result_modes">Refresh rate yang diminta: %1$d Hz\nMode layar teramati: %2$d Hz</string>
+    <string name="check_game_help">Periksa game ini</string>
     <string name="check_result_scope">Diukur di layar Hyper120. Periksa FPS saat bermain secara terpisah.</string>
     <string name="game_settings_label">Setelan untuk %1$s</string>
+    <string name="check_measurement_missing">FPS tes Hyper120 tidak tersedia</string>
+    <string name="check_browse_apps">Lihat aplikasi terpasang</string>
+    <string name="game_check_selected">Dipilih • Permintaan yang diatur: %d Hz</string>
+    <string name="game_check_unselected">Tidak dipilih • Tidak ada permintaan baru</string>
+    <string name="game_check_no_request">Belum ada permintaan tercatat dalam sesi ini</string>
+    <string name="game_check_last_request">Permintaan terakhir: %1$d Hz (%2$d detik lalu)</string>
+    <string name="game_check_select_guide">Centang aplikasi di daftar untuk menyertakannya saat mengetuk Terapkan.</string>
+    <string name="game_check_apply_guide">Ketuk Terapkan untuk mengirim permintaan, lalu buka pemeriksaan ini lagi.</string>
+    <string name="game_check_play_guide">Mainkan satu pertandingan dan lihat penghitung FPS bawaan game jika tersedia. Layar ini menunjukkan permintaan Hyper120.</string>
+    <string name="set_usage_title">Bagikan penggunaan anonim</string>
+    <string name="set_usage_sub">Opsional. Mengirim ID instalasi acak dan versi aplikasi untuk menghitung pengguna aktif.</string>
+    <string name="ob3_continue_test">Lanjut dan uji</string>
+    <string name="ob3_panel_limit">Android melaporkan layar di bawah 90 Hz. Lanjutkan untuk melihat refresh rate yang tersedia.</string>
+    <string name="ob3_low_setting">Ponsel melaporkan refresh rate rendah. Pilih angka lebih tinggi di Tampilan atau lanjutkan pengujian.</string>
 </resources>
